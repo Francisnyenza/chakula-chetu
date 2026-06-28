@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chakula Chetu 🍲 — Meal Suggester (Tanzania)</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#243043;
+    --ink:#f1f5f9; --muted:#94a3b8;
+    --brand:#fb923c; --brand2:#fbbf24;     /* warm food colours */
+    --good:#22c55e; --bad:#ef4444; --warn:#f59e0b; --leaf:#4ade80;
+    --line:#334155;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Segoe UI",system-ui,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%, #3a2a14 0%, var(--bg) 60%);
+    color:var(--ink); min-height:100vh; padding:18px;
+  }
+  .wrap{max-width:600px; margin:0 auto}
+  header{display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap}
+  .logo{font-size:34px}
+  h1{font-size:22px; margin:0}
+  .tag{color:var(--muted); font-size:13px; margin:2px 0 0}
+  .spacer{flex:1}
+  .pill{background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:6px 12px; font-size:13px; color:var(--muted)}
+  .pill b{color:var(--brand2)}
+  .pill.lang{cursor:pointer; user-select:none}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:20px; margin-bottom:14px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .btn{appearance:none; border:0; cursor:pointer; font-weight:700; font-size:16px;
+    padding:13px 18px; border-radius:14px; color:#3a1d05;
+    background:linear-gradient(180deg,var(--brand2),var(--brand)); transition:.15s; width:100%}
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:var(--card2); color:var(--ink); border:1px solid var(--line)}
+  .btn.small{width:auto; font-size:14px; padding:10px 14px}
+
+  .meals{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:4px}
+  .tile{cursor:pointer; border:1px solid var(--line); border-radius:16px; padding:16px 12px;
+    background:var(--card2); text-align:center; transition:.15s}
+  .tile:hover{transform:translateY(-2px); border-color:var(--brand)}
+  .tile .ic{font-size:30px; display:block; margin-bottom:4px}
+  .tile .nm{font-weight:800; font-size:15px}
+  .tile .sub{color:var(--muted); font-size:11px; margin-top:2px}
+  .tile.wide{grid-column:1 / -1}
+  .tile.tonight{grid-column:1 / -1; background:linear-gradient(180deg,#46260b,#3a1f08); border-color:#7c4514}
+
+  .filters{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 2px; align-items:center}
+  .chip{cursor:pointer; border:1px solid var(--line); background:var(--card2); color:var(--muted);
+    border-radius:999px; padding:7px 13px; font-weight:700; font-size:13px; user-select:none}
+  .chip.on{background:var(--leaf); color:#06280f; border-color:var(--leaf)}
+
+  /* suggestion */
+  .sgHead{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+  .sgHead .mi{font-size:30px}
+  .sgHead h2{margin:0; font-size:20px}
+  .dish{font-size:26px; font-weight:900; margin:8px 0 2px; color:var(--brand2)}
+  .gloss{color:var(--muted); font-size:14px; margin-bottom:8px}
+  .lineitem{display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:15px}
+  .lineitem:last-child{border-bottom:0}
+  .lineitem .k{color:var(--muted); min-width:92px; font-size:13px; padding-top:2px}
+  .lineitem .v{font-weight:700}
+  .lineitem .v small{display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:1px}
+  .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+  .t{font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px}
+  .t-veg{background:rgba(74,222,128,.15); color:#86efac}
+  .t-budget{background:rgba(96,165,250,.15); color:#93c5fd}
+  .t-quick{background:rgba(251,191,36,.15); color:#fcd34d}
+  .t-hearty{background:rgba(248,113,113,.15); color:#fca5a5}
+  .note{background:var(--card2); border-left:4px solid var(--brand); padding:10px 12px; border-radius:8px; margin-top:12px; font-size:14px; line-height:1.5}
+  .shop{background:#0b1424; border:1px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:12px; font-size:14px}
+  .shop b{color:var(--brand2)}
+  .recipe{background:#0b1424; border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:10px; font-size:14px; line-height:1.55}
+  .rsteps{margin:6px 0 0; padding-left:18px}
+  .rsteps li{margin:5px 0}
+  .ytbtn{display:block; text-align:center; margin-top:12px; background:#7f1d1d; color:#fff; text-decoration:none;
+    font-weight:800; padding:11px; border-radius:12px; border:1px solid #b91c1c}
+  .ytbtn:hover{filter:brightness(1.12)}
+  .dishlink{color:var(--brand2); text-decoration:none; border-bottom:1px dotted var(--line)}
+  .dishlink:hover{border-bottom-style:solid}
+
+  /* day / week */
+  .daycard{border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; background:var(--card2)}
+  .daycard h3{margin:0 0 8px; font-size:15px; color:var(--brand2)}
+  table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px}
+  th,td{text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-weight:600}
+  .muted{color:var(--muted)}
+  .row{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .hidden{display:none}
+  .fav{cursor:pointer; font-size:22px; user-select:none}
+  footer{text-align:center; color:var(--muted); font-size:12px; margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🍲</div>
+    <div>
+      <h1 data-en="Chakula Chetu" data-sw="Chakula Chetu">Chakula Chetu</h1>
+      <p class="tag" data-en="What shall we eat? • Tanzanian meal ideas" data-sw="Tule nini? • Mawazo ya chakula cha Kitanzania">What shall we eat? • Tanzanian meal ideas</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
+  </header>
+
+  <!-- HOME -->
+  <div id="home" class="card">
+    <h2 id="greet" style="margin-top:0">Karibu! 👋</h2>
+    <p class="muted" id="homeMsg" data-en="Tell me the meal and I'll suggest a Tanzanian dish, what to serve with it, a drink, and a quick shopping list."
+       data-sw="Niambie mlo nami nitapendekeza chakula cha Kitanzania, cha kuandama nacho, kinywaji, na orodha fupi ya manunuzi.">
+       Tell me the meal and I'll suggest a Tanzanian dish, what to serve with it, a drink, and a quick shopping list.</p>
+
+    <div class="filters">
+      <span class="muted" data-en="Filters:" data-sw="Vichujio:">Filters:</span>
+      <span class="chip" data-f="veg" data-en="🥬 Vegetarian" data-sw="🥬 Mboga tu">🥬 Vegetarian</span>
+      <span class="chip" data-f="budget" data-en="💰 Budget" data-sw="💰 Nafuu">💰 Budget</span>
+      <span class="chip" data-f="quick" data-en="⏱️ Quick" data-sw="⏱️ Haraka">⏱️ Quick</span>
+    </div>
+
+    <div class="meals">
+      <div class="tile tonight" data-meal="dinner"><span class="ic">🌙</span><div class="nm" data-en="What's for dinner tonight?" data-sw="Tule nini usiku huu?">What's for dinner tonight?</div><div class="sub" data-en="instant suggestion" data-sw="pendekezo la papo hapo">instant suggestion</div></div>
+      <div class="tile" data-meal="breakfast"><span class="ic">🌅</span><div class="nm" data-en="Breakfast" data-sw="Kifungua kinywa">Breakfast</div></div>
+      <div class="tile" data-meal="lunch"><span class="ic">☀️</span><div class="nm" data-en="Lunch" data-sw="Chakula cha mchana">Lunch</div></div>
+      <div class="tile wide" data-meal="day"><span class="ic">📅</span><div class="nm" data-en="Plan my whole day" data-sw="Panga siku nzima">Plan my whole day</div><div class="sub" data-en="breakfast + lunch + dinner" data-sw="kifungua + mchana + usiku">breakfast + lunch + dinner</div></div>
+      <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div></div>
+    </div>
+
+    <div class="row">
+      <button class="btn ghost small" id="favBtn" data-en="❤️ My favourites" data-sw="❤️ Vipendwa vyangu">❤️ My favourites</button>
+    </div>
+  </div>
+
+  <!-- SUGGESTION (single meal) -->
+  <div id="suggest" class="card hidden"></div>
+  <!-- DAY / WEEK / FAVOURITES -->
+  <div id="multi" class="card hidden"></div>
+
+  <footer>Chakula Chetu · <span data-en="Home-cooked, the Tanzanian way 🇹🇿" data-sw="Mapishi ya nyumbani, kwa mtindo wa Kitanzania 🇹🇿">Home-cooked, the Tanzanian way 🇹🇿</span></footer>
+</div>
+
+<script>
+/* ============================================================
+   Chakula Chetu — offline Tanzanian meal suggester.
+   Breakfast / Lunch / Dinner + full day + weekly menu.
+   Favourites & recent-avoidance saved in the browser. No internet.
+   ============================================================ */
+
+const STORE='chakula_v1';
+const $=id=>document.getElementById(id);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function load(){ try{return JSON.parse(localStorage.getItem(STORE))||{};}catch(e){return {};} }
+function save(o){ try{localStorage.setItem(STORE,JSON.stringify(o));}catch(e){} }
+
+let lang=load().lang||'en';
+function t(en,sw){ return lang==='sw'?sw:en; }
+function applyLang(){
+  document.querySelectorAll('[data-en]').forEach(el=>{ el.textContent=lang==='sw'?el.dataset.sw:el.dataset.en; });
+  $('langLabel').textContent=lang==='sw'?'English':'Kiswahili';
+}
+$('langToggle').onclick=()=>{ lang=lang==='sw'?'en':'sw'; const d=load(); d.lang=lang; save(d); applyLang(); refreshHome(); };
+
+/* active filters */
+let filters={veg:false,budget:false,quick:false};
+
+/* ---------- DATA: Tanzanian dishes ----------
+   tags: veg=vegetarian, budget=cheap, quick=fast to cook, hearty=filling
+   sw = Swahili name, en = short English gloss, shop = key ingredients   */
+const BREAKFAST=[
+  {sw:'Chai na mkate', en:'Tea with bread (butter/jam)', tags:['veg','budget','quick'], shop:'mkate, chai, sukari, maziwa, siagi'},
+  {sw:'Chapati', en:'Soft flatbread', tags:['veg','budget'], shop:'unga wa ngano, mafuta, chumvi'},
+  {sw:'Maandazi', en:'Fried sweet dough (donuts)', tags:['veg','budget'], shop:'unga, sukari, hamira, nazi/maziwa'},
+  {sw:'Uji wa ulezi', en:'Millet porridge', tags:['veg','budget','quick'], shop:'unga wa ulezi, sukari, maziwa/nazi'},
+  {sw:'Vitumbua', en:'Rice-coconut rice cakes', tags:['veg','budget'], shop:'unga wa mchele, nazi, sukari, hamira'},
+  {sw:'Mayai na mkate', en:'Eggs with bread', tags:['quick'], shop:'mayai, mkate, vitunguu, nyanya'},
+  {sw:'Viazi vitamu vya kuchemsha', en:'Boiled sweet potatoes', tags:['veg','budget','quick'], shop:'viazi vitamu'},
+  {sw:'Maharage na chapati', en:'Beans with chapati', tags:['veg','hearty'], shop:'maharage, vitunguu, nyanya, chapati'},
+  {sw:'Maini na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, nyanya', like:true},
+  {sw:'Saladi ya matunda', en:'Fruit salad', tags:['veg','quick'], shop:'matunda mchanganyiko, ndimu, mtindi/asali'},
+  {sw:'Mkate wa kumimina', en:'Steamed rice bread', tags:['veg','budget'], shop:'unga wa mchele, nazi, sukari'},
+];
+const MAINS=[ // lunch & dinner mains
+  {sw:'Wali na maharage', en:'Rice with beans', tags:['veg','budget','hearty'], shop:'mchele, maharage, nyanya, vitunguu'},
+  {sw:'Ugali na mchicha', en:'Ugali with spinach', tags:['veg','budget'], shop:'unga wa mahindi, mchicha, nyanya, vitunguu'},
+  {sw:'Ugali na samaki', en:'Ugali with fish', tags:['hearty'], shop:'unga wa mahindi, samaki, nyanya, ndimu'},
+  {sw:'Pilau', en:'Spiced rice (with meat)', tags:['hearty'], shop:'mchele, nyama, viungo vya pilau, vitunguu'},
+  {sw:'Wali na maini', en:'Rice with fried liver', tags:['hearty'], shop:'mchele, maini, vitunguu, nyanya, pilipili', like:true},
+  {sw:'Ugali na maini', en:'Ugali with fried liver', tags:['hearty'], shop:'unga wa mahindi, maini, vitunguu, nyanya', like:true},
+  {sw:'Maini ya kukaanga na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, pilipili, ndimu', like:true},
+  {sw:'Wali wa nazi na maharage', en:'Coconut rice with beans', tags:['veg','hearty'], shop:'mchele, nazi, maharage'},
+  {sw:'Ndizi nyama', en:'Plantain & meat stew', tags:['hearty'], shop:'ndizi, nyama, nyanya, vitunguu'},
+  {sw:'Makande', en:'Maize & beans stew', tags:['veg','budget','hearty'], shop:'mahindi, maharage, nazi'},
+  {sw:'Wali na kuku', en:'Rice with chicken stew', tags:['hearty'], shop:'mchele, kuku, nyanya, viungo'},
+  {sw:'Ugali na nyama', en:'Ugali with meat stew', tags:['hearty'], shop:'unga wa mahindi, nyama, nyanya'},
+  {sw:'Chapati na mchuzi wa kuku', en:'Chapati with chicken curry', tags:['hearty'], shop:'chapati, kuku, nyanya, viungo'},
+  {sw:'Wali na dagaa', en:'Rice with small dried fish', tags:['budget','hearty'], shop:'mchele, dagaa, nyanya, vitunguu'},
+  {sw:'Ugali na kisamvu', en:'Ugali with cassava leaves', tags:['veg','budget'], shop:'unga wa mahindi, kisamvu, nazi, karanga'},
+  {sw:'Mtori', en:'Banana & meat soup', tags:['hearty'], shop:'ndizi, nyama, nyanya, vitunguu'},
+  {sw:'Wali na mboga za majani', en:'Rice with leafy greens', tags:['veg','budget'], shop:'mchele, mboga za majani, nyanya'},
+  {sw:'Wali na njegere', en:'Rice with green peas', tags:['veg','hearty'], shop:'mchele, njegere, vitunguu, nyanya'},
+  {sw:'Tambi za nyama', en:'Savoury vermicelli with meat', tags:['hearty'], shop:'tambi, nyama, vitunguu, nyanya'},
+  {sw:'Mihogo na nyama', en:'Cassava with meat stew', tags:['hearty'], shop:'mihogo, nyama, vitunguu, nyanya'},
+  {sw:'Magimbi ya nazi', en:'Taro in coconut sauce', tags:['veg','hearty'], shop:'magimbi, nazi, vitunguu'},
+  {sw:'Mchuzi wa uyoga na wali', en:'Mushroom stew with rice', tags:['veg','hearty'], rare:true, shop:'uyoga, mchele, vitunguu, nyanya'},
+];
+const SIDES=[
+  {sw:'Kachumbari', en:'Tomato & onion salad', tags:['veg','quick']},
+  {sw:'Mchicha', en:'Cooked spinach', tags:['veg']},
+  {sw:'Kisamvu', en:'Cassava leaves in coconut', tags:['veg']},
+  {sw:'Parachichi', en:'Sliced avocado', tags:['veg','quick']},
+  {sw:'Saladi ya majani', en:'Green salad', tags:['veg','quick']},
+  {sw:'Maharage ya nazi', en:'Beans in coconut sauce', tags:['veg']},
+  {sw:'Mboga za kukaanga', en:'Stir-fried vegetables', tags:['veg','quick']},
+];
+const DRINKS_AM=[
+  {sw:'Chai ya maziwa', en:'Milky tea'},
+  {sw:'Chai ya rangi', en:'Black spiced tea'},
+  {sw:'Kahawa', en:'Coffee'},
+  {sw:'Juisi ya machungwa', en:'Orange juice'},
+  {sw:'Maji ya tangawizi', en:'Ginger water'},
+];
+const DRINKS_PM=[
+  {sw:'Maji ya kunywa', en:'Drinking water'},
+  {sw:'Juisi ya embe/passion', en:'Mango/passion juice'},
+  {sw:'Sharubati', en:'Fruit squash'},
+  {sw:'Maji ya madafu', en:'Coconut water'},
+  {sw:'Soda baridi', en:'Cold soda'},
+];
+
+/* ---------- FRUITS available locally + juices made from them ----------
+   eat:true = nice as a whole fruit; all fruits can be juiced.  */
+const FRUITS=[
+  {sw:'Embe', en:'Mango', eat:true},
+  {sw:'Machungwa', en:'Orange', eat:true},
+  {sw:'Papai', en:'Papaya', eat:true},
+  {sw:'Tikiti maji', en:'Watermelon', eat:true},
+  {sw:'Parachichi', en:'Avocado', eat:true},
+  {sw:'Ndizi', en:'Banana', eat:true},
+  {sw:'Nanasi', en:'Pineapple', eat:true},
+  {sw:'Pera', en:'Guava', eat:true},
+  {sw:'Zabibu', en:'Grapes', eat:true},
+  {sw:'Passion', en:'Passion fruit', eat:true},
+  {sw:'Ndimu', en:'Lemon/lime', eat:false},
+  {sw:'Ukwaju', en:'Tamarind', eat:false},
+  {sw:'Rozela', en:'Roselle (hibiscus)', eat:false},
+  {sw:'Beetroot', en:'Beetroot', eat:false},
+];
+function pickFruit(){ return pick(FRUITS.filter(f=>f.eat)); }
+function pickJuice(){ const f=pick(FRUITS); return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw}; }
+
+/* ---------- RECIPES: how to prepare each dish (steps), keyed by Swahili name.
+   Ingredients are shown from each dish's `shop` field. ---------- */
+const RECIPES={
+  'Chai na mkate':{sw:['Chemsha maji, weka majani ya chai (au tea bag) na sukari.','Ongeza maziwa, acha yachemke kidogo.','Chuja chai kwenye kikombe.','Kata mkate, paka siagi au jam, tumia na chai.'],
+    en:['Boil water, add tea leaves (or a tea bag) and sugar.','Add milk and let it simmer briefly.','Strain the tea into a cup.','Slice bread, spread butter or jam, serve with the tea.']},
+  'Chapati':{sw:['Changanya unga wa ngano, chumvi, maji kidogo na mafuta; ukande hadi ulainike.','Acha donge lipumzike dakika 20-30.','Gawa vipande, sukuma duara, paka mafuta, kunja na usukume tena.','Kaanga kwenye kikaango cha moto kwa mafuta kidogo hadi pande zote ziwe za kahawia.'],
+    en:['Mix wheat flour, salt, a little water and oil; knead until smooth.','Rest the dough 20-30 minutes.','Divide, roll into circles, brush with oil, fold and roll again.','Fry on a hot pan with a little oil until golden on both sides.']},
+  'Maandazi':{sw:['Changanya unga, sukari, hamira, hiliki na maziwa/nazi; ukande.','Acha donge liumuke kwa saa moja.','Sukuma na ukate vipande vya pembetatu.','Kaanga kwenye mafuta ya moto hadi yawe ya dhahabu.'],
+    en:['Mix flour, sugar, yeast, cardamom and milk/coconut; knead.','Let the dough rise for about one hour.','Roll out and cut into triangles.','Deep-fry in hot oil until golden.']},
+  'Uji wa ulezi':{sw:['Koroga unga wa ulezi kwenye maji baridi upate uji laini bila madonge.','Chemsha maji mengine, mimina mchanganyiko ukikoroga.','Pika kwa moto wa wastani dakika 10-15 ukikoroga.','Ongeza sukari, maziwa au nazi na ndimu kidogo.'],
+    en:['Mix millet flour into cold water to a smooth lump-free paste.','Boil more water, pour in the paste while stirring.','Cook on medium heat 10-15 min, stirring.','Add sugar, milk or coconut and a little lemon.']},
+  'Vitumbua':{sw:['Saga mchele uliolowekwa na nazi upate uji mzito.','Ongeza sukari na hamira, acha uumuke.','Pasha chuma cha vitumbua, mimina mchanganyiko kila kishimo.','Pika hadi chini iwe kahawia, geuza kidogo, toa.'],
+    en:['Grind soaked rice with coconut into a thick batter.','Add sugar and yeast, let it rise.','Heat a vitumbua pan, pour batter into each mould.','Cook until the base browns, turn briefly, remove.']},
+  'Mayai na mkate':{sw:['Kaanga vitunguu na nyanya kwa mafuta kidogo.','Vunja mayai, koroga na chumvi, mimina.','Pika ukikoroga hadi yaive (au tengeneza omeleti).','Tumia na mkate na chai.'],
+    en:['Fry onion and tomato in a little oil.','Beat eggs with salt, pour in.','Stir-cook until set (or make an omelette).','Serve with bread and tea.']},
+  'Viazi vitamu vya kuchemsha':{sw:['Osha na menya viazi vitamu, kata vipande.','Weka kwenye sufuria na maji na chumvi kidogo.','Chemsha dakika 15-20 hadi vilainike.','Chuja maji, tumia na chai au nazi.'],
+    en:['Wash and peel sweet potatoes, cut into pieces.','Put in a pot with water and a little salt.','Boil 15-20 min until soft.','Drain and serve with tea or coconut.']},
+  'Ndizi za kuchemsha':{sw:['Menya ndizi mbichi, kata vipande.','Chemsha kwa maji na chumvi dakika 15-20.','Unaweza kuongeza nazi ipate ladha.','Tumia na supu au mboga.'],
+    en:['Peel green bananas, cut into pieces.','Boil in salted water 15-20 min.','Add coconut milk for flavour if you like.','Serve with soup or vegetables.']},
+  'Maharage na chapati':{sw:['Chemsha maharage hadi yalainike (au tumia ya makopo).','Kaanga vitunguu na nyanya, ongeza maharage na maji kidogo.','Tia chumvi na bizari, acha yachemke yawe mzito.','Tumia na chapati za moto.'],
+    en:['Boil beans until soft (or use canned).','Fry onion and tomato, add beans and a little water.','Season with salt and spices, simmer to thicken.','Serve with hot chapati.']},
+  'Maini na chapati':{sw:['Osha maini, kata vipande vidogo, paka chumvi na ndimu.','Kaanga vitunguu, ongeza maini, pilipili na bizari.','Pika dakika 8-10 hadi yaive (usiyakaushe sana).','Tumia na chapati za moto.'],
+    en:['Wash liver, cut small, season with salt and lemon.','Fry onion, add liver, chilli and spices.','Cook 8-10 min until done (do not overcook or dry it).','Serve with hot chapati.']},
+  'Supu ya makongoro':{sw:['Safisha miguu ya ng’ombe/nyama, weka kwenye maji.','Ongeza vitunguu, kitunguu saumu, tangawizi na chumvi.','Chemsha kwa moto mdogo saa 1-2 hadi nyama ilainike.','Kamua ndimu na pilipili, tumia na mkate.'],
+    en:['Clean the trotters/meat, place in water.','Add onion, garlic, ginger and salt.','Simmer on low heat 1-2 hrs until tender.','Add lemon and chilli, serve with bread.']},
+  'Mkate wa kumimina':{sw:['Saga mchele uliolowekwa na nazi upate uji mzito.','Ongeza sukari, hamira na hiliki, acha uumuke.','Mimina kwenye chombo chenye mafuta.','Oka hadi uive na juu iwe ya kahawia.'],
+    en:['Grind soaked rice with coconut into a thick batter.','Add sugar, yeast and cardamom, let it rise.','Pour into a greased dish.','Bake until cooked and golden on top.']},
+
+  'Wali na maharage':{sw:['Osha mchele, pika kwa maji na chumvi (na mafuta kidogo) hadi uive.','Chemsha maharage hadi yalainike.','Kaanga vitunguu na nyanya, ongeza maharage, tia chumvi, acha mzito.','Pakua wali na mchuzi wa maharage.'],
+    en:['Wash rice, cook with water, salt (and a little oil) until done.','Boil beans until soft.','Fry onion and tomato, add beans, season, simmer thick.','Serve rice with the bean stew.']},
+  'Ugali na mchicha':{sw:['Chemsha maji, mimina unga wa mahindi taratibu ukikoroga.','Endelea kukoroga na kuongeza unga hadi ugali ushikamane.','Kaanga mchicha na vitunguu, nyanya na chumvi.','Pakua ugali na mchicha.'],
+    en:['Boil water, add maize flour slowly while stirring.','Keep stirring and adding flour until the ugali is firm.','Cook spinach with onion, tomato and salt.','Serve ugali with the spinach.']},
+  'Ugali na samaki':{sw:['Safisha samaki, paka chumvi na ndimu.','Kaanga au choma samaki hadi aive.','Tengeneza mchuzi wa nyanya na vitunguu, weka samaki ndani.','Andaa ugali, pakua na samaki na mchuzi.'],
+    en:['Clean fish, rub with salt and lemon.','Fry or grill the fish until cooked.','Make a tomato-onion sauce, place the fish in it.','Prepare ugali, serve with fish and sauce.']},
+  'Pilau':{sw:['Kaanga vitunguu, ongeza nyama na viungo vya pilau (hiliki, mdalasini, karafuu, bizari).','Pika nyama hadi ilainike.','Ongeza mchele uliooshwa na maji ya kupimia.','Funika, pika kwa moto mdogo hadi wali uive.'],
+    en:['Fry onion, add meat and pilau spices (cardamom, cinnamon, cloves, cumin).','Cook the meat until tender.','Add washed rice and measured water.','Cover and cook on low heat until the rice is done.']},
+  'Wali na maini':{sw:['Pika wali kwa kawaida hadi uive.','Osha maini, kata vipande, kaanga na vitunguu.','Ongeza nyanya, chumvi, pilipili na bizari; pika dakika 8-10.','Pakua wali na maini.'],
+    en:['Cook plain rice until done.','Wash liver, cut up, fry with onion.','Add tomato, salt, chilli and spices; cook 8-10 min.','Serve rice with the liver.']},
+  'Ugali na maini':{sw:['Andaa ugali kutoka unga wa mahindi.','Kaanga maini na vitunguu, nyanya, chumvi na pilipili.','Pika hadi maini yaive lakini yasikauke.','Pakua ugali na maini.'],
+    en:['Prepare ugali from maize flour.','Fry liver with onion, tomato, salt and chilli.','Cook until the liver is done but not dry.','Serve ugali with the liver.']},
+  'Maini ya kukaanga na chapati':{sw:['Osha maini, kata vipande vidogo, paka chumvi na ndimu.','Kaanga vitunguu, ongeza maini, pilipili na bizari.','Kaanga dakika 8-10 hadi yaive.','Tumia na chapati za moto.'],
+    en:['Wash liver, cut small, season with salt and lemon.','Fry onion, add liver, chilli and spices.','Stir-fry 8-10 min until cooked.','Serve with hot chapati.']},
+  'Wali wa nazi na maharage':{sw:['Pika mchele kwa maziwa ya nazi badala ya maji.','Chemsha maharage hadi yalainike.','Tengeneza mchuzi wa maharage kwa nazi, vitunguu na nyanya.','Pakua wali wa nazi na maharage.'],
+    en:['Cook rice in coconut milk instead of water.','Boil beans until soft.','Make a bean stew with coconut, onion and tomato.','Serve coconut rice with the beans.']},
+  'Ndizi nyama':{sw:['Kaanga vitunguu na nyama hadi nyama ianze kulainika.','Ongeza nyanya, chumvi na maji kidogo.','Menya ndizi, kata, weka kwenye mchuzi.','Pika hadi ndizi na nyama ziive.'],
+    en:['Fry onion and meat until the meat starts to soften.','Add tomato, salt and a little water.','Peel bananas, cut, add to the stew.','Cook until bananas and meat are done.']},
+  'Makande':{sw:['Loweka mahindi na maharage usiku kucha.','Chemsha pamoja saa 1-2 hadi vilainike.','Ongeza maziwa ya nazi na chumvi.','Pika kidogo zaidi hadi mzito, pakua.'],
+    en:['Soak maize and beans overnight.','Boil together 1-2 hrs until soft.','Add coconut milk and salt.','Simmer a bit more until thick, serve.']},
+  'Wali na kuku':{sw:['Pika wali hadi uive.','Kaanga vitunguu, ongeza kuku, chumvi na viungo.','Ongeza nyanya na maji, pika hadi kuku aive na mchuzi uwe mzito.','Pakua wali na kuku.'],
+    en:['Cook rice until done.','Fry onion, add chicken, salt and spices.','Add tomato and water, cook until chicken is done and the sauce thickens.','Serve rice with the chicken.']},
+  'Ugali na nyama':{sw:['Kaanga vitunguu, ongeza nyama, chumvi na viungo.','Ongeza nyanya na maji, pika hadi nyama ilainike.','Andaa ugali kutoka unga wa mahindi.','Pakua ugali na nyama.'],
+    en:['Fry onion, add meat, salt and spices.','Add tomato and water, cook until the meat is tender.','Prepare ugali from maize flour.','Serve ugali with the meat.']},
+  'Chapati na mchuzi wa kuku':{sw:['Andaa chapati (kande, sukuma, kaanga).','Kaanga vitunguu na kuku, ongeza nyanya na viungo.','Ongeza maji, pika hadi kuku aive na mchuzi uwe mzito.','Tumia chapati na mchuzi wa kuku.'],
+    en:['Make chapati (knead, roll, fry).','Fry onion and chicken, add tomato and spices.','Add water, cook until chicken is done and the sauce thickens.','Serve chapati with the chicken curry.']},
+  'Wali na dagaa':{sw:['Osha dagaa vizuri, ondoa uchafu.','Kaanga vitunguu na nyanya, ongeza dagaa na chumvi.','Pika dakika 10 hadi dagaa ziive.','Pakua na wali.'],
+    en:['Wash the small dried fish well.','Fry onion and tomato, add the dagaa and salt.','Cook 10 min until done.','Serve with rice.']},
+  'Ugali na kisamvu':{sw:['Twanga/saga kisamvu, chemsha hadi kilainike.','Ongeza nazi, karanga zilizosagwa, vitunguu na chumvi.','Pika hadi kiive na kiwe kizito.','Pakua na ugali.'],
+    en:['Pound/grind the cassava leaves, boil until soft.','Add coconut, ground peanuts, onion and salt.','Cook until done and thick.','Serve with ugali.']},
+  'Mtori':{sw:['Chemsha nyama na vitunguu hadi ilainike.','Menya ndizi, kata, weka kwenye nyama.','Pika hadi ndizi ziive, kisha ponda kidogo zichanganyike.','Koroga, ongeza chumvi, pakua moto.'],
+    en:['Boil meat with onion until tender.','Peel bananas, cut, add to the meat.','Cook until bananas are soft, then mash a little to blend.','Stir, add salt, serve hot.']},
+  'Wali na mboga za majani':{sw:['Pika wali hadi uive.','Kaanga mboga za majani na vitunguu na nyanya.','Tia chumvi na mafuta kidogo, pika hadi ziive.','Pakua wali na mboga.'],
+    en:['Cook rice until done.','Fry the leafy greens with onion and tomato.','Add salt and a little oil, cook until done.','Serve rice with the greens.']},
+  'Saladi ya matunda':{sw:['Osha na menya matunda (embe, papai, nanasi, ndizi).','Kata vipande vidogo, weka kwenye bakuli.','Kamua ndimu kidogo, ongeza mtindi au asali (hiari).','Changanya taratibu, pakua ikiwa baridi.'],
+    en:['Wash and peel the fruit (mango, papaya, pineapple, banana).','Cut into small pieces, put in a bowl.','Squeeze a little lime, add yogurt or honey (optional).','Mix gently, serve chilled.']},
+  'Wali na njegere':{sw:['Pika wali kwa kawaida hadi uive.','Chemsha njegere hadi zilainike.','Kaanga vitunguu na nyanya, ongeza njegere na chumvi.','Pakua wali na njegere.'],
+    en:['Cook plain rice until done.','Boil peas until tender.','Fry onion and tomato, add peas and salt.','Serve rice with the peas.']},
+  'Tambi za nyama':{sw:['Kaanga vitunguu na nyama hadi iive.','Ongeza nyanya, chumvi na maji kidogo.','Weka tambi, funika, pika hadi zilainike.','Koroga taratibu, pakua moto.'],
+    en:['Fry onion and meat until cooked.','Add tomato, salt and a little water.','Add the vermicelli, cover, cook until soft.','Stir gently, serve hot.']},
+  'Mihogo na nyama':{sw:['Menya mihogo, kata vipande, chemsha hadi ilainike.','Tengeneza mchuzi wa nyama na vitunguu na nyanya.','Weka mihogo kwenye mchuzi, pika kidogo.','Pakua mihogo na nyama.'],
+    en:['Peel cassava, cut into pieces, boil until soft.','Make a meat stew with onion and tomato.','Add cassava to the stew, simmer briefly.','Serve cassava with the meat.']},
+  'Magimbi ya nazi':{sw:['Menya magimbi, kata vipande.','Chemsha hadi yaanze kulainika.','Ongeza maziwa ya nazi, chumvi na vitunguu.','Pika hadi yaive na mchuzi uwe mzito.'],
+    en:['Peel taro, cut into pieces.','Boil until it starts to soften.','Add coconut milk, salt and onion.','Cook until done and the sauce thickens.']},
+  'Mchuzi wa uyoga na wali':{sw:['Osha uyoga, kata vipande.','Kaanga vitunguu, ongeza uyoga, nyanya na chumvi.','Pika dakika 10 hadi uyoga uive.','Pakua na wali.'],
+    en:['Wash mushrooms, slice them.','Fry onion, add mushrooms, tomato and salt.','Cook 10 min until the mushrooms are done.','Serve with rice.']},
+};
+function ytLink(sw){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent('jinsi ya kupika '+sw); }
+function recipeSteps(dish){ const r=RECIPES[dish.sw]; return r ? (lang==='sw'?r.sw:r.en) : null; }
+
+/* ---------- filtering & selection ---------- */
+function activeFilterList(){ return Object.keys(filters).filter(k=>filters[k]); }
+function matches(dish){
+  const need=activeFilterList();
+  return need.every(f=> dish.tags.includes(f));
+}
+function poolFor(meal){
+  const base = meal==='breakfast' ? BREAKFAST : MAINS;
+  // rare dishes (e.g. uyoga/mushroom) only show up occasionally
+  let ok = base.filter(matches).filter(d=> !d.rare || Math.random()<0.15);
+  if(!ok.length) ok = base.filter(matches);
+  return ok.length ? ok : base;   // if filters too strict, fall back so we always suggest something
+}
+function chooseAvoiding(pool, key){
+  const d=load(); const recent=(d.recent&&d.recent[key])||[];
+  const fresh=pool.filter(x=>!recent.includes(x.sw));
+  const chosen=pick(fresh.length?fresh:pool);
+  // remember last 3 so suggestions don't repeat back-to-back
+  d.recent=d.recent||{}; const list=[chosen.sw,...recent].slice(0,3); d.recent[key]=list; save(d);
+  return chosen;
+}
+/* The cook loves maini (liver) — favour it, unless the vegetarian filter is on. */
+function likedIn(pool){ return pool.filter(x=>x.like); }
+function chooseMain(meal){
+  const pool=poolFor(meal);
+  if(!filters.veg){
+    const likes=likedIn(pool);
+    if(likes.length && Math.random()<0.45) return chooseAvoiding(likes, meal);
+  }
+  return chooseAvoiding(pool, meal);
+}
+function nm(o){ return lang==='sw'?o.sw:o.en; }
+function sub(o){ return lang==='sw'?o.en:o.sw; }  // show the other language as a hint
+
+const MEALINFO={
+  breakfast:{ic:'🌅', en:'Breakfast', sw:'Kifungua kinywa'},
+  lunch:{ic:'☀️', en:'Lunch', sw:'Chakula cha mchana'},
+  dinner:{ic:'🌙', en:'Dinner', sw:'Chakula cha usiku'},
+};
+
+/* ---------- render one meal ---------- */
+function suggestMeal(meal, into){
+  const info=MEALINFO[meal];
+  const main=chooseMain(meal);
+  const wantSide = meal!=='breakfast' || main.tags.includes('hearty');
+  const side = (meal==='breakfast') ? null : chooseAvoiding(SIDES.filter(matches).length?SIDES.filter(matches):SIDES, meal+'_side');
+  const fruit = pickFruit();
+  const juice = pickJuice();
+
+  const tagLabel={veg:t('Vegetarian','Mboga tu'),budget:t('Budget','Nafuu'),quick:t('Quick','Haraka'),hearty:t('Filling','Inashibisha')};
+  const tagsHtml=main.tags.map(tg=>`<span class="t t-${tg}">${tagLabel[tg]||tg}</span>`).join('');
+
+  const fav=isFav(main.sw);
+  let html=`
+    <div class="sgHead"><span class="mi">${info.ic}</span><h2>${t(info.en,info.sw)}</h2>
+      <span class="spacer" style="flex:1"></span>
+      <span class="fav" data-fav="${escAttr(main.sw)}" title="${t('Save to favourites','Hifadhi kwenye vipendwa')}">${fav?'❤️':'🤍'}</span>
+    </div>
+    <div class="dish">${nm(main)}</div>
+    <div class="gloss">${sub(main)}</div>
+    <div class="tags">${tagsHtml}</div>
+
+    <div style="margin-top:12px">`;
+  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v">${nm(side)}<small>${sub(side)}</small></span></div>`;
+  html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v">${nm(fruit)}<small>${sub(fruit)}</small></span></div>
+    <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v">${nm(juice)}<small>${sub(juice)}</small></span></div>
+    <div class="lineitem"><span class="k">${t('Shopping','Manunuzi')}</span><span class="v" style="font-weight:600">${main.shop}${side?', '+ (lang==='sw'?side.sw.toLowerCase():side.en.toLowerCase()):''}, ${fruit.sw.toLowerCase()}, ${juice.fruitSw.toLowerCase()}</span></div>
+    </div>`;
+
+  // recipe + how to prepare + YouTube video (hidden until tapped)
+  const rsteps=recipeSteps(main);
+  html+=`<button class="btn ghost small" data-recipe style="width:100%; margin-top:14px">📖 ${t('Show recipe & video','Onyesha mapishi na video')}</button>
+    <div class="recipe hidden" id="recipeBox">
+      <div><b>${t('Ingredients','Mahitaji')}:</b> ${main.shop}</div>
+      <div style="margin-top:8px"><b>${t('How to prepare','Jinsi ya kuandaa')}:</b>
+        <ol class="rsteps">${(rsteps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
+      <a class="ytbtn" href="${ytLink(main.sw)}" target="_blank" rel="noopener">▶ ${t('Watch how to cook it on YouTube','Tazama jinsi ya kupika kwenye YouTube')}</a>
+    </div>`;
+
+  html+=`<div class="row">
+      <button class="btn" data-again="${meal}">🔄 ${t('Another idea','Wazo lingine')}</button>
+      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+    </div>`;
+  into.innerHTML=html;
+  wireSuggestButtons(into);
+  show(into.id);
+}
+
+/* ---------- full day ---------- */
+function suggestDay(into){
+  const meals=['breakfast','lunch','dinner'];
+  let html=`<h2 style="margin-top:0">📅 ${t("Today's plan","Mpango wa leo")}</h2>`;
+  meals.forEach(m=>{
+    const info=MEALINFO[m];
+    const main=chooseMain(m);
+    const side = m==='breakfast'? null : pick(SIDES.filter(matches).length?SIDES.filter(matches):SIDES);
+    const fruit=pickFruit(); const juice=pickJuice();
+    html+=`<div class="daycard">
+      <h3>${info.ic} ${t(info.en,info.sw)}</h3>
+      <div style="font-size:18px; font-weight:800"><a class="dishlink" href="${ytLink(main.sw)}" target="_blank" rel="noopener">${nm(main)}</a> <span class="muted" style="font-size:13px; font-weight:400">· ${sub(main)}</span></div>
+      <div class="muted" style="font-size:13px; margin-top:4px">
+        ${side?'🥗 '+nm(side)+' · ':''}🍎 ${nm(fruit)} · 🥤 ${nm(juice)}</div>
+    </div>`;
+  });
+  html+=`<div class="row">
+      <button class="btn" data-again="day">🔄 ${t('Shuffle the day','Changanya siku')}</button>
+      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+    </div>`;
+  into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+}
+
+/* ---------- weekly menu ---------- */
+function suggestWeek(into){
+  const days = lang==='sw'
+    ? ['Jumatatu','Jumanne','Jumatano','Alhamisi','Ijumaa','Jumamosi','Jumapili']
+    : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  // build 7 distinct-ish picks per meal
+  function week(meal){
+    const p=poolFor(meal).slice(); const out=[];
+    for(let i=0;i<7;i++){ if(!p.length) p.push(...poolFor(meal)); out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); }
+    return out;
+  }
+  // The cook loves maini — plant it on a few days (skip if vegetarian filter is on).
+  function plantLikes(arr, meal, count){
+    if(filters.veg) return arr;
+    const likes=likedIn(poolFor(meal)); if(!likes.length) return arr;
+    const days=[...Array(7).keys()].sort(()=>Math.random()-0.5).slice(0,count);
+    days.forEach(d=>{ arr[d]=pick(likes); });
+    return arr;
+  }
+  const wb=plantLikes(week('breakfast'),'breakfast',1);
+  const wl=plantLikes(week('lunch'),'lunch',2);
+  const wd=plantLikes(week('dinner'),'dinner',2);
+  let html=`<h2 style="margin-top:0">🗓️ ${t('Weekly menu','Menyu ya wiki')}</h2>
+    <table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
+  // show both languages: Swahili name (link) with the English name below
+  const cell=d=>`<a class="dishlink" href="${ytLink(d.sw)}" target="_blank" rel="noopener">${d.sw}</a><br><small class="muted">${d.en}</small>`;
+  for(let i=0;i<7;i++){
+    const fr=pickFruit(), jc=pickJuice();
+    html+=`<tr><td><b>${days[i]}</b></td><td>${cell(wb[i])}</td><td>${cell(wl[i])}</td><td>${cell(wd[i])}</td><td><small class="muted">🍎 ${fr.sw} / ${fr.en}<br>🥤 ${jc.sw}</small></td></tr>`;
+  }
+  html+=`</table>
+    <div class="note">💡 ${t('Tip: cook beans or ugali in a bigger pot once, then reuse for two days to save time and money.','Dokezo: pika maharage au ugali kwa wingi mara moja, kisha tumia kwa siku mbili kuokoa muda na pesa.')}</div>
+    <div class="note">🍹 ${t('Add a fresh fruit and a juice to every meal (one is suggested per day above).','Ongeza tunda na juisi kwa kila mlo (limependekezwa kwa kila siku hapo juu).')}</div>
+    <div class="row">
+      <button class="btn" data-again="week">🔄 ${t('New week','Wiki mpya')}</button>
+      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+    </div>`;
+  into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+}
+
+/* ---------- favourites ---------- */
+function allDishes(){ return [...BREAKFAST,...MAINS]; }
+function isFav(sw){ const d=load(); return (d.favs||[]).includes(sw); }
+function toggleFav(sw){ const d=load(); d.favs=d.favs||[]; const i=d.favs.indexOf(sw);
+  if(i<0) d.favs.push(sw); else d.favs.splice(i,1); save(d); return i<0; }
+function renderFavs(into){
+  const d=load(); const favs=(d.favs||[]);
+  let html=`<h2 style="margin-top:0">❤️ ${t('My favourites','Vipendwa vyangu')}</h2>`;
+  if(!favs.length){
+    html+=`<p class="muted">${t('No favourites yet. Tap the heart 🤍 on any dish to save it here.','Bado hakuna vipendwa. Gusa moyo 🤍 kwenye chakula chochote kukihifadhi.')}</p>`;
+  } else {
+    favs.forEach(sw=>{
+      const dish=allDishes().find(x=>x.sw===sw)||{sw, en:''};
+      html+=`<div class="lineitem"><span class="v" style="flex:1">${nm(dish)}<small>${sub(dish)}</small></span>
+        <span class="fav" data-fav="${escAttr(sw)}">❤️</span></div>`;
+    });
+  }
+  html+=`<div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+  into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+}
+
+/* ---------- screens / wiring ---------- */
+function show(id){ ['home','suggest','multi'].forEach(s=>$(s).classList.toggle('hidden', s!==id)); }
+function refreshHome(){
+  const h=new Date().getHours();
+  $('greet').textContent=(h<12?t('Good morning','Habari za asubuhi'):h<17?t('Good afternoon','Habari za mchana'):t('Good evening','Habari za jioni'))+'! 👋';
+}
+function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+function route(meal){
+  if(meal==='day') return suggestDay($('multi'));
+  if(meal==='week') return suggestWeek($('multi'));
+  if(meal==='favs') return renderFavs($('multi'));
+  return suggestMeal(meal, $('suggest'));
+}
+function wireSuggestButtons(scope){
+  scope.querySelectorAll('[data-again]').forEach(b=>b.onclick=()=>route(b.dataset.again));
+  const home=scope.querySelector('#bkHome'); if(home) home.onclick=()=>{refreshHome();show('home');};
+  const rt=scope.querySelector('[data-recipe]');
+  if(rt) rt.onclick=()=>{
+    const box=scope.querySelector('#recipeBox');
+    const hidden=box.classList.toggle('hidden');
+    rt.textContent = hidden ? '📖 '+t('Show recipe & video','Onyesha mapishi na video')
+                            : '📖 '+t('Hide recipe','Ficha mapishi');
+  };
+  scope.querySelectorAll('[data-fav]').forEach(h=>h.onclick=()=>{
+    const sw=h.dataset.fav; const now=toggleFav(sw); h.textContent=now?'❤️':'🤍';
+  });
+}
+
+document.querySelectorAll('.tile').forEach(tl=>tl.onclick=()=>route(tl.dataset.meal));
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+  const f=c.dataset.f; filters[f]=!filters[f]; c.classList.toggle('on', filters[f]);
+});
+$('favBtn').onclick=()=>route('favs');
+
+applyLang();
+refreshHome();
+show('home');
+</script>
+</body>
+</html>
