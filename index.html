@@ -81,6 +81,15 @@
   .ytbtn:hover{filter:brightness(1.12)}
   .dishlink{color:var(--brand2); text-decoration:none; border-bottom:1px dotted var(--line)}
   .dishlink:hover{border-bottom-style:solid}
+  /* login */
+  .field{width:100%; font-size:16px; padding:12px 14px; border-radius:12px; margin-top:8px;
+    border:2px solid var(--line); background:#0b1424; color:var(--ink); outline:none}
+  .field:focus{border-color:var(--brand)}
+  .authtabs{display:flex; gap:8px; margin:4px 0 10px}
+  .authtabs .chip.on{background:var(--brand); color:#3a1d05; border-color:var(--brand)}
+  .autherr{background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.45); color:#fca5a5;
+    border-radius:10px; padding:9px 12px; margin-top:10px; font-size:13px}
+  .userpill{cursor:pointer; user-select:none}
 
   /* day / week */
   .daycard{border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; background:var(--card2)}
@@ -104,8 +113,30 @@
       <p class="tag" data-en="What shall we eat? • Tanzanian meal ideas" data-sw="Tule nini? • Mawazo ya chakula cha Kitanzania">What shall we eat? • Tanzanian meal ideas</p>
     </div>
     <div class="spacer"></div>
+    <div class="pill userpill hidden" id="userPill">👤 <b id="userName"></b> · <span data-en="Log out" data-sw="Toka">Log out</span></div>
     <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
   </header>
+
+  <!-- LOGIN -->
+  <div id="auth" class="card hidden">
+    <h2 style="margin-top:0">🔐 <span data-en="Welcome!" data-sw="Karibu!">Welcome!</span></h2>
+    <p class="muted" data-en="Log in so your favourite dishes are saved to your own account." data-sw="Ingia ili vyakula unavyovipenda vihifadhiwe kwenye akaunti yako.">Log in so your favourite dishes are saved to your own account.</p>
+    <div class="authtabs">
+      <span class="chip on" id="tabLogin" data-en="Log in" data-sw="Ingia">Log in</span>
+      <span class="chip" id="tabSignup" data-en="Create account" data-sw="Fungua akaunti">Create account</span>
+    </div>
+    <input class="field hidden" type="text" id="aName" autocomplete="name" placeholder="Jina / Name" />
+    <input class="field" type="email" id="aEmail" autocomplete="email" placeholder="Barua pepe / Email" />
+    <input class="field" type="password" id="aPass" autocomplete="current-password" placeholder="Nenosiri / Password" />
+    <div id="aErr" class="autherr hidden"></div>
+    <div class="row">
+      <button class="btn" id="aSubmit" data-en="Log in ▶" data-sw="Ingia ▶">Log in ▶</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost small" id="aGuest" data-en="Continue without an account" data-sw="Endelea bila akaunti">Continue without an account</button>
+    </div>
+    <p class="muted" style="font-size:12px; margin-top:12px" data-en="Accounts live on this device only — passwords are never sent anywhere." data-sw="Akaunti zinakaa kwenye kifaa hiki tu — nenosiri halitumwi popote.">Accounts live on this device only — passwords are never sent anywhere.</p>
+  </div>
 
   <!-- HOME -->
   <div id="home" class="card">
@@ -482,11 +513,13 @@ function suggestWeek(into){
 
 /* ---------- favourites ---------- */
 function allDishes(){ return [...BREAKFAST,...MAINS]; }
-function isFav(sw){ const d=load(); return (d.favs||[]).includes(sw); }
-function toggleFav(sw){ const d=load(); d.favs=d.favs||[]; const i=d.favs.indexOf(sw);
-  if(i<0) d.favs.push(sw); else d.favs.splice(i,1); save(d); return i<0; }
+/* favourites belong to the logged-in account; guests share the device list */
+function favList(d){ const u=d.session&&d.users&&d.users[d.session]; return u?(u.favs=u.favs||[]):(d.favs=d.favs||[]); }
+function isFav(sw){ return favList(load()).includes(sw); }
+function toggleFav(sw){ const d=load(); const f=favList(d); const i=f.indexOf(sw);
+  if(i<0) f.push(sw); else f.splice(i,1); save(d); return i<0; }
 function renderFavs(into){
-  const d=load(); const favs=(d.favs||[]);
+  const d=load(); const favs=favList(d).slice();
   let html=`<h2 style="margin-top:0">❤️ ${t('My favourites','Vipendwa vyangu')}</h2>`;
   if(!favs.length){
     html+=`<p class="muted">${t('No favourites yet. Tap the heart 🤍 on any dish to save it here.','Bado hakuna vipendwa. Gusa moyo 🤍 kwenye chakula chochote kukihifadhi.')}</p>`;
@@ -501,11 +534,65 @@ function renderFavs(into){
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
+/* ---------- accounts (stored on this device only; passwords hashed, never sent) ---------- */
+let authMode='login';
+async function hashPw(pw,salt){
+  const msg=salt+':'+pw;
+  if(window.crypto && crypto.subtle){
+    const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  let h=2166136261;                     // fallback for very old browsers
+  for(let i=0;i<msg.length;i++){ h^=msg.charCodeAt(i); h=Math.imul(h,16777619); }
+  return 'f'+(h>>>0).toString(16);
+}
+function setAuthMode(m){
+  authMode=m;
+  $('tabLogin').classList.toggle('on',m==='login');
+  $('tabSignup').classList.toggle('on',m==='signup');
+  $('aName').classList.toggle('hidden',m!=='signup');
+  const b=$('aSubmit');
+  b.dataset.en = m==='signup'?'Create account ▶':'Log in ▶';
+  b.dataset.sw = m==='signup'?'Fungua akaunti ▶':'Ingia ▶';
+  b.textContent = t(b.dataset.en,b.dataset.sw);
+  $('aErr').classList.add('hidden');
+}
+function authErr(msg){ const e=$('aErr'); e.textContent=msg; e.classList.remove('hidden'); }
+async function doAuth(){
+  const email=$('aEmail').value.trim().toLowerCase();
+  const pass=$('aPass').value;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return authErr(t('Please enter a valid email address.','Tafadhali andika barua pepe sahihi.'));
+  if(pass.length<6) return authErr(t('Password must be at least 6 characters.','Nenosiri liwe na herufi 6 au zaidi.'));
+  const d=load(); d.users=d.users||{};
+  if(authMode==='signup'){
+    const name=$('aName').value.trim();
+    if(!name) return authErr(t('Please enter your name.','Tafadhali andika jina lako.'));
+    if(d.users[email]) return authErr(t('That email already has an account on this device — try logging in.','Barua pepe hiyo tayari ina akaunti kwenye kifaa hiki — jaribu kuingia.'));
+    const salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    d.users[email]={name, salt, hash:await hashPw(pass,salt), favs:[], created:Date.now()};
+  } else {
+    const u=d.users[email];
+    if(!u) return authErr(t('No account with that email on this device. Create one first.','Hakuna akaunti ya barua pepe hiyo kwenye kifaa hiki. Fungua akaunti kwanza.'));
+    if(await hashPw(pass,u.salt)!==u.hash) return authErr(t('Wrong password — try again.','Nenosiri si sahihi — jaribu tena.'));
+  }
+  d.session=email; save(d);
+  $('aPass').value=''; $('aErr').classList.add('hidden');
+  updateUserPill(); refreshHome(); show('home');
+}
+function logout(){ const d=load(); delete d.session; save(d); updateUserPill(); $('aPass').value=''; setAuthMode('login'); show('auth'); }
+function updateUserPill(){
+  const d=load(); const u=d.users&&d.users[d.session];
+  $('userPill').classList.toggle('hidden', !u);
+  if(u) $('userName').textContent=u.name.split(' ')[0];
+}
+
 /* ---------- screens / wiring ---------- */
-function show(id){ ['home','suggest','multi'].forEach(s=>$(s).classList.toggle('hidden', s!==id)); }
+function show(id){ ['auth','home','suggest','multi'].forEach(s=>$(s).classList.toggle('hidden', s!==id)); }
 function refreshHome(){
   const h=new Date().getHours();
-  $('greet').textContent=(h<12?t('Good morning','Habari za asubuhi'):h<17?t('Good afternoon','Habari za mchana'):t('Good evening','Habari za jioni'))+'! 👋';
+  const d=load(); const u=d.users&&d.users[d.session];
+  const g=(h<12?t('Good morning','Habari za asubuhi'):h<17?t('Good afternoon','Habari za mchana'):t('Good evening','Habari za jioni'));
+  $('greet').textContent=g+(u?', '+u.name.split(' ')[0]:'')+'! 👋';
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
 
@@ -536,9 +623,19 @@ document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
 });
 $('favBtn').onclick=()=>route('favs');
 
+$('tabLogin').onclick=()=>setAuthMode('login');
+$('tabSignup').onclick=()=>setAuthMode('signup');
+$('aSubmit').onclick=doAuth;
+$('aGuest').onclick=()=>{ const d=load(); d.session='guest'; save(d); updateUserPill(); refreshHome(); show('home'); };
+$('userPill').onclick=logout;
+['aName','aEmail','aPass'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') doAuth(); }));
+
 applyLang();
+setAuthMode('login');
 refreshHome();
-show('home');
+updateUserPill();
+const boot=load();
+show(boot.session==='guest'||(boot.users&&boot.users[boot.session])?'home':'auth');
 </script>
 </body>
 </html>
