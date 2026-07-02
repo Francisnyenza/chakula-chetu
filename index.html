@@ -209,7 +209,7 @@ const BREAKFAST=[
   {sw:'Mayai na mkate', en:'Eggs with bread', tags:['quick'], shop:'mayai, mkate, vitunguu, nyanya'},
   {sw:'Viazi vitamu vya kuchemsha', en:'Boiled sweet potatoes', tags:['veg','budget','quick'], shop:'viazi vitamu'},
   {sw:'Maharage na chapati', en:'Beans with chapati', tags:['veg','hearty'], shop:'maharage, vitunguu, nyanya, chapati'},
-  {sw:'Maini na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, nyanya', like:true},
+  {sw:'Maini na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, nyanya'},
   {sw:'Saladi ya matunda', en:'Fruit salad', tags:['veg','quick'], shop:'matunda mchanganyiko, ndimu, mtindi/asali'},
   {sw:'Mkate wa kumimina', en:'Steamed rice bread', tags:['veg','budget'], shop:'unga wa mchele, nazi, sukari'},
 ];
@@ -218,9 +218,9 @@ const MAINS=[ // lunch & dinner mains
   {sw:'Ugali na mchicha', en:'Ugali with spinach', tags:['veg','budget'], shop:'unga wa mahindi, mchicha, nyanya, vitunguu'},
   {sw:'Ugali na samaki', en:'Ugali with fish', tags:['hearty'], shop:'unga wa mahindi, samaki, nyanya, ndimu'},
   {sw:'Pilau', en:'Spiced rice (with meat)', tags:['hearty'], shop:'mchele, nyama, viungo vya pilau, vitunguu'},
-  {sw:'Wali na maini', en:'Rice with fried liver', tags:['hearty'], shop:'mchele, maini, vitunguu, nyanya, pilipili', like:true},
-  {sw:'Ugali na maini', en:'Ugali with fried liver', tags:['hearty'], shop:'unga wa mahindi, maini, vitunguu, nyanya', like:true},
-  {sw:'Maini ya kukaanga na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, pilipili, ndimu', like:true},
+  {sw:'Wali na maini', en:'Rice with fried liver', tags:['hearty'], shop:'mchele, maini, vitunguu, nyanya, pilipili'},
+  {sw:'Ugali na maini', en:'Ugali with fried liver', tags:['hearty'], shop:'unga wa mahindi, maini, vitunguu, nyanya'},
+  {sw:'Maini ya kukaanga na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, pilipili, ndimu'},
   {sw:'Wali wa nazi na maharage', en:'Coconut rice with beans', tags:['veg','hearty'], shop:'mchele, nazi, maharage'},
   {sw:'Ndizi nyama', en:'Plantain & meat stew', tags:['hearty'], shop:'ndizi, nyama, nyanya, vitunguu'},
   {sw:'Makande', en:'Maize & beans stew', tags:['veg','budget','hearty'], shop:'mahindi, maharage, nazi'},
@@ -381,16 +381,7 @@ function chooseAvoiding(pool, key){
   d.recent=d.recent||{}; const list=[chosen.sw,...recent].slice(0,3); d.recent[key]=list; save(d);
   return chosen;
 }
-/* The cook loves maini (liver) — favour it, unless the vegetarian filter is on. */
-function likedIn(pool){ return pool.filter(x=>x.like); }
-function chooseMain(meal){
-  const pool=poolFor(meal);
-  if(!filters.veg){
-    const likes=likedIn(pool);
-    if(likes.length && Math.random()<0.45) return chooseAvoiding(likes, meal);
-  }
-  return chooseAvoiding(pool, meal);
-}
+function chooseMain(meal){ return chooseAvoiding(poolFor(meal), meal); }
 function nm(o){ return lang==='sw'?o.sw:o.en; }
 function sub(o){ return lang==='sw'?o.en:o.sw; }  // show the other language as a hint
 
@@ -482,17 +473,7 @@ function suggestWeek(into){
     for(let i=0;i<7;i++){ if(!p.length) p.push(...poolFor(meal)); out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); }
     return out;
   }
-  // The cook loves maini — plant it on a few days (skip if vegetarian filter is on).
-  function plantLikes(arr, meal, count){
-    if(filters.veg) return arr;
-    const likes=likedIn(poolFor(meal)); if(!likes.length) return arr;
-    const days=[...Array(7).keys()].sort(()=>Math.random()-0.5).slice(0,count);
-    days.forEach(d=>{ arr[d]=pick(likes); });
-    return arr;
-  }
-  const wb=plantLikes(week('breakfast'),'breakfast',1);
-  const wl=plantLikes(week('lunch'),'lunch',2);
-  const wd=plantLikes(week('dinner'),'dinner',2);
+  const wb=week('breakfast'), wl=week('lunch'), wd=week('dinner');
   let html=`<h2 style="margin-top:0">🗓️ ${t('Weekly menu','Menyu ya wiki')}</h2>
     <table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
   // show both languages: Swahili name (link) with the English name below
