@@ -459,7 +459,8 @@ function mealsOf(f){ return (f.meals&&f.meals.length)?f.meals:['breakfast','lunc
 /* a custom food dressed as a normal dish object so the rest of the app can use it */
 function asDish(f){
   return {sw:f.sw, en:f.en||f.sw, tags:f.veg?['veg']:[], cost:+f.cost||DEFAULT_COST[f.kind]||0,
-          shop:f.shop||f.sw.toLowerCase(), steps:f.steps||[], custom:true, kind:f.kind};
+          shop:f.shop||f.sw.toLowerCase(), steps:f.steps||[], video:f.video||'',
+          custom:true, kind:f.kind};
 }
 function customDishes(kind, meal, plannedToo){
   const src = plannedToo ? myFoodsOf(kind) : myAnytime(kind);
@@ -490,7 +491,7 @@ function pickJuice(){
 }
 function juiceOf(key){
   const c=myFoodsOf('juice').find(f=>f.sw===key);
-  if(c) return {sw:c.sw, en:c.en||c.sw, fruitSw:c.sw, custom:true};
+  if(c) return {sw:c.sw, en:c.en||c.sw, fruitSw:c.sw, custom:true, video:c.video||''};
   const f=FRUITS.find(x=>x.sw===key)||FRUITS[0];
   return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw};
 }
@@ -591,13 +592,48 @@ const RECIPES={
   'Mboga za kukaanga':{sw:['Kata mboga mchanganyiko vipande vidogo.','Kaanga vitunguu kwa mafuta ya moto.','Weka mboga, koroga kwa moto mkali dakika 5.','Tia chumvi, pakua zikiwa bado na rangi nzuri.'],
     en:['Chop mixed vegetables into small pieces.','Fry onion in hot oil.','Add vegetables and stir-fry on high heat for 5 min.','Season with salt and serve while still colourful.']},
 };
-function ytLink(sw){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent('jinsi ya kupika '+sw); }
+/* Only http(s) links are allowed to become buttons — never javascript: */
+function safeUrl(u){ const s=String(u||'').trim(); return /^https?:\/\//i.test(s) ? s : ''; }
+/* A video for ANY food — the cook's own link if they pasted one, otherwise a
+   YouTube search in the language they are reading the app in. Works for a dish
+   they saw on social media and have never cooked before. */
+function ytLink(name, own){
+  const mine=safeUrl(own);
+  if(mine) return mine;
+  const q = lang==='sw' ? 'jinsi ya kupika '+name : 'how to cook '+name+' recipe';
+  return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+}
+function ytOf(o){ return ytLink(o.sw, o.video); }
+/* simple steps so juice and fruit also get real instructions, not just a video */
+const GENERIC_JUICE={
+  sw:['Osha na menya tunda, kata vipande.','Weka kwenye blenda na maji baridi kidogo.','Saga hadi ilainike.','Chuja, ongeza sukari au ndimu kidogo, pakua ikiwa baridi.'],
+  en:['Wash and peel the fruit, cut into pieces.','Put in a blender with a little cold water.','Blend until smooth.','Strain, add a little sugar or lime, serve chilled.']};
+const GENERIC_FRUIT={
+  sw:['Osha tunda kwa maji safi.','Menya au kata kama inavyohitajika.','Kata vipande vya kuliwa.','Pakua likiwa baridi, au weka kwenye saladi ya matunda.'],
+  en:['Wash the fruit in clean water.','Peel or trim as needed.','Cut into bite-size pieces.','Serve chilled, or add to a fruit salad.']};
 function recipeSteps(dish){
   if(dish.custom && dish.steps && dish.steps.length) return dish.steps;   // the cook's own steps
-  const r=RECIPES[dish.sw]; return r ? (lang==='sw'?r.sw:r.en) : null;
+  const r=RECIPES[dish.sw]; if(r) return lang==='sw'?r.sw:r.en;
+  if(dish.kind==='juice' || /^juisi ya /i.test(dish.sw)) return lang==='sw'?GENERIC_JUICE.sw:GENERIC_JUICE.en;
+  if(dish.kind==='fruit' || dish.isFruit) return lang==='sw'?GENERIC_FRUIT.sw:GENERIC_FRUIT.en;
+  return null;
 }
 function allDishes(){ return [...BREAKFAST,...MAINS,...SIDES,...myFoods().map(asDish)]; }
 function dishBySw(sw){ return allDishes().find(d=>d.sw===sw)||null; }
+/* resolve ANY name shown in a menu — dish, side, fruit or juice — so every one
+   of them can open the recipe sheet and its video */
+function anyBySw(sw){
+  const d=dishBySw(sw); if(d) return d;
+  const f=FRUITS.find(x=>x.sw===sw);
+  if(f) return {sw:f.sw, en:f.en, tags:['veg'], cost:FRUIT_COST, shop:f.sw.toLowerCase(), isFruit:true};
+  const m=/^Juisi ya (.+)$/i.exec(sw);
+  if(m){
+    const src=FRUITS.find(x=>x.sw.toLowerCase()===m[1].toLowerCase());
+    return {sw, en:(src?src.en+' juice':'Juice'), tags:['veg'], cost:JUICE_COST,
+            shop:(src?src.sw:m[1]).toLowerCase()+', sukari, maji', kind:'juice'};
+  }
+  return null;
+}
 
 /* ---------- money helpers ---------- */
 function TSh(n){ return Math.round(n).toLocaleString('en-US')+' TSh'; }
@@ -897,7 +933,7 @@ function renderShopping(into){
 /* ---------- recipe sheet (works from anywhere) ---------- */
 let lastFocus=null;
 function openRecipe(sw){
-  const dish=dishBySw(sw); if(!dish) return;
+  const dish=anyBySw(sw); if(!dish) return;
   lastFocus=document.activeElement;
   const steps=recipeSteps(dish);
   const tags=(dish.tags||[]).map(tg=>`<span class="t t-${tg}">${TAGLABEL()[tg]||tg}</span>`).join('');
@@ -909,10 +945,13 @@ function openRecipe(sw){
     <div class="tags">${tags}<span class="t t-cost">${TSh(dish.cost)} / ${t('person','mtu')}</span></div>
     <div class="recipe">
       <div><b>${t('Ingredients','Mahitaji')}:</b> ${dish.shop}</div>
-      <div style="margin-top:10px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
-        <ol class="rsteps">${(steps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol>
-      </div>
-      <a class="ytbtn" href="${ytLink(dish.sw)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
+      ${steps
+        ? `<div style="margin-top:10px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
+             <ol class="rsteps">${steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>`
+        : `<div class="note" style="margin-top:10px">🎬 ${t('You have not written the steps for this one yet — watch the video below and it will show you how to cook it.','Bado hujaandika hatua za chakula hiki — tazama video hapa chini nayo itakuonyesha jinsi ya kupika.')}</div>`}
+      <a class="ytbtn" href="${ytOf(dish)}" target="_blank" rel="noopener">▶ ${dish.video
+        ? t('Watch your saved video','Tazama video yako uliyohifadhi')
+        : t('Watch how to cook it on YouTube','Tazama jinsi ya kupika kwenye YouTube')}</a>
     </div>`;
   $('recipeOverlay').classList.remove('hidden');
   $('rsClose').onclick=closeRecipe;
@@ -952,9 +991,9 @@ function suggestMeal(meal, into){
     <div class="tags">${tagsHtml}</div>
 
     <div style="margin-top:12px">`;
-  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(side.sw)}">${nm(side)}</button><small>${sub(side)}</small></span></div>`;
-  html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v">${nm(fruit)}<small>${sub(fruit)}</small></span></div>
-    <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v">${nm(juice)}<small>${sub(juice)}</small></span></div>
+  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(side.sw)}">${nm(side)}</button> <a class="ytmini" href="${ytOf(side)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(side)}</small></span></div>`;
+  html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(fruit)}</small></span></div>
+    <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(juice)}</small></span></div>
     <div class="lineitem"><span class="k">${t('Shopping','Manunuzi')}</span><span class="v" style="font-weight:600">${main.shop}${side?', '+side.shop:''}, ${fruit.sw.toLowerCase()}, ${juice.fruitSw.toLowerCase()}</span></div>
     </div>`;
 
@@ -964,7 +1003,7 @@ function suggestMeal(meal, into){
       <div><b>${t('Ingredients','Mahitaji')}:</b> ${main.shop}</div>
       <div style="margin-top:8px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
         <ol class="rsteps">${(steps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
-      <a class="ytbtn" href="${ytLink(main.sw)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
+      <a class="ytbtn" href="${ytOf(main)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
     </div>`;
 
   html+=`<div class="row">
@@ -991,11 +1030,11 @@ function suggestDay(into, force){
     html+=`<div class="daycard">
       <h3>${info.ic} ${t(info.en,info.sw)}</h3>
       <div style="font-size:18px"><button class="dishbtn" data-recipe-for="${escAttr(main.sw)}">${nm(main)}</button>
-        <a class="ytmini" href="${ytLink(main.sw)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+        <a class="ytmini" href="${ytOf(main)}" target="_blank" rel="noopener" title="YouTube">▶</a>
         <span class="muted" style="font-size:13px"> · ${sub(main)}</span></div>
       <div class="muted" style="font-size:13px; margin-top:6px">
-        ${side?'🥗 <button class="dishbtn" style="font-size:13px" data-recipe-for="'+escAttr(side.sw)+'">'+nm(side)+'</button> · ':''}🍎 ${nm(fruit)} · 🥤 ${nm(juice)}</div>
-      <div class="muted" style="font-size:12px; margin-top:6px">📖 ${t('Tap the dish name for step-by-step cooking','Gusa jina la chakula upate hatua za kupika')}</div>
+        ${side?'🥗 <button class="dishbtn" style="font-size:13px" data-recipe-for="'+escAttr(side.sw)+'">'+nm(side)+'</button> <a class="ytmini" href="'+ytOf(side)+'" target="_blank" rel="noopener" title="YouTube">▶</a> · ':''}🍎 <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">▶</a> · 🥤 <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">▶</a></div>
+      <div class="muted" style="font-size:12px; margin-top:6px">📖 ${t('Tap any name for the steps, or ▶ for a video','Gusa jina lolote upate hatua, au ▶ kwa video')}</div>
     </div>`;
   });
 
@@ -1032,18 +1071,21 @@ function suggestWeek(into, force){
     html+=`<p class="muted" style="font-size:13px">${t('Filters used','Vichujio vilivyotumika')}: <b>${names}</b></p>`;
   }
   html+=`<table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
-  const cell=sw=>{ const d=dishBySw(sw); if(!d) return '';
+  const cell=sw=>{ const d=anyBySw(sw); if(!d) return '';
     return `<button class="dishbtn" data-recipe-for="${escAttr(d.sw)}">${d.sw}</button>
-      <a class="ytmini" href="${ytLink(d.sw)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">▶</a>
       <br><small class="muted">${d.en}</small>`; };
+  const mini=(sw,icon)=>{ const d=anyBySw(sw); if(!d) return icon+' '+sw;
+    return `${icon} <button class="dishbtn" style="font-weight:400" data-recipe-for="${escAttr(d.sw)}">${d.sw}</button>
+      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">▶</a>`; };
   plan.days.forEach((day,i)=>{
     const fr=fruitBySw(day.fruit), jc=juiceOf(day.juice);
-    const sideLine = day.side ? `<br><small class="muted">🥗 ${day.side}</small>` : '';
+    const sideLine = day.side ? `<br><small class="muted">${mini(day.side,'🥗')}</small>` : '';
     html+=`<tr><td><b>${days[i]}</b></td><td>${cell(day.b)}</td><td>${cell(day.l)}</td><td>${cell(day.d)}${sideLine}</td>
-      <td><small class="muted">🍎 ${fr.sw} / ${fr.en}<br>🥤 ${jc.sw}</small></td></tr>`;
+      <td><small class="muted">${mini(fr.sw,'🍎')}<br>${mini(jc.sw,'🥤')}</small></td></tr>`;
   });
   html+=`</table>
-    <div class="note">📖 ${t('Tap any dish name to read the step-by-step cooking instructions. The ▶ opens a video instead.','Gusa jina la chakula chochote usome hatua za kupika. Alama ▶ hufungua video badala yake.')}</div>`;
+    <div class="note">📖 ${t('Tap any name — food, mboga, fruit or juice — to read the steps. The ▶ opens a video of how to cook it, even for foods you added yourself.','Gusa jina lolote — chakula, mboga, tunda au juisi — usome hatua. Alama ▶ hufungua video ya jinsi ya kupika, hata kwa vyakula ulivyoongeza mwenyewe.')}</div>`;
 
   const cost=planCost(plan,'week');
   html+=`<div class="total"><span>${t('Estimated cost for','Makadirio ya gharama kwa')} ${plan.people} ${t('people','watu')} / ${t('week','wiki')}</span><span class="amt">${TSh(cost)}</span></div>`;
@@ -1086,7 +1128,8 @@ function renderMyFoods(into){
       html+=`<tr>
         <td><div class="fname">${f.sw}</div>
             ${f.en?`<div class="fsub">${f.en}</div>`:''}
-            <span class="kindtag">${kindName(f.kind)}</span></td>
+            <span class="kindtag">${kindName(f.kind)}</span>
+            ${f.video?`<span class="kindtag" title="${t('Has your own video','Ina video yako')}">🎬 ${t('video','video')}</span>`:''}</td>
         <td>${whenText(f)}</td>
         <td>${freqText(f)}</td>
         <td style="white-space:nowrap">
@@ -1122,6 +1165,10 @@ function renderMyFoods(into){
       <select class="field" id="mfPer">${PERIODS.map(p=>`<option value="${p.key}" ${ed&&ed.per===p.key?'selected':(!ed&&p.key==='week'?'selected':'')}>${t(p.en,p.sw)}</option>`).join('')}</select>
     </div>
     <p class="muted" style="font-size:12px; margin:6px 0 0">${t('Put 0 for “whenever it comes”.','Weka 0 kwa “wakati wowote”.')}</p>
+
+    <label class="mflabel" for="mfVideo">${t('Video link (optional)','Kiungo cha video (hiari)')}</label>
+    <input class="field" id="mfVideo" type="url" inputmode="url" placeholder="https://youtube.com/..." value="${ed&&ed.video?escAttr(ed.video):''}" />
+    <p class="muted" style="font-size:12px; margin:6px 0 0">${t('Saw it on social media? Paste the link here. If you leave it empty I will still find you a cooking video on YouTube.','Umekiona kwenye mitandao? Bandika kiungo hapa. Ukiacha wazi, bado nitakutafutia video ya kupika kwenye YouTube.')}</p>
 
     <details class="more" ${ed&&(ed.cost||ed.shop||(ed.steps&&ed.steps.length))?'open':''}>
       <summary>${t('More details (optional)','Maelezo zaidi (hiari)')}</summary>
@@ -1188,8 +1235,11 @@ function saveMyFoodForm(into){
     veg: $('mfVeg').value==='yes' || kind!=='main',
     cost: Math.max(0,+$('mfCost').value||0) || DEFAULT_COST[kind],
     shop: $('mfShop').value.trim(),
+    video: safeUrl($('mfVideo').value),
     steps: $('mfSteps').value.split('\n').map(s=>s.trim()).filter(Boolean),
   };
+  const typed=$('mfVideo').value.trim();
+  if(typed && !entry.video) return err(t('That video link must start with http:// or https://','Kiungo cha video lazima kianze na http:// au https://'));
   const i=arr.findIndex(f=>f.id===entry.id);
   if(i>-1) arr[i]=entry; else arr.push(entry);
   saveMyFoods(arr);
