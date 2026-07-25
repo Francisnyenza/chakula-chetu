@@ -10,7 +10,7 @@
   :root{
     --bg:#FFF8EC; --card:#FFFFFF; --card2:#FFF1DC;
     --ink:#291D18; --muted:#8A7265;
-    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;
+    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;   /* terracotta */
     --accent:#047857; --good:#047857; --bad:#DC2626; --warn:#D97706;
     --btn-ink:#FFFFFF; --accent-ink:#FFFFFF;
     --line:#F0DFD2;
@@ -88,6 +88,7 @@
   .chip:hover{border-color:var(--accent)}
   .chip.on{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
 
+  /* budget box */
   .budgetbox{background:var(--card2); border:2px solid var(--accent); border-radius:14px;
     padding:14px; margin-top:12px}
   .budgetbox h4{margin:0 0 8px; font-size:14px; color:var(--accent)}
@@ -95,6 +96,7 @@
   .bgrid label{display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:4px}
   .bhint{font-size:12px; color:var(--muted); margin-top:8px}
 
+  /* suggestion */
   .sgHead{display:flex; align-items:center; gap:10px; margin-bottom:4px}
   .sgHead .mi{font-size:32px}
   .sgHead h2{margin:0; font-size:20px}
@@ -135,6 +137,7 @@
   .dishbtn:hover{border-bottom-style:solid; border-bottom-color:var(--brand)}
   .ytmini{text-decoration:none; font-size:12px; margin-left:6px; opacity:.85}
 
+  /* recipe modal */
   .overlay{position:fixed; inset:0; background:rgba(41,29,24,.55); backdrop-filter:blur(3px);
     display:flex; align-items:flex-end; justify-content:center; z-index:1000; padding:12px}
   @media(min-width:600px){ .overlay{align-items:center} }
@@ -146,6 +149,7 @@
     cursor:pointer; border-radius:50%; width:38px; height:38px; font-size:18px; font-weight:700; flex:none}
   .xbtn:hover{border-color:var(--brand)}
 
+  /* shopping list */
   .shopcat{margin-top:16px}
   .shopcat h4{margin:0 0 6px; font-size:12px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
   .shopitem{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line)}
@@ -158,6 +162,7 @@
     border:2px solid var(--line); border-radius:14px; padding:14px; margin-top:16px; font-weight:700}
   .total .amt{font-size:22px; color:var(--brand)}
 
+  /* day / week */
   .daycard{border:2px solid var(--line); border-radius:16px; padding:16px; margin-top:12px; background:var(--card2)}
   .daycard h3{margin:0 0 8px; font-size:13px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
   table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px}
@@ -170,6 +175,7 @@
   .fav:hover{transform:scale(1.15)}
   footer{text-align:center; color:var(--muted); font-size:12px; margin-top:14px}
   :focus-visible{outline:3px solid var(--brand2); outline-offset:2px}
+  /* login */
   .field{width:100%; font-size:16px; padding:13px 14px; border-radius:12px; margin-top:8px;
     border:2px solid var(--line); background:var(--card); color:var(--ink); outline:none;
     transition:border-color .2s, box-shadow .2s}
@@ -180,6 +186,31 @@
   .autherr{background:#FEE2E2; border:2px solid #FCA5A5; color:#991B1B;
     border-radius:10px; padding:10px 12px; margin-top:10px; font-size:13px; font-weight:700}
   .userpill{cursor:pointer; user-select:none}
+
+  /* my foods */
+  .mytable td{font-size:13px}
+  .mytable .fname{font-weight:700; font-size:14px}
+  .mytable .fsub{color:var(--muted); font-size:11px}
+  .kindtag{display:inline-block; background:var(--card2); border:1px solid var(--line); color:var(--muted);
+    border-radius:999px; padding:1px 8px; font-size:10px; font-weight:700; margin-top:3px}
+  .whenbadge{display:inline-block; background:var(--card2); border:1px solid var(--line);
+    border-radius:999px; padding:2px 7px; font-size:10px; font-weight:700; margin:1px 2px 1px 0}
+  .freqbig{font-weight:700; color:var(--brand)}
+  .iconbtn{appearance:none; border:2px solid var(--line); background:var(--card); color:var(--ink);
+    cursor:pointer; border-radius:10px; min-width:38px; height:38px; font-size:15px; margin:1px;
+    transition:border-color .2s}
+  .iconbtn:hover{border-color:var(--brand)}
+  .mfform{background:var(--card2); border:2px solid var(--line); border-radius:16px; padding:16px; margin-top:16px}
+  .mfform h3{margin:0 0 4px; font-size:16px; color:var(--deep)}
+  .mfgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .mflabel{display:block; font-size:12px; color:var(--muted); font-weight:700;
+    margin:12px 0 4px; text-transform:uppercase; letter-spacing:.4px}
+  .freqrow{display:grid; grid-template-columns:100px 1fr; gap:10px}
+  select.field{appearance:auto; -webkit-appearance:menulist}
+  textarea.field{min-height:76px; font-family:inherit; resize:vertical; line-height:1.5}
+  details.more summary{cursor:pointer; font-weight:700; color:var(--brand); font-size:13px; margin-top:14px}
+  .mfchips{display:flex; gap:8px; flex-wrap:wrap}
+  @media (max-width:400px){ .mfgrid{grid-template-columns:1fr} }
   @media (prefers-color-scheme: dark){
     .t-veg{background:#14532D; color:#BBF7D0}
     .t-budget{background:#1E3A8A; color:#BFDBFE}
@@ -208,6 +239,7 @@
     <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
   </header>
 
+  <!-- LOGIN -->
   <div id="auth" class="card hidden">
     <h2 style="margin-top:0">🔐 <span data-en="Welcome!" data-sw="Karibu!">Welcome!</span></h2>
     <p class="muted" data-en="Log in so your favourite dishes and meal plans are saved to your own account." data-sw="Ingia ili vyakula unavyovipenda na mipango yako vihifadhiwe kwenye akaunti yako.">Log in so your favourite dishes and meal plans are saved to your own account.</p>
@@ -228,6 +260,7 @@
     <p class="muted" style="font-size:12px; margin-top:12px" data-en="Accounts live on this device only — passwords are never sent anywhere." data-sw="Akaunti zinakaa kwenye kifaa hiki tu — nenosiri halitumwi popote.">Accounts live on this device only — passwords are never sent anywhere.</p>
   </div>
 
+  <!-- HOME -->
   <div id="home" class="card">
     <h2 id="greet" style="margin-top:0">Karibu! 👋</h2>
     <p class="muted" id="homeMsg" data-en="Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy."
@@ -259,6 +292,7 @@
       <div class="tile wide" data-meal="day"><span class="ic">📅</span><div class="nm" data-en="Plan my whole day" data-sw="Panga siku nzima">Plan my whole day</div><div class="sub" data-en="breakfast + lunch + dinner" data-sw="kifungua + mchana + usiku">breakfast + lunch + dinner</div></div>
       <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div><div class="sub" data-en="saved until you change it" data-sw="huhifadhiwa hadi ubadilishe">saved until you change it</div></div>
       <div class="tile shop" data-meal="shop"><span class="ic">🛒</span><div class="nm" data-en="Shopping list" data-sw="Orodha ya manunuzi">Shopping list</div><div class="sub" data-en="everything to buy for your plan" data-sw="vitu vyote vya kununua kwa mpango wako">everything to buy for your plan</div></div>
+      <div class="tile wide" data-meal="myfoods"><span class="ic">🍽️</span><div class="nm" data-en="My foods" data-sw="Vyakula vyangu">My foods</div><div class="sub" data-en="add your own dishes, juices, fruit & mboga — say when and how often" data-sw="ongeza vyakula, juisi, matunda na mboga zako — sema lini na mara ngapi">add your own dishes, juices, fruit &amp; mboga — say when and how often</div></div>
     </div>
 
     <div class="row">
@@ -266,12 +300,15 @@
     </div>
   </div>
 
+  <!-- SUGGESTION (single meal) -->
   <div id="suggest" class="card hidden"></div>
+  <!-- DAY / WEEK / FAVOURITES / SHOPPING -->
   <div id="multi" class="card hidden"></div>
 
   <footer>Chakula Chetu · <span data-en="Home-cooked, the Tanzanian way 🇹🇿" data-sw="Mapishi ya nyumbani, kwa mtindo wa Kitanzania 🇹🇿">Home-cooked, the Tanzanian way 🇹🇿</span></footer>
 </div>
 
+<!-- RECIPE SHEET -->
 <div id="recipeOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
   <div class="sheet" id="recipeSheet"></div>
 </div>
@@ -301,6 +338,7 @@ $('langToggle').onclick=()=>{
   applyLang(); renderFilters(); refreshHome(); show('home');
 };
 
+/* ---------- FILTERS ---------- */
 const FILTER_DEFS=[
   {key:'veg',     en:'🥬 Vegetarian', sw:'🥬 Mboga tu'},
   {key:'budget',  en:'💰 Budget',     sw:'💰 Nafuu'},
@@ -335,7 +373,7 @@ const BREAKFAST=[
   {sw:'Saladi ya matunda', en:'Fruit salad', tags:['veg','quick'], cost:1500, shop:'matunda mchanganyiko, ndimu, mtindi'},
   {sw:'Mkate wa kumimina', en:'Steamed rice bread', tags:['veg','budget'], cost:1200, shop:'unga wa mchele, nazi, sukari'},
 ];
-const MAINS=[
+const MAINS=[ // lunch & dinner mains
   {sw:'Wali na maharage', en:'Rice with beans', tags:['veg','budget','hearty'], cost:2000, shop:'mchele, maharage, nyanya, vitunguu'},
   {sw:'Ugali na mchicha', en:'Ugali with spinach', tags:['veg','budget'], cost:1500, shop:'unga wa mahindi, mchicha, nyanya, vitunguu'},
   {sw:'Ugali na samaki', en:'Ugali with fish', tags:['hearty','fish'], cost:4000, shop:'unga wa mahindi, samaki, nyanya, ndimu'},
@@ -371,6 +409,7 @@ const SIDES=[
   {sw:'Mboga za kukaanga', en:'Stir-fried vegetables', tags:['veg','quick'], cost:800, shop:'mboga mchanganyiko, vitunguu, mafuta'},
 ];
 
+/* ---------- FRUITS available locally + juices made from them ---------- */
 const FRUITS=[
   {sw:'Embe', en:'Mango', eat:true},
   {sw:'Machungwa', en:'Orange', eat:true},
@@ -388,12 +427,82 @@ const FRUITS=[
   {sw:'Beetroot', en:'Beetroot', eat:false},
 ];
 const FRUIT_COST=700, JUICE_COST=800;
-function pickFruit(){ return pick(FRUITS.filter(f=>f.eat)); }
-function pickJuice(){ const f=pick(FRUITS); return juiceOf(f.sw); }
-function juiceOf(fruitSw){ const f=FRUITS.find(x=>x.sw===fruitSw)||FRUITS[0];
-  return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw}; }
-function fruitBySw(sw){ return FRUITS.find(f=>f.sw===sw)||FRUITS[0]; }
 
+/* ============================================================
+   MY FOODS — dishes, juices, fruit and mboga the cook adds,
+   with the meals they belong to and how often they should appear.
+   Stored per account, exactly like favourites and plans.
+   ============================================================ */
+const KINDS=[
+  {key:'main',  en:'Main dish',  sw:'Chakula kikuu'},
+  {key:'side',  en:'Mboga / side',sw:'Mboga / kiambatanisho'},
+  {key:'fruit', en:'Fruit',      sw:'Tunda'},
+  {key:'juice', en:'Juice / drink',sw:'Juisi / kinywaji'},
+];
+const PERIODS=[
+  {key:'day',   en:'per day',   sw:'kwa siku'},
+  {key:'week',  en:'per week',  sw:'kwa wiki'},
+  {key:'month', en:'per month', sw:'kwa mwezi'},
+];
+const DEFAULT_COST={main:3000, side:800, fruit:FRUIT_COST, juice:JUICE_COST};
+
+function myOf(d){ const u=d.session&&d.users&&d.users[d.session]; return u?(u.myFoods=u.myFoods||[]):(d.myFoods=d.myFoods||[]); }
+function myFoods(){ return myOf(load()); }
+function saveMyFoods(arr){ const d=load(); const u=d.session&&d.users&&d.users[d.session];
+  if(u) u.myFoods=arr; else d.myFoods=arr; save(d); }
+function myFoodsOf(kind){ return myFoods().filter(f=>f.kind===kind); }
+/* foods with a frequency are placed deliberately; n=0 means "whenever" so they
+   simply join the normal pool */
+function myPlanned(kind){ return myFoodsOf(kind).filter(f=>+f.n>0); }
+function myAnytime(kind){ return myFoodsOf(kind).filter(f=>!(+f.n>0)); }
+function mealsOf(f){ return (f.meals&&f.meals.length)?f.meals:['breakfast','lunch','dinner']; }
+/* a custom food dressed as a normal dish object so the rest of the app can use it */
+function asDish(f){
+  return {sw:f.sw, en:f.en||f.sw, tags:f.veg?['veg']:[], cost:+f.cost||DEFAULT_COST[f.kind]||0,
+          shop:f.shop||f.sw.toLowerCase(), steps:f.steps||[], custom:true, kind:f.kind};
+}
+function customDishes(kind, meal, plannedToo){
+  const src = plannedToo ? myFoodsOf(kind) : myAnytime(kind);
+  return src.filter(f=>!meal || mealsOf(f).includes(meal)).map(asDish);
+}
+/* how many times a food should appear in one week / one day */
+function weeklyQuota(f){
+  const n=+f.n||0;
+  if(f.per==='day')  return n*7;
+  if(f.per==='week') return n;
+  return n/4.3;                       // per month
+}
+function dailyQuota(f){
+  const n=+f.n||0;
+  if(f.per==='day')  return n;
+  if(f.per==='week') return n/7;
+  return n/30;                        // per month
+}
+/* 2.4 becomes 2 most of the time and 3 sometimes, so "5 per month" stays honest */
+function resolveQuota(q){ const b=Math.floor(q); return b + (Math.random() < (q-b) ? 1 : 0); }
+function shuffleArr(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function pickFruit(){ return pick([...FRUITS.filter(f=>f.eat), ...myAnytime('fruit')]); }
+function pickJuice(){
+  const custom=myAnytime('juice');
+  const pool=[...FRUITS.map(f=>f.sw), ...custom.map(f=>f.sw)];
+  return juiceOf(pick(pool));
+}
+function juiceOf(key){
+  const c=myFoodsOf('juice').find(f=>f.sw===key);
+  if(c) return {sw:c.sw, en:c.en||c.sw, fruitSw:c.sw, custom:true};
+  const f=FRUITS.find(x=>x.sw===key)||FRUITS[0];
+  return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw};
+}
+function fruitBySw(sw){
+  return myFoodsOf('fruit').find(f=>f.sw===sw) || myFoodsOf('juice').find(f=>f.sw===sw)
+      || FRUITS.find(f=>f.sw===sw) || FRUITS[0];
+}
+function shopTerm(o){ return (o.shop||o.sw||'').toLowerCase(); }
+/* custom fruit/juice carry their own price; built-in ones use the flat rate */
+function costOfExtra(sw, fallback){ const c=fruitBySw(sw); return c.kind ? (+c.cost||fallback) : fallback; }
+
+/* ---------- RECIPES: how to prepare each dish (steps), keyed by Swahili name ---------- */
 const RECIPES={
   'Chai na mkate':{sw:['Chemsha maji, weka majani ya chai (au tea bag) na sukari.','Ongeza maziwa, acha yachemke kidogo.','Chuja chai kwenye kikombe.','Kata mkate, paka siagi au jam, tumia na chai.'],
     en:['Boil water, add tea leaves (or a tea bag) and sugar.','Add milk and let it simmer briefly.','Strain the tea into a cup.','Slice bread, spread butter or jam, serve with the tea.']},
@@ -483,29 +592,34 @@ const RECIPES={
     en:['Chop mixed vegetables into small pieces.','Fry onion in hot oil.','Add vegetables and stir-fry on high heat for 5 min.','Season with salt and serve while still colourful.']},
 };
 function ytLink(sw){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent('jinsi ya kupika '+sw); }
-function recipeSteps(dish){ const r=RECIPES[dish.sw]; return r ? (lang==='sw'?r.sw:r.en) : null; }
-function allDishes(){ return [...BREAKFAST,...MAINS,...SIDES]; }
+function recipeSteps(dish){
+  if(dish.custom && dish.steps && dish.steps.length) return dish.steps;   // the cook's own steps
+  const r=RECIPES[dish.sw]; return r ? (lang==='sw'?r.sw:r.en) : null;
+}
+function allDishes(){ return [...BREAKFAST,...MAINS,...SIDES,...myFoods().map(asDish)]; }
 function dishBySw(sw){ return allDishes().find(d=>d.sw===sw)||null; }
 
+/* ---------- money helpers ---------- */
 function TSh(n){ return Math.round(n).toLocaleString('en-US')+' TSh'; }
 function budgetActive(){ return filters.budget && budget.amount>0; }
+/* how much one main dish may cost per person, for the given scope */
 function allowanceFor(scope){
   if(!budgetActive()) return 0;
   const people=Math.max(1,budget.people);
   const perPerson=budget.amount/people;
-  if(scope==='week'){
+  if(scope==='week'){    // 7 days x 3 meals, each meal also carries a fruit + juice
     return Math.max(500, perPerson/7/3 - (FRUIT_COST+JUICE_COST)/3);
   }
-  if(scope==='day'){
+  if(scope==='day'){     // 3 meals in one day
     return Math.max(500, perPerson/3 - (FRUIT_COST+JUICE_COST));
   }
-  return Math.max(500, perPerson - (FRUIT_COST+JUICE_COST));
+  return Math.max(500, perPerson - (FRUIT_COST+JUICE_COST));  // single meal
 }
 function affordable(pool, allowance){
   if(!allowance) return pool;
   const ok=pool.filter(d=>d.cost<=allowance*1.1);
   if(ok.length) return ok;
-  return [...pool].sort((a,b)=>a.cost-b.cost).slice(0,3);
+  return [...pool].sort((a,b)=>a.cost-b.cost).slice(0,3);   // cheapest options
 }
 
 /* ---------- filtering & selection ---------- */
@@ -518,7 +632,7 @@ function matchesKeys(dish, keys){
   const wantProtein=need.filter(f=>PROTEIN_FILTERS.includes(f));
   const others=need.filter(f=>!PROTEIN_FILTERS.includes(f));
   if(!others.every(f=>dish.tags.includes(f))) return false;
-  if(wantProtein.length) return wantProtein.some(f=>dish.tags.includes(f));
+  if(wantProtein.length) return wantProtein.some(f=>dish.tags.includes(f)); // any of the chosen proteins
   return true;
 }
 function matches(dish){ return matchesKeys(dish, activeFilterList()); }
@@ -535,12 +649,15 @@ function filteredList(base){
 }
 function poolFor(meal, scope){
   const base = meal==='breakfast' ? BREAKFAST : MAINS;
-  const list = filteredList(base);
+  // the cook's own dishes for this meal: "whenever" ones always, and the ones with a
+  // set frequency too when this is a single browse (plans place those deliberately)
+  const mine = customDishes('main', meal, scope==='meal');
+  const list = filteredList([...base, ...mine]);
   let ok = list.filter(d=> !d.rare || Math.random()<0.15);
   if(!ok.length) ok = list;
   return affordable(ok, allowanceFor(scope||'meal'));
 }
-function sidePool(){ return filteredList(SIDES); }
+function sidePool(meal, plannedToo){ return filteredList([...SIDES, ...customDishes('side', meal, plannedToo)]); }
 function chooseAvoiding(pool, key){
   const d=load(); const recent=(d.recent&&d.recent[key])||[];
   const fresh=pool.filter(x=>!recent.includes(x.sw));
@@ -579,39 +696,93 @@ function buildWeekPlan(){
     const j=wd.findIndex((x,k)=>k!==i && x.sw!==wl[i].sw && wl[k].sw!==wd[i].sw);
     if(j>-1){ const tmp=wd[i]; wd[i]=wd[j]; wd[j]=tmp; }
   }
+  const slots={breakfast:wb, lunch:wl, dinner:wd};
+  const taken={breakfast:new Set(), lunch:new Set(), dinner:new Set()};
+  // honour every "my food" that asked for a set number of times this week
+  myPlanned('main').forEach(f=>{
+    const meals=mealsOf(f);
+    let times=Math.min(resolveQuota(weeklyQuota(f)), meals.length*7);
+    const cands=[];
+    meals.forEach(m=>{ for(let i=0;i<7;i++) if(!taken[m].has(i)) cands.push([m,i]); });
+    shuffleArr(cands);
+    for(const [m,i] of cands){ if(times<=0) break; slots[m][i]=asDish(f); taken[m].add(i); times--; }
+  });
+  // fruit, juice and mboga for each of the 7 days
+  const fruits=[], juices=[], sides=new Array(7).fill(null);
+  for(let i=0;i<7;i++){ fruits.push(pickFruit().sw); juices.push(pickJuice().fruitSw); }
+  plantSimple(fruits,'fruit'); plantSimple(juices,'juice');
+  myPlanned('side').forEach(f=>{
+    let times=Math.min(resolveQuota(weeklyQuota(f)), 7);
+    const idx=shuffleArr([...Array(7).keys()].filter(i=>!sides[i]));
+    for(const i of idx){ if(times<=0) break; sides[i]=f.sw; times--; }
+  });
   const days=[];
   for(let i=0;i<7;i++){
-    const fr=pickFruit(), jc=pickJuice();
-    days.push({b:wb[i].sw, l:wl[i].sw, d:wd[i].sw, fruit:fr.sw, juice:jc.fruitSw});
+    days.push({b:wb[i].sw, l:wl[i].sw, d:wd[i].sw, fruit:fruits[i], juice:juices[i], side:sides[i]});
   }
   return {createdAt:Date.now(), people:budget.people, budget:budgetActive()?budget.amount:0,
           filters:activeFilterList(), days, checked:{}};
+}
+/* place the cook's fruit/juice choices across the 7 days of a week */
+function plantSimple(arr, kind){
+  const taken=new Set();
+  myPlanned(kind).forEach(f=>{
+    let times=Math.min(resolveQuota(weeklyQuota(f)), 7);
+    const idx=shuffleArr([...Array(7).keys()].filter(i=>!taken.has(i)));
+    for(const i of idx){ if(times<=0) break; arr[i]=f.sw; taken.add(i); times--; }
+  });
+  return arr;
 }
 function buildDayPlan(){
   const meals={};
   ['breakfast','lunch','dinner'].forEach(m=>{
     const main=chooseMain(m,'day');
-    const side = m==='breakfast'? null : pick(sidePool());
+    const side = m==='breakfast'? null : pick(sidePool(m,false));
     const fr=pickFruit(), jc=pickJuice();
     meals[m]={main:main.sw, side:side?side.sw:null, fruit:fr.sw, juice:jc.fruitSw};
+  });
+  // honour "my foods" asked for today
+  const usedMain=new Set(), usedSide=new Set(), usedFruit=new Set(), usedJuice=new Set();
+  const all=['breakfast','lunch','dinner'];
+  myPlanned('main').forEach(f=>{
+    const allowed=shuffleArr(mealsOf(f).filter(m=>!usedMain.has(m)));
+    let times=Math.min(resolveQuota(dailyQuota(f)), allowed.length);
+    for(const m of allowed){ if(times<=0) break; meals[m].main=f.sw; usedMain.add(m); times--; }
+  });
+  myPlanned('side').forEach(f=>{
+    const allowed=shuffleArr(mealsOf(f).filter(m=>m!=='breakfast' && !usedSide.has(m)));
+    let times=Math.min(resolveQuota(dailyQuota(f)), allowed.length);
+    for(const m of allowed){ if(times<=0) break; meals[m].side=f.sw; usedSide.add(m); times--; }
+  });
+  myPlanned('fruit').forEach(f=>{
+    const allowed=shuffleArr(mealsOf(f).filter(m=>!usedFruit.has(m)));
+    let times=Math.min(resolveQuota(dailyQuota(f)), allowed.length);
+    for(const m of allowed){ if(times<=0) break; meals[m].fruit=f.sw; usedFruit.add(m); times--; }
+  });
+  myPlanned('juice').forEach(f=>{
+    const allowed=shuffleArr(mealsOf(f).filter(m=>!usedJuice.has(m)));
+    let times=Math.min(resolveQuota(dailyQuota(f)), allowed.length);
+    for(const m of allowed){ if(times<=0) break; meals[m].juice=f.sw; usedJuice.add(m); times--; }
   });
   return {createdAt:Date.now(), people:budget.people, budget:budgetActive()?budget.amount:0,
           filters:activeFilterList(), meals, checked:{}};
 }
 
+/* ---------- cost of a plan ---------- */
 function planCost(plan,type){
   const people=Math.max(1,plan.people||1);
   let total=0;
   if(type==='week'){
     plan.days.forEach(day=>{
       ['b','l','d'].forEach(k=>{ const dish=dishBySw(day[k]); total += dish?dish.cost:0; });
-      total += FRUIT_COST + JUICE_COST;
+      if(day.side){ const s=dishBySw(day.side); total += s?s.cost:0; }
+      total += costOfExtra(day.fruit,FRUIT_COST) + costOfExtra(day.juice,JUICE_COST);
     });
   } else {
     Object.values(plan.meals).forEach(m=>{
       const dish=dishBySw(m.main); total += dish?dish.cost:0;
       if(m.side){ const s=dishBySw(m.side); total += s?s.cost:0; }
-      total += FRUIT_COST + JUICE_COST;
+      total += costOfExtra(m.fruit,FRUIT_COST) + costOfExtra(m.juice,JUICE_COST);
     });
   }
   return total*people;
@@ -644,15 +815,16 @@ function shoppingFrom(plan,type){
   if(type==='week'){
     plan.days.forEach(day=>{
       ['b','l','d'].forEach(k=>{ const dish=dishBySw(day[k]); if(dish) addItems(map,dish.shop); });
-      addItems(map, fruitBySw(day.fruit).sw.toLowerCase());
-      addItems(map, fruitBySw(day.juice).sw.toLowerCase());
+      if(day.side){ const s=dishBySw(day.side); if(s) addItems(map,s.shop); }
+      addItems(map, shopTerm(fruitBySw(day.fruit)));
+      addItems(map, shopTerm(fruitBySw(day.juice)));
     });
   } else {
     Object.values(plan.meals).forEach(m=>{
       const dish=dishBySw(m.main); if(dish) addItems(map,dish.shop);
       if(m.side){ const s=dishBySw(m.side); if(s) addItems(map,s.shop); }
-      addItems(map, fruitBySw(m.fruit).sw.toLowerCase());
-      addItems(map, fruitBySw(m.juice).sw.toLowerCase());
+      addItems(map, shopTerm(fruitBySw(m.fruit)));
+      addItems(map, shopTerm(fruitBySw(m.juice)));
     });
   }
   return map;
@@ -752,6 +924,7 @@ function closeRecipe(){
 }
 $('recipeOverlay').onclick=e=>{ if(e.target===$('recipeOverlay')) closeRecipe(); };
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('recipeOverlay').classList.contains('hidden')) closeRecipe(); });
+/* any element with data-recipe-for opens the sheet */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-recipe-for]');
   if(b){ e.preventDefault(); openRecipe(b.dataset.recipeFor); }
@@ -761,7 +934,7 @@ document.addEventListener('click',e=>{
 function suggestMeal(meal, into){
   const info=MEALINFO[meal];
   const main=chooseMain(meal,'meal');
-  const side = (meal==='breakfast') ? null : chooseAvoiding(sidePool(), meal+'_side');
+  const side = (meal==='breakfast') ? null : chooseAvoiding(sidePool(meal,true), meal+'_side');
   const fruit = pickFruit();
   const juice = pickJuice();
 
@@ -865,7 +1038,8 @@ function suggestWeek(into, force){
       <br><small class="muted">${d.en}</small>`; };
   plan.days.forEach((day,i)=>{
     const fr=fruitBySw(day.fruit), jc=juiceOf(day.juice);
-    html+=`<tr><td><b>${days[i]}</b></td><td>${cell(day.b)}</td><td>${cell(day.l)}</td><td>${cell(day.d)}</td>
+    const sideLine = day.side ? `<br><small class="muted">🥗 ${day.side}</small>` : '';
+    html+=`<tr><td><b>${days[i]}</b></td><td>${cell(day.b)}</td><td>${cell(day.l)}</td><td>${cell(day.d)}${sideLine}</td>
       <td><small class="muted">🍎 ${fr.sw} / ${fr.en}<br>🥤 ${jc.sw}</small></td></tr>`;
   });
   html+=`</table>
@@ -884,6 +1058,143 @@ function suggestWeek(into, force){
       <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+}
+
+/* ---------- MY FOODS screen: add / edit the cook's own foods ---------- */
+let editingId=null;
+let formMeals=['breakfast','lunch','dinner'];
+
+function freqText(f){
+  const n=+f.n||0;
+  if(!n) return t('whenever it comes','wakati wowote');
+  const p=PERIODS.find(x=>x.key===f.per)||PERIODS[1];
+  return `<span class="freqbig">${n}×</span> ${t(p.en,p.sw)}`;
+}
+function whenText(f){
+  return mealsOf(f).map(m=>`<span class="whenbadge">${MEALINFO[m].ic} ${t(MEALINFO[m].en,MEALINFO[m].sw)}</span>`).join('');
+}
+function renderMyFoods(into){
+  const list=myFoods();
+  const kindName=k=>{ const o=KINDS.find(x=>x.key===k)||KINDS[0]; return t(o.en,o.sw); };
+  let html=`<h2 style="margin-top:0">🍽️ ${t('My foods','Vyakula vyangu')}</h2>
+    <p class="muted">${t('Write the foods, juices, fruit and mboga your family likes. Say which meal they belong to and how often you want them — the planner will then include them for you.','Andika vyakula, juisi, matunda na mboga anazopenda familia yako. Sema ni mlo gani na mara ngapi unavitaka — kisha mpangaji atavijumuisha.')}</p>`;
+
+  if(list.length){
+    html+=`<table class="mytable">
+      <tr><th>${t('Food','Chakula')}</th><th>${t('When','Wakati')}</th><th>${t('How often','Mara ngapi')}</th><th></th></tr>`;
+    list.forEach(f=>{
+      html+=`<tr>
+        <td><div class="fname">${f.sw}</div>
+            ${f.en?`<div class="fsub">${f.en}</div>`:''}
+            <span class="kindtag">${kindName(f.kind)}</span></td>
+        <td>${whenText(f)}</td>
+        <td>${freqText(f)}</td>
+        <td style="white-space:nowrap">
+          <button class="iconbtn" data-edit="${escAttr(f.id)}" title="${t('Edit','Hariri')}" aria-label="${t('Edit','Hariri')} ${escAttr(f.sw)}">✏️</button>
+          <button class="iconbtn" data-del="${escAttr(f.id)}" title="${t('Delete','Futa')}" aria-label="${t('Delete','Futa')} ${escAttr(f.sw)}">🗑️</button>
+        </td></tr>`;
+    });
+    html+=`</table>
+      <div class="note lock">📌 ${t('Your saved weekly menu will not change by itself. Tap “New week” on the weekly menu when you are ready to use these foods.','Menyu yako ya wiki iliyohifadhiwa haitabadilika yenyewe. Bonyeza “Wiki mpya” kwenye menyu ya wiki ukiwa tayari kutumia vyakula hivi.')}</div>`;
+  } else {
+    html+=`<p class="muted">${t('Nothing added yet. Use the form below to add your first food.','Bado hakuna kilichoongezwa. Tumia fomu hapa chini kuongeza chakula chako cha kwanza.')}</p>`;
+  }
+
+  const ed = editingId ? list.find(f=>f.id===editingId) : null;
+  if(ed) formMeals=mealsOf(ed).slice();
+  html+=`<div class="mfform">
+    <h3>${ed?'✏️ '+t('Edit food','Hariri chakula'):'➕ '+t('Add a food','Ongeza chakula')}</h3>
+    <label class="mflabel" for="mfName">${t('Name (Kiswahili)','Jina (Kiswahili)')}</label>
+    <input class="field" id="mfName" placeholder="${t('e.g. Ndizi nyama','mf. Ndizi nyama')}" value="${ed?escAttr(ed.sw):''}" />
+    <div class="mfgrid">
+      <div><label class="mflabel" for="mfEn">${t('English name (optional)','Jina la Kiingereza (hiari)')}</label>
+        <input class="field" id="mfEn" value="${ed&&ed.en?escAttr(ed.en):''}" /></div>
+      <div><label class="mflabel" for="mfKind">${t('Type','Aina')}</label>
+        <select class="field" id="mfKind">${KINDS.map(k=>`<option value="${k.key}" ${ed&&ed.kind===k.key?'selected':''}>${t(k.en,k.sw)}</option>`).join('')}</select></div>
+    </div>
+    <label class="mflabel">${t('When do you want it?','Unaitaka wakati gani?')}</label>
+    <div class="mfchips" id="mfMeals">
+      ${['breakfast','lunch','dinner'].map(m=>`<span class="chip${formMeals.includes(m)?' on':''}" data-meal-pick="${m}" role="button" tabindex="0">${MEALINFO[m].ic} ${t(MEALINFO[m].en,MEALINFO[m].sw)}</span>`).join('')}
+    </div>
+    <label class="mflabel" for="mfN">${t('How many times?','Mara ngapi?')}</label>
+    <div class="freqrow">
+      <input class="field" id="mfN" type="number" min="0" max="21" inputmode="numeric" value="${ed?(+ed.n||0):1}" />
+      <select class="field" id="mfPer">${PERIODS.map(p=>`<option value="${p.key}" ${ed&&ed.per===p.key?'selected':(!ed&&p.key==='week'?'selected':'')}>${t(p.en,p.sw)}</option>`).join('')}</select>
+    </div>
+    <p class="muted" style="font-size:12px; margin:6px 0 0">${t('Put 0 for “whenever it comes”.','Weka 0 kwa “wakati wowote”.')}</p>
+
+    <details class="more" ${ed&&(ed.cost||ed.shop||(ed.steps&&ed.steps.length))?'open':''}>
+      <summary>${t('More details (optional)','Maelezo zaidi (hiari)')}</summary>
+      <div class="mfgrid">
+        <div><label class="mflabel" for="mfCost">${t('Cost per person (TSh)','Gharama kwa mtu (TSh)')}</label>
+          <input class="field" id="mfCost" type="number" min="0" inputmode="numeric" value="${ed&&ed.cost?ed.cost:''}" /></div>
+        <div><label class="mflabel" for="mfVeg">${t('Vegetarian?','Ni mboga tu?')}</label>
+          <select class="field" id="mfVeg"><option value="no" ${ed&&!ed.veg?'selected':''}>${t('No','Hapana')}</option><option value="yes" ${ed&&ed.veg?'selected':''}>${t('Yes','Ndiyo')}</option></select></div>
+      </div>
+      <label class="mflabel" for="mfShop">${t('Ingredients to buy (separate with commas)','Mahitaji ya kununua (tenganisha kwa koma)')}</label>
+      <input class="field" id="mfShop" placeholder="${t('e.g. ndizi, nyama, nyanya','mf. ndizi, nyama, nyanya')}" value="${ed&&ed.shop?escAttr(ed.shop):''}" />
+      <label class="mflabel" for="mfSteps">${t('How to prepare — one step per line','Jinsi ya kuandaa — hatua moja kila mstari')}</label>
+      <textarea class="field" id="mfSteps" placeholder="${t('Fry the onions...\nAdd the meat...','Kaanga vitunguu...\nOngeza nyama...')}">${ed&&ed.steps?ed.steps.join('\n'):''}</textarea>
+    </details>
+
+    <div id="mfErr" class="autherr hidden"></div>
+    <div class="row">
+      <button class="btn green" id="mfSave">${ed?'💾 '+t('Save changes','Hifadhi mabadiliko'):'➕ '+t('Add to my foods','Ongeza kwenye vyakula vyangu')}</button>
+    </div>
+    ${ed?`<div class="row"><button class="btn ghost small" id="mfCancel">${t('Cancel','Ghairi')}</button></div>`:''}
+  </div>
+  <div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+
+  into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+
+  // meal chips
+  into.querySelectorAll('[data-meal-pick]').forEach(c=>{
+    const toggle=()=>{ const m=c.dataset.mealPick;
+      const i=formMeals.indexOf(m);
+      if(i<0) formMeals.push(m); else formMeals.splice(i,1);
+      c.classList.toggle('on', formMeals.includes(m)); };
+    c.onclick=toggle;
+    c.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } };
+  });
+  into.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{ editingId=b.dataset.edit; renderMyFoods(into); into.scrollIntoView({behavior:'smooth'}); });
+  into.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    const f=myFoods().find(x=>x.id===b.dataset.del); if(!f) return;
+    if(!window.confirm(t('Remove "'+f.sw+'" from your foods?','Ondoa "'+f.sw+'" kwenye vyakula vyako?'))) return;
+    saveMyFoods(myFoods().filter(x=>x.id!==b.dataset.del));
+    if(editingId===b.dataset.del) editingId=null;
+    renderMyFoods(into);
+  });
+  const cancel=into.querySelector('#mfCancel');
+  if(cancel) cancel.onclick=()=>{ editingId=null; formMeals=['breakfast','lunch','dinner']; renderMyFoods(into); };
+  into.querySelector('#mfSave').onclick=()=>saveMyFoodForm(into);
+}
+function saveMyFoodForm(into){
+  const err=m=>{ const e=$('mfErr'); e.textContent=m; e.classList.remove('hidden'); };
+  const name=$('mfName').value.trim();
+  if(!name) return err(t('Please write the name of the food.','Tafadhali andika jina la chakula.'));
+  if(!formMeals.length) return err(t('Choose at least one meal (breakfast, lunch or dinner).','Chagua angalau mlo mmoja (asubuhi, mchana au usiku).'));
+  const kind=$('mfKind').value;
+  const n=Math.min(21,Math.max(0,+$('mfN').value||0));
+  const arr=myFoods();
+  const clash=arr.find(f=>f.sw.toLowerCase()===name.toLowerCase() && f.id!==editingId);
+  if(clash) return err(t('You already added a food with that name.','Tayari umeongeza chakula chenye jina hilo.'));
+  const entry={
+    id: editingId || ('mf'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
+    sw: name,
+    en: $('mfEn').value.trim(),
+    kind,
+    meals: formMeals.slice(),
+    n, per: $('mfPer').value,
+    veg: $('mfVeg').value==='yes' || kind!=='main',
+    cost: Math.max(0,+$('mfCost').value||0) || DEFAULT_COST[kind],
+    shop: $('mfShop').value.trim(),
+    steps: $('mfSteps').value.split('\n').map(s=>s.trim()).filter(Boolean),
+  };
+  const i=arr.findIndex(f=>f.id===entry.id);
+  if(i>-1) arr[i]=entry; else arr.push(entry);
+  saveMyFoods(arr);
+  editingId=null; formMeals=['breakfast','lunch','dinner'];
+  renderMyFoods(into);
 }
 
 /* ---------- favourites ---------- */
@@ -1004,6 +1315,7 @@ function route(meal){
   if(meal==='week') return suggestWeek($('multi'), false);
   if(meal==='favs') return renderFavs($('multi'));
   if(meal==='shop') return renderShopping($('multi'));
+  if(meal==='myfoods'){ editingId=null; formMeals=['breakfast','lunch','dinner']; return renderMyFoods($('multi')); }
   return suggestMeal(meal, $('suggest'));
 }
 function confirmNew(type){
