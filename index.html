@@ -10,7 +10,7 @@
   :root{
     --bg:#FFF8EC; --card:#FFFFFF; --card2:#FFF1DC;
     --ink:#291D18; --muted:#8A7265;
-    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;   /* terracotta */
+    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;
     --accent:#047857; --good:#047857; --bad:#DC2626; --warn:#D97706;
     --btn-ink:#FFFFFF; --accent-ink:#FFFFFF;
     --line:#F0DFD2;
@@ -61,6 +61,7 @@
   .btn.ghost{background:var(--card2); color:var(--ink); border:2px solid var(--line); box-shadow:none}
   .btn.ghost:hover{border-color:var(--brand); filter:none}
   .btn.small{width:auto; font-size:14px; padding:10px 16px}
+  .btn.green{background:linear-gradient(180deg,#10B981,#047857); color:#fff; box-shadow:0 6px 16px rgba(4,120,87,.28)}
 
   .meals{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:6px}
   .tile{cursor:pointer; border:2px solid var(--line); border-radius:18px; padding:18px 14px;
@@ -77,6 +78,8 @@
   .tile.tonight .nm{color:#fff; font-size:17px}
   .tile.tonight .sub{color:#FFD9B3}
   .tile.tonight:hover{border-color:transparent; filter:brightness(1.06)}
+  .tile.shop{grid-column:1 / -1; border-color:var(--accent); background:var(--card)}
+  .tile.shop .nm{color:var(--accent)}
 
   .filters{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 4px; align-items:center}
   .chip{cursor:pointer; border:2px solid var(--line); background:var(--card); color:var(--muted);
@@ -85,7 +88,13 @@
   .chip:hover{border-color:var(--accent)}
   .chip.on{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
 
-  /* suggestion */
+  .budgetbox{background:var(--card2); border:2px solid var(--accent); border-radius:14px;
+    padding:14px; margin-top:12px}
+  .budgetbox h4{margin:0 0 8px; font-size:14px; color:var(--accent)}
+  .bgrid{display:grid; grid-template-columns:1fr 110px; gap:10px}
+  .bgrid label{display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:4px}
+  .bhint{font-size:12px; color:var(--muted); margin-top:8px}
+
   .sgHead{display:flex; align-items:center; gap:10px; margin-bottom:4px}
   .sgHead .mi{font-size:32px}
   .sgHead h2{margin:0; font-size:20px}
@@ -102,9 +111,15 @@
   .t-budget{background:#DBEAFE; color:#1E40AF}
   .t-quick{background:#FEF3C7; color:#92400E}
   .t-hearty{background:#FEE2E2; color:#991B1B}
+  .t-fish{background:#CFFAFE; color:#155E75}
+  .t-chicken{background:#FFE4E6; color:#9F1239}
+  .t-meat{background:#F5E0D3; color:#7C2D12}
+  .t-cost{background:var(--card2); color:var(--brand); border:1px solid var(--line)}
   .note{background:var(--card2); border-left:4px solid var(--warn); padding:12px 14px; border-radius:10px; margin-top:12px; font-size:14px; line-height:1.55}
-  .shop{background:var(--card2); border:2px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:12px; font-size:14px}
-  .shop b{color:var(--brand)}
+  .note.lock{border-left-color:var(--accent)}
+  .note.over{border-left-color:var(--bad)}
+  .shopbox{background:var(--card2); border:2px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:12px; font-size:14px}
+  .shopbox b{color:var(--brand)}
   .recipe{background:var(--card2); border:2px solid var(--line); border-radius:14px; padding:16px; margin-top:10px; font-size:14px; line-height:1.6}
   .rsteps{margin:6px 0 0; padding-left:18px}
   .rsteps li{margin:6px 0}
@@ -114,18 +129,35 @@
   .ytbtn:hover{filter:brightness(1.08); transform:translateY(-1px)}
   .dishlink{color:var(--brand); text-decoration:none; border-bottom:2px dotted var(--line); font-weight:700}
   .dishlink:hover{border-bottom-style:solid; border-bottom-color:var(--brand)}
-  /* login */
-  .field{width:100%; font-size:16px; padding:13px 14px; border-radius:12px; margin-top:8px;
-    border:2px solid var(--line); background:var(--card); color:var(--ink); outline:none;
-    transition:border-color .2s, box-shadow .2s}
-  .field:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(234,88,12,.15)}
-  .authtabs{display:flex; gap:8px; margin:4px 0 10px}
-  .authtabs .chip.on{background:var(--brand); color:var(--btn-ink); border-color:var(--brand)}
-  .autherr{background:#FEE2E2; border:2px solid #FCA5A5; color:#991B1B;
-    border-radius:10px; padding:10px 12px; margin-top:10px; font-size:13px; font-weight:700}
-  .userpill{cursor:pointer; user-select:none}
+  .dishbtn{appearance:none; background:none; border:0; padding:0; cursor:pointer; text-align:left;
+    color:var(--brand); font-weight:700; font-size:inherit; font-family:inherit;
+    border-bottom:2px dotted var(--line)}
+  .dishbtn:hover{border-bottom-style:solid; border-bottom-color:var(--brand)}
+  .ytmini{text-decoration:none; font-size:12px; margin-left:6px; opacity:.85}
 
-  /* day / week */
+  .overlay{position:fixed; inset:0; background:rgba(41,29,24,.55); backdrop-filter:blur(3px);
+    display:flex; align-items:flex-end; justify-content:center; z-index:1000; padding:12px}
+  @media(min-width:600px){ .overlay{align-items:center} }
+  .sheet{background:var(--card); border:2px solid var(--line); border-radius:20px; padding:20px;
+    width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow)}
+  .sheetHead{display:flex; align-items:flex-start; gap:10px; margin-bottom:6px}
+  .sheetHead h3{margin:0; font-size:22px; color:var(--deep); flex:1; line-height:1.25}
+  .xbtn{appearance:none; border:2px solid var(--line); background:var(--card2); color:var(--ink);
+    cursor:pointer; border-radius:50%; width:38px; height:38px; font-size:18px; font-weight:700; flex:none}
+  .xbtn:hover{border-color:var(--brand)}
+
+  .shopcat{margin-top:16px}
+  .shopcat h4{margin:0 0 6px; font-size:12px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
+  .shopitem{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line)}
+  .shopitem:last-child{border-bottom:0}
+  .shopitem input{width:22px; height:22px; accent-color:var(--accent); flex:none; cursor:pointer}
+  .shopitem label{flex:1; cursor:pointer; font-weight:700}
+  .shopitem label small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .shopitem.done label{text-decoration:line-through; opacity:.5}
+  .total{display:flex; justify-content:space-between; align-items:center; background:var(--card2);
+    border:2px solid var(--line); border-radius:14px; padding:14px; margin-top:16px; font-weight:700}
+  .total .amt{font-size:22px; color:var(--brand)}
+
   .daycard{border:2px solid var(--line); border-radius:16px; padding:16px; margin-top:12px; background:var(--card2)}
   .daycard h3{margin:0 0 8px; font-size:13px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
   table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px}
@@ -138,11 +170,24 @@
   .fav:hover{transform:scale(1.15)}
   footer{text-align:center; color:var(--muted); font-size:12px; margin-top:14px}
   :focus-visible{outline:3px solid var(--brand2); outline-offset:2px}
+  .field{width:100%; font-size:16px; padding:13px 14px; border-radius:12px; margin-top:8px;
+    border:2px solid var(--line); background:var(--card); color:var(--ink); outline:none;
+    transition:border-color .2s, box-shadow .2s}
+  .field:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(234,88,12,.15)}
+  .field.tight{margin-top:0}
+  .authtabs{display:flex; gap:8px; margin:4px 0 10px}
+  .authtabs .chip.on{background:var(--brand); color:var(--btn-ink); border-color:var(--brand)}
+  .autherr{background:#FEE2E2; border:2px solid #FCA5A5; color:#991B1B;
+    border-radius:10px; padding:10px 12px; margin-top:10px; font-size:13px; font-weight:700}
+  .userpill{cursor:pointer; user-select:none}
   @media (prefers-color-scheme: dark){
     .t-veg{background:#14532D; color:#BBF7D0}
     .t-budget{background:#1E3A8A; color:#BFDBFE}
     .t-quick{background:#713F12; color:#FDE68A}
     .t-hearty{background:#7F1D1D; color:#FECACA}
+    .t-fish{background:#164E63; color:#A5F3FC}
+    .t-chicken{background:#881337; color:#FECDD3}
+    .t-meat{background:#7C2D12; color:#FED7AA}
     .autherr{background:#450A0A; border-color:#7F1D1D; color:#FECACA}
   }
   @media (prefers-reduced-motion: reduce){
@@ -163,10 +208,9 @@
     <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
   </header>
 
-  <!-- LOGIN -->
   <div id="auth" class="card hidden">
     <h2 style="margin-top:0">🔐 <span data-en="Welcome!" data-sw="Karibu!">Welcome!</span></h2>
-    <p class="muted" data-en="Log in so your favourite dishes are saved to your own account." data-sw="Ingia ili vyakula unavyovipenda vihifadhiwe kwenye akaunti yako.">Log in so your favourite dishes are saved to your own account.</p>
+    <p class="muted" data-en="Log in so your favourite dishes and meal plans are saved to your own account." data-sw="Ingia ili vyakula unavyovipenda na mipango yako vihifadhiwe kwenye akaunti yako.">Log in so your favourite dishes and meal plans are saved to your own account.</p>
     <div class="authtabs">
       <span class="chip on" id="tabLogin" data-en="Log in" data-sw="Ingia">Log in</span>
       <span class="chip" id="tabSignup" data-en="Create account" data-sw="Fungua akaunti">Create account</span>
@@ -184,18 +228,28 @@
     <p class="muted" style="font-size:12px; margin-top:12px" data-en="Accounts live on this device only — passwords are never sent anywhere." data-sw="Akaunti zinakaa kwenye kifaa hiki tu — nenosiri halitumwi popote.">Accounts live on this device only — passwords are never sent anywhere.</p>
   </div>
 
-  <!-- HOME -->
   <div id="home" class="card">
     <h2 id="greet" style="margin-top:0">Karibu! 👋</h2>
-    <p class="muted" id="homeMsg" data-en="Tell me the meal and I'll suggest a Tanzanian dish, what to serve with it, a drink, and a quick shopping list."
-       data-sw="Niambie mlo nami nitapendekeza chakula cha Kitanzania, cha kuandama nacho, kinywaji, na orodha fupi ya manunuzi.">
-       Tell me the meal and I'll suggest a Tanzanian dish, what to serve with it, a drink, and a quick shopping list.</p>
+    <p class="muted" id="homeMsg" data-en="Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy."
+       data-sw="Chagua mlo nami nitapendekeza chakula cha Kitanzania, jinsi ya kupika, tunda na juisi, na cha kununua.">
+       Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy.</p>
 
-    <div class="filters">
+    <div class="filters" id="filterRow">
       <span class="muted" data-en="Filters:" data-sw="Vichujio:">Filters:</span>
-      <span class="chip" data-f="veg" data-en="🥬 Vegetarian" data-sw="🥬 Mboga tu">🥬 Vegetarian</span>
-      <span class="chip" data-f="budget" data-en="💰 Budget" data-sw="💰 Nafuu">💰 Budget</span>
-      <span class="chip" data-f="quick" data-en="⏱️ Quick" data-sw="⏱️ Haraka">⏱️ Quick</span>
+    </div>
+    <div id="budgetBox" class="budgetbox hidden">
+      <h4 data-en="💰 My budget" data-sw="💰 Bajeti yangu">💰 My budget</h4>
+      <div class="bgrid">
+        <div>
+          <label for="bAmount" data-en="How much money do I have? (TSh)" data-sw="Nina shilingi ngapi? (TSh)">How much money do I have? (TSh)</label>
+          <input class="field tight" type="number" id="bAmount" inputmode="numeric" min="0" placeholder="50000" />
+        </div>
+        <div>
+          <label for="bPeople" data-en="People" data-sw="Watu">People</label>
+          <input class="field tight" type="number" id="bPeople" inputmode="numeric" min="1" max="20" value="4" />
+        </div>
+      </div>
+      <div class="bhint" id="bHint"></div>
     </div>
 
     <div class="meals">
@@ -203,7 +257,8 @@
       <div class="tile" data-meal="breakfast"><span class="ic">🌅</span><div class="nm" data-en="Breakfast" data-sw="Kifungua kinywa">Breakfast</div></div>
       <div class="tile" data-meal="lunch"><span class="ic">☀️</span><div class="nm" data-en="Lunch" data-sw="Chakula cha mchana">Lunch</div></div>
       <div class="tile wide" data-meal="day"><span class="ic">📅</span><div class="nm" data-en="Plan my whole day" data-sw="Panga siku nzima">Plan my whole day</div><div class="sub" data-en="breakfast + lunch + dinner" data-sw="kifungua + mchana + usiku">breakfast + lunch + dinner</div></div>
-      <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div></div>
+      <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div><div class="sub" data-en="saved until you change it" data-sw="huhifadhiwa hadi ubadilishe">saved until you change it</div></div>
+      <div class="tile shop" data-meal="shop"><span class="ic">🛒</span><div class="nm" data-en="Shopping list" data-sw="Orodha ya manunuzi">Shopping list</div><div class="sub" data-en="everything to buy for your plan" data-sw="vitu vyote vya kununua kwa mpango wako">everything to buy for your plan</div></div>
     </div>
 
     <div class="row">
@@ -211,19 +266,22 @@
     </div>
   </div>
 
-  <!-- SUGGESTION (single meal) -->
   <div id="suggest" class="card hidden"></div>
-  <!-- DAY / WEEK / FAVOURITES -->
   <div id="multi" class="card hidden"></div>
 
   <footer>Chakula Chetu · <span data-en="Home-cooked, the Tanzanian way 🇹🇿" data-sw="Mapishi ya nyumbani, kwa mtindo wa Kitanzania 🇹🇿">Home-cooked, the Tanzanian way 🇹🇿</span></footer>
 </div>
 
+<div id="recipeOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+  <div class="sheet" id="recipeSheet"></div>
+</div>
+
 <script>
 /* ============================================================
    Chakula Chetu — offline Tanzanian meal suggester.
-   Breakfast / Lunch / Dinner + full day + weekly menu.
-   Favourites & recent-avoidance saved in the browser. No internet.
+   Breakfast / Lunch / Dinner + day plan + weekly menu + shopping list.
+   Plans are LOCKED once made: they only change when the cook asks.
+   Everything saved in the browser. No internet needed.
    ============================================================ */
 
 const STORE='chakula_v1';
@@ -238,77 +296,81 @@ function applyLang(){
   document.querySelectorAll('[data-en]').forEach(el=>{ el.textContent=lang==='sw'?el.dataset.sw:el.dataset.en; });
   $('langLabel').textContent=lang==='sw'?'English':'Kiswahili';
 }
-$('langToggle').onclick=()=>{ lang=lang==='sw'?'en':'sw'; const d=load(); d.lang=lang; save(d); applyLang(); refreshHome(); };
+$('langToggle').onclick=()=>{
+  lang=lang==='sw'?'en':'sw'; const d=load(); d.lang=lang; save(d);
+  applyLang(); renderFilters(); refreshHome(); show('home');
+};
 
-/* active filters */
-let filters={veg:false,budget:false,quick:false};
+const FILTER_DEFS=[
+  {key:'veg',     en:'🥬 Vegetarian', sw:'🥬 Mboga tu'},
+  {key:'budget',  en:'💰 Budget',     sw:'💰 Nafuu'},
+  {key:'quick',   en:'⏱️ Quick',      sw:'⏱️ Haraka'},
+  {key:'fish',    en:'🐟 Fish',       sw:'🐟 Samaki'},
+  {key:'chicken', en:'🍗 Chicken',    sw:'🍗 Kuku'},
+  {key:'meat',    en:'🥩 Meat',       sw:'🥩 Nyama'},
+];
+let filters={};
+FILTER_DEFS.forEach(f=>filters[f.key]=false);
+let budget={amount:0, people:4};
+(function restoreSettings(){
+  const d=load();
+  if(d.filters) FILTER_DEFS.forEach(f=>{ filters[f.key]=!!d.filters[f.key]; });
+  if(d.budget) budget={amount:+d.budget.amount||0, people:+d.budget.people||4};
+})();
+function persistSettings(){ const d=load(); d.filters=filters; d.budget=budget; save(d); }
 
 /* ---------- DATA: Tanzanian dishes ----------
-   tags: veg=vegetarian, budget=cheap, quick=fast to cook, hearty=filling
-   sw = Swahili name, en = short English gloss, shop = key ingredients   */
+   tags: veg, budget, quick, hearty, fish, chicken, meat
+   cost = rough TSh per person                                   */
 const BREAKFAST=[
-  {sw:'Chai na mkate', en:'Tea with bread (butter/jam)', tags:['veg','budget','quick'], shop:'mkate, chai, sukari, maziwa, siagi'},
-  {sw:'Chapati', en:'Soft flatbread', tags:['veg','budget'], shop:'unga wa ngano, mafuta, chumvi'},
-  {sw:'Maandazi', en:'Fried sweet dough (donuts)', tags:['veg','budget'], shop:'unga, sukari, hamira, nazi/maziwa'},
-  {sw:'Uji wa ulezi', en:'Millet porridge', tags:['veg','budget','quick'], shop:'unga wa ulezi, sukari, maziwa/nazi'},
-  {sw:'Vitumbua', en:'Rice-coconut rice cakes', tags:['veg','budget'], shop:'unga wa mchele, nazi, sukari, hamira'},
-  {sw:'Mayai na mkate', en:'Eggs with bread', tags:['quick'], shop:'mayai, mkate, vitunguu, nyanya'},
-  {sw:'Viazi vitamu vya kuchemsha', en:'Boiled sweet potatoes', tags:['veg','budget','quick'], shop:'viazi vitamu'},
-  {sw:'Maharage na chapati', en:'Beans with chapati', tags:['veg','hearty'], shop:'maharage, vitunguu, nyanya, chapati'},
-  {sw:'Maini na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, nyanya'},
-  {sw:'Saladi ya matunda', en:'Fruit salad', tags:['veg','quick'], shop:'matunda mchanganyiko, ndimu, mtindi/asali'},
-  {sw:'Mkate wa kumimina', en:'Steamed rice bread', tags:['veg','budget'], shop:'unga wa mchele, nazi, sukari'},
+  {sw:'Chai na mkate', en:'Tea with bread (butter/jam)', tags:['veg','budget','quick'], cost:1000, shop:'mkate, chai, sukari, maziwa, siagi'},
+  {sw:'Chapati', en:'Soft flatbread', tags:['veg','budget'], cost:1000, shop:'unga wa ngano, mafuta, chumvi'},
+  {sw:'Maandazi', en:'Fried sweet dough (donuts)', tags:['veg','budget'], cost:900, shop:'unga, sukari, hamira, nazi'},
+  {sw:'Uji wa ulezi', en:'Millet porridge', tags:['veg','budget','quick'], cost:700, shop:'unga wa ulezi, sukari, maziwa'},
+  {sw:'Vitumbua', en:'Rice-coconut rice cakes', tags:['veg','budget'], cost:1000, shop:'unga wa mchele, nazi, sukari, hamira'},
+  {sw:'Mayai na mkate', en:'Eggs with bread', tags:['quick'], cost:2000, shop:'mayai, mkate, vitunguu, nyanya'},
+  {sw:'Viazi vitamu vya kuchemsha', en:'Boiled sweet potatoes', tags:['veg','budget','quick'], cost:800, shop:'viazi vitamu'},
+  {sw:'Maharage na chapati', en:'Beans with chapati', tags:['veg','hearty'], cost:1800, shop:'maharage, vitunguu, nyanya, unga wa ngano'},
+  {sw:'Maini na chapati', en:'Fried liver with chapati', tags:['hearty','meat'], cost:3000, shop:'maini, unga wa ngano, vitunguu, nyanya'},
+  {sw:'Saladi ya matunda', en:'Fruit salad', tags:['veg','quick'], cost:1500, shop:'matunda mchanganyiko, ndimu, mtindi'},
+  {sw:'Mkate wa kumimina', en:'Steamed rice bread', tags:['veg','budget'], cost:1200, shop:'unga wa mchele, nazi, sukari'},
 ];
-const MAINS=[ // lunch & dinner mains
-  {sw:'Wali na maharage', en:'Rice with beans', tags:['veg','budget','hearty'], shop:'mchele, maharage, nyanya, vitunguu'},
-  {sw:'Ugali na mchicha', en:'Ugali with spinach', tags:['veg','budget'], shop:'unga wa mahindi, mchicha, nyanya, vitunguu'},
-  {sw:'Ugali na samaki', en:'Ugali with fish', tags:['hearty'], shop:'unga wa mahindi, samaki, nyanya, ndimu'},
-  {sw:'Pilau', en:'Spiced rice (with meat)', tags:['hearty'], shop:'mchele, nyama, viungo vya pilau, vitunguu'},
-  {sw:'Wali na maini', en:'Rice with fried liver', tags:['hearty'], shop:'mchele, maini, vitunguu, nyanya, pilipili'},
-  {sw:'Ugali na maini', en:'Ugali with fried liver', tags:['hearty'], shop:'unga wa mahindi, maini, vitunguu, nyanya'},
-  {sw:'Maini ya kukaanga na chapati', en:'Fried liver with chapati', tags:['hearty'], shop:'maini, chapati, vitunguu, pilipili, ndimu'},
-  {sw:'Wali wa nazi na maharage', en:'Coconut rice with beans', tags:['veg','hearty'], shop:'mchele, nazi, maharage'},
-  {sw:'Ndizi nyama', en:'Plantain & meat stew', tags:['hearty'], shop:'ndizi, nyama, nyanya, vitunguu'},
-  {sw:'Makande', en:'Maize & beans stew', tags:['veg','budget','hearty'], shop:'mahindi, maharage, nazi'},
-  {sw:'Wali na kuku', en:'Rice with chicken stew', tags:['hearty'], shop:'mchele, kuku, nyanya, viungo'},
-  {sw:'Ugali na nyama', en:'Ugali with meat stew', tags:['hearty'], shop:'unga wa mahindi, nyama, nyanya'},
-  {sw:'Chapati na mchuzi wa kuku', en:'Chapati with chicken curry', tags:['hearty'], shop:'chapati, kuku, nyanya, viungo'},
-  {sw:'Wali na dagaa', en:'Rice with small dried fish', tags:['budget','hearty'], shop:'mchele, dagaa, nyanya, vitunguu'},
-  {sw:'Ugali na kisamvu', en:'Ugali with cassava leaves', tags:['veg','budget'], shop:'unga wa mahindi, kisamvu, nazi, karanga'},
-  {sw:'Mtori', en:'Banana & meat soup', tags:['hearty'], shop:'ndizi, nyama, nyanya, vitunguu'},
-  {sw:'Wali na mboga za majani', en:'Rice with leafy greens', tags:['veg','budget'], shop:'mchele, mboga za majani, nyanya'},
-  {sw:'Wali na njegere', en:'Rice with green peas', tags:['veg','hearty'], shop:'mchele, njegere, vitunguu, nyanya'},
-  {sw:'Tambi za nyama', en:'Savoury vermicelli with meat', tags:['hearty'], shop:'tambi, nyama, vitunguu, nyanya'},
-  {sw:'Mihogo na nyama', en:'Cassava with meat stew', tags:['hearty'], shop:'mihogo, nyama, vitunguu, nyanya'},
-  {sw:'Magimbi ya nazi', en:'Taro in coconut sauce', tags:['veg','hearty'], shop:'magimbi, nazi, vitunguu'},
-  {sw:'Mchuzi wa uyoga na wali', en:'Mushroom stew with rice', tags:['veg','hearty'], rare:true, shop:'uyoga, mchele, vitunguu, nyanya'},
+const MAINS=[
+  {sw:'Wali na maharage', en:'Rice with beans', tags:['veg','budget','hearty'], cost:2000, shop:'mchele, maharage, nyanya, vitunguu'},
+  {sw:'Ugali na mchicha', en:'Ugali with spinach', tags:['veg','budget'], cost:1500, shop:'unga wa mahindi, mchicha, nyanya, vitunguu'},
+  {sw:'Ugali na samaki', en:'Ugali with fish', tags:['hearty','fish'], cost:4000, shop:'unga wa mahindi, samaki, nyanya, ndimu'},
+  {sw:'Pilau', en:'Spiced rice (with meat)', tags:['hearty','meat'], cost:5000, shop:'mchele, nyama, viungo vya pilau, vitunguu'},
+  {sw:'Wali na maini', en:'Rice with fried liver', tags:['hearty','meat'], cost:4000, shop:'mchele, maini, vitunguu, nyanya, pilipili'},
+  {sw:'Ugali na maini', en:'Ugali with fried liver', tags:['hearty','meat'], cost:3500, shop:'unga wa mahindi, maini, vitunguu, nyanya'},
+  {sw:'Maini ya kukaanga na chapati', en:'Fried liver with chapati', tags:['hearty','meat'], cost:4000, shop:'maini, unga wa ngano, vitunguu, pilipili, ndimu'},
+  {sw:'Wali wa nazi na maharage', en:'Coconut rice with beans', tags:['veg','hearty'], cost:2500, shop:'mchele, nazi, maharage'},
+  {sw:'Ndizi nyama', en:'Plantain & meat stew', tags:['hearty','meat'], cost:4500, shop:'ndizi, nyama, nyanya, vitunguu'},
+  {sw:'Makande', en:'Maize & beans stew', tags:['veg','budget','hearty'], cost:1800, shop:'mahindi, maharage, nazi'},
+  {sw:'Wali na kuku', en:'Rice with chicken stew', tags:['hearty','chicken'], cost:5000, shop:'mchele, kuku, nyanya, viungo'},
+  {sw:'Ugali na nyama', en:'Ugali with meat stew', tags:['hearty','meat'], cost:4500, shop:'unga wa mahindi, nyama, nyanya'},
+  {sw:'Chapati na mchuzi wa kuku', en:'Chapati with chicken curry', tags:['hearty','chicken'], cost:5000, shop:'unga wa ngano, kuku, nyanya, viungo'},
+  {sw:'Wali na dagaa', en:'Rice with small dried fish', tags:['budget','hearty','fish'], cost:2500, shop:'mchele, dagaa, nyanya, vitunguu'},
+  {sw:'Ugali na kisamvu', en:'Ugali with cassava leaves', tags:['veg','budget'], cost:1800, shop:'unga wa mahindi, kisamvu, nazi, karanga'},
+  {sw:'Mtori', en:'Banana & meat soup', tags:['hearty','meat'], cost:4000, shop:'ndizi, nyama, nyanya, vitunguu'},
+  {sw:'Wali na mboga za majani', en:'Rice with leafy greens', tags:['veg','budget'], cost:1800, shop:'mchele, mboga za majani, nyanya'},
+  {sw:'Wali na njegere', en:'Rice with green peas', tags:['veg','hearty'], cost:2200, shop:'mchele, njegere, vitunguu, nyanya'},
+  {sw:'Tambi za nyama', en:'Savoury vermicelli with meat', tags:['hearty','meat'], cost:4000, shop:'tambi, nyama, vitunguu, nyanya'},
+  {sw:'Mihogo na nyama', en:'Cassava with meat stew', tags:['hearty','meat'], cost:4000, shop:'mihogo, nyama, vitunguu, nyanya'},
+  {sw:'Magimbi ya nazi', en:'Taro in coconut sauce', tags:['veg','hearty'], cost:2500, shop:'magimbi, nazi, vitunguu'},
+  {sw:'Samaki wa kupaka', en:'Grilled fish in coconut sauce', tags:['hearty','fish'], cost:5500, shop:'samaki, nazi, ndimu, viungo'},
+  {sw:'Kuku wa kuchoma na kachumbari', en:'Grilled chicken with salad', tags:['hearty','chicken'], cost:6000, shop:'kuku, ndimu, vitunguu, nyanya, pilipili'},
+  {sw:'Mchuzi wa uyoga na wali', en:'Mushroom stew with rice', tags:['veg','hearty'], rare:true, cost:3000, shop:'uyoga, mchele, vitunguu, nyanya'},
 ];
 const SIDES=[
-  {sw:'Kachumbari', en:'Tomato & onion salad', tags:['veg','quick']},
-  {sw:'Mchicha', en:'Cooked spinach', tags:['veg']},
-  {sw:'Kisamvu', en:'Cassava leaves in coconut', tags:['veg']},
-  {sw:'Parachichi', en:'Sliced avocado', tags:['veg','quick']},
-  {sw:'Saladi ya majani', en:'Green salad', tags:['veg','quick']},
-  {sw:'Maharage ya nazi', en:'Beans in coconut sauce', tags:['veg']},
-  {sw:'Mboga za kukaanga', en:'Stir-fried vegetables', tags:['veg','quick']},
-];
-const DRINKS_AM=[
-  {sw:'Chai ya maziwa', en:'Milky tea'},
-  {sw:'Chai ya rangi', en:'Black spiced tea'},
-  {sw:'Kahawa', en:'Coffee'},
-  {sw:'Juisi ya machungwa', en:'Orange juice'},
-  {sw:'Maji ya tangawizi', en:'Ginger water'},
-];
-const DRINKS_PM=[
-  {sw:'Maji ya kunywa', en:'Drinking water'},
-  {sw:'Juisi ya embe/passion', en:'Mango/passion juice'},
-  {sw:'Sharubati', en:'Fruit squash'},
-  {sw:'Maji ya madafu', en:'Coconut water'},
-  {sw:'Soda baridi', en:'Cold soda'},
+  {sw:'Kachumbari', en:'Tomato & onion salad', tags:['veg','quick'], cost:500, shop:'nyanya, vitunguu, ndimu'},
+  {sw:'Mchicha', en:'Cooked spinach', tags:['veg'], cost:600, shop:'mchicha, vitunguu, nyanya'},
+  {sw:'Kisamvu', en:'Cassava leaves in coconut', tags:['veg'], cost:700, shop:'kisamvu, nazi, karanga'},
+  {sw:'Parachichi', en:'Sliced avocado', tags:['veg','quick'], cost:800, shop:'parachichi'},
+  {sw:'Saladi ya majani', en:'Green salad', tags:['veg','quick'], cost:700, shop:'saladi, nyanya, tango'},
+  {sw:'Maharage ya nazi', en:'Beans in coconut sauce', tags:['veg'], cost:900, shop:'maharage, nazi'},
+  {sw:'Mboga za kukaanga', en:'Stir-fried vegetables', tags:['veg','quick'], cost:800, shop:'mboga mchanganyiko, vitunguu, mafuta'},
 ];
 
-/* ---------- FRUITS available locally + juices made from them ----------
-   eat:true = nice as a whole fruit; all fruits can be juiced.  */
 const FRUITS=[
   {sw:'Embe', en:'Mango', eat:true},
   {sw:'Machungwa', en:'Orange', eat:true},
@@ -325,11 +387,13 @@ const FRUITS=[
   {sw:'Rozela', en:'Roselle (hibiscus)', eat:false},
   {sw:'Beetroot', en:'Beetroot', eat:false},
 ];
+const FRUIT_COST=700, JUICE_COST=800;
 function pickFruit(){ return pick(FRUITS.filter(f=>f.eat)); }
-function pickJuice(){ const f=pick(FRUITS); return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw}; }
+function pickJuice(){ const f=pick(FRUITS); return juiceOf(f.sw); }
+function juiceOf(fruitSw){ const f=FRUITS.find(x=>x.sw===fruitSw)||FRUITS[0];
+  return {sw:'Juisi ya '+f.sw, en:f.en+' juice', fruitSw:f.sw}; }
+function fruitBySw(sw){ return FRUITS.find(f=>f.sw===sw)||FRUITS[0]; }
 
-/* ---------- RECIPES: how to prepare each dish (steps), keyed by Swahili name.
-   Ingredients are shown from each dish's `shop` field. ---------- */
 const RECIPES={
   'Chai na mkate':{sw:['Chemsha maji, weka majani ya chai (au tea bag) na sukari.','Ongeza maziwa, acha yachemke kidogo.','Chuja chai kwenye kikombe.','Kata mkate, paka siagi au jam, tumia na chai.'],
     en:['Boil water, add tea leaves (or a tea bag) and sugar.','Add milk and let it simmer briefly.','Strain the tea into a cup.','Slice bread, spread butter or jam, serve with the tea.']},
@@ -345,14 +409,12 @@ const RECIPES={
     en:['Fry onion and tomato in a little oil.','Beat eggs with salt, pour in.','Stir-cook until set (or make an omelette).','Serve with bread and tea.']},
   'Viazi vitamu vya kuchemsha':{sw:['Osha na menya viazi vitamu, kata vipande.','Weka kwenye sufuria na maji na chumvi kidogo.','Chemsha dakika 15-20 hadi vilainike.','Chuja maji, tumia na chai au nazi.'],
     en:['Wash and peel sweet potatoes, cut into pieces.','Put in a pot with water and a little salt.','Boil 15-20 min until soft.','Drain and serve with tea or coconut.']},
-  'Ndizi za kuchemsha':{sw:['Menya ndizi mbichi, kata vipande.','Chemsha kwa maji na chumvi dakika 15-20.','Unaweza kuongeza nazi ipate ladha.','Tumia na supu au mboga.'],
-    en:['Peel green bananas, cut into pieces.','Boil in salted water 15-20 min.','Add coconut milk for flavour if you like.','Serve with soup or vegetables.']},
   'Maharage na chapati':{sw:['Chemsha maharage hadi yalainike (au tumia ya makopo).','Kaanga vitunguu na nyanya, ongeza maharage na maji kidogo.','Tia chumvi na bizari, acha yachemke yawe mzito.','Tumia na chapati za moto.'],
     en:['Boil beans until soft (or use canned).','Fry onion and tomato, add beans and a little water.','Season with salt and spices, simmer to thicken.','Serve with hot chapati.']},
   'Maini na chapati':{sw:['Osha maini, kata vipande vidogo, paka chumvi na ndimu.','Kaanga vitunguu, ongeza maini, pilipili na bizari.','Pika dakika 8-10 hadi yaive (usiyakaushe sana).','Tumia na chapati za moto.'],
     en:['Wash liver, cut small, season with salt and lemon.','Fry onion, add liver, chilli and spices.','Cook 8-10 min until done (do not overcook or dry it).','Serve with hot chapati.']},
-  'Supu ya makongoro':{sw:['Safisha miguu ya ng’ombe/nyama, weka kwenye maji.','Ongeza vitunguu, kitunguu saumu, tangawizi na chumvi.','Chemsha kwa moto mdogo saa 1-2 hadi nyama ilainike.','Kamua ndimu na pilipili, tumia na mkate.'],
-    en:['Clean the trotters/meat, place in water.','Add onion, garlic, ginger and salt.','Simmer on low heat 1-2 hrs until tender.','Add lemon and chilli, serve with bread.']},
+  'Saladi ya matunda':{sw:['Osha na menya matunda (embe, papai, nanasi, ndizi).','Kata vipande vidogo, weka kwenye bakuli.','Kamua ndimu kidogo, ongeza mtindi au asali (hiari).','Changanya taratibu, pakua ikiwa baridi.'],
+    en:['Wash and peel the fruit (mango, papaya, pineapple, banana).','Cut into small pieces, put in a bowl.','Squeeze a little lime, add yogurt or honey (optional).','Mix gently, serve chilled.']},
   'Mkate wa kumimina':{sw:['Saga mchele uliolowekwa na nazi upate uji mzito.','Ongeza sukari, hamira na hiliki, acha uumuke.','Mimina kwenye chombo chenye mafuta.','Oka hadi uive na juu iwe ya kahawia.'],
     en:['Grind soaked rice with coconut into a thick batter.','Add sugar, yeast and cardamom, let it rise.','Pour into a greased dish.','Bake until cooked and golden on top.']},
 
@@ -390,8 +452,6 @@ const RECIPES={
     en:['Boil meat with onion until tender.','Peel bananas, cut, add to the meat.','Cook until bananas are soft, then mash a little to blend.','Stir, add salt, serve hot.']},
   'Wali na mboga za majani':{sw:['Pika wali hadi uive.','Kaanga mboga za majani na vitunguu na nyanya.','Tia chumvi na mafuta kidogo, pika hadi ziive.','Pakua wali na mboga.'],
     en:['Cook rice until done.','Fry the leafy greens with onion and tomato.','Add salt and a little oil, cook until done.','Serve rice with the greens.']},
-  'Saladi ya matunda':{sw:['Osha na menya matunda (embe, papai, nanasi, ndizi).','Kata vipande vidogo, weka kwenye bakuli.','Kamua ndimu kidogo, ongeza mtindi au asali (hiari).','Changanya taratibu, pakua ikiwa baridi.'],
-    en:['Wash and peel the fruit (mango, papaya, pineapple, banana).','Cut into small pieces, put in a bowl.','Squeeze a little lime, add yogurt or honey (optional).','Mix gently, serve chilled.']},
   'Wali na njegere':{sw:['Pika wali kwa kawaida hadi uive.','Chemsha njegere hadi zilainike.','Kaanga vitunguu na nyanya, ongeza njegere na chumvi.','Pakua wali na njegere.'],
     en:['Cook plain rice until done.','Boil peas until tender.','Fry onion and tomato, add peas and salt.','Serve rice with the peas.']},
   'Tambi za nyama':{sw:['Kaanga vitunguu na nyama hadi iive.','Ongeza nyanya, chumvi na maji kidogo.','Weka tambi, funika, pika hadi zilainike.','Koroga taratibu, pakua moto.'],
@@ -400,54 +460,313 @@ const RECIPES={
     en:['Peel cassava, cut into pieces, boil until soft.','Make a meat stew with onion and tomato.','Add cassava to the stew, simmer briefly.','Serve cassava with the meat.']},
   'Magimbi ya nazi':{sw:['Menya magimbi, kata vipande.','Chemsha hadi yaanze kulainika.','Ongeza maziwa ya nazi, chumvi na vitunguu.','Pika hadi yaive na mchuzi uwe mzito.'],
     en:['Peel taro, cut into pieces.','Boil until it starts to soften.','Add coconut milk, salt and onion.','Cook until done and the sauce thickens.']},
+  'Samaki wa kupaka':{sw:['Safisha samaki, paka chumvi, ndimu na viungo; acha dakika 20.','Choma samaki kidogo kwenye moto au kaanga.','Tengeneza mchuzi mzito wa nazi na viungo.','Paka samaki mchuzi wa nazi, pika dakika 10, pakua.'],
+    en:['Clean fish, rub with salt, lime and spices; rest 20 min.','Grill or lightly fry the fish.','Make a thick coconut sauce with spices.','Coat the fish in the coconut sauce, cook 10 min, serve.']},
+  'Kuku wa kuchoma na kachumbari':{sw:['Osha kuku, kata vipande, paka chumvi, ndimu, kitunguu saumu na pilipili.','Acha akolee dakika 30 au zaidi.','Choma kwenye mkaa au oveni hadi aive na awe wa kahawia.','Tengeneza kachumbari ya nyanya na vitunguu, pakua pamoja.'],
+    en:['Wash chicken, cut into pieces, season with salt, lime, garlic and chilli.','Marinate for 30 minutes or more.','Grill over charcoal or bake until cooked and browned.','Make tomato-onion kachumbari and serve together.']},
   'Mchuzi wa uyoga na wali':{sw:['Osha uyoga, kata vipande.','Kaanga vitunguu, ongeza uyoga, nyanya na chumvi.','Pika dakika 10 hadi uyoga uive.','Pakua na wali.'],
     en:['Wash mushrooms, slice them.','Fry onion, add mushrooms, tomato and salt.','Cook 10 min until the mushrooms are done.','Serve with rice.']},
+
+  'Kachumbari':{sw:['Kata nyanya na vitunguu vipande vyembamba.','Ongeza pilipili hoho au pilipili kali (hiari).','Kamua ndimu, tia chumvi kidogo.','Changanya, pakua ikiwa baridi.'],
+    en:['Slice tomatoes and onions thinly.','Add sweet or hot pepper (optional).','Squeeze lime and add a little salt.','Toss and serve cool.']},
+  'Mchicha':{sw:['Osha mchicha vizuri, kata.','Kaanga vitunguu na nyanya kwa mafuta kidogo.','Weka mchicha, tia chumvi.','Pika dakika 5-8, usiiache ikauke sana.'],
+    en:['Wash the spinach well and chop.','Fry onion and tomato in a little oil.','Add the spinach and salt.','Cook 5-8 min, do not overcook.']},
+  'Kisamvu':{sw:['Twanga majani ya muhogo.','Chemsha hadi yalainike.','Ongeza nazi na karanga zilizosagwa.','Pika hadi mchuzi uwe mzito.'],
+    en:['Pound the cassava leaves.','Boil until soft.','Add coconut milk and ground peanuts.','Cook until thick.']},
+  'Parachichi':{sw:['Chagua parachichi lililoiva.','Kata katikati, toa kokwa.','Kata vipande au chota kwa kijiko.','Tia chumvi kidogo au ndimu, pakua.'],
+    en:['Pick a ripe avocado.','Cut in half and remove the stone.','Slice or scoop out with a spoon.','Add a little salt or lime and serve.']},
+  'Saladi ya majani':{sw:['Osha majani ya saladi, nyanya na tango.','Kata vipande vidogo.','Changanya na ndimu, mafuta kidogo na chumvi.','Pakua ikiwa baridi.'],
+    en:['Wash the lettuce, tomato and cucumber.','Cut into small pieces.','Toss with lime, a little oil and salt.','Serve chilled.']},
+  'Maharage ya nazi':{sw:['Chemsha maharage hadi yalainike.','Kamua tui la nazi.','Weka tui, chumvi na vitunguu.','Pika hadi mchuzi uwe mzito.'],
+    en:['Boil the beans until soft.','Extract coconut milk.','Add coconut milk, salt and onion.','Simmer until the sauce thickens.']},
+  'Mboga za kukaanga':{sw:['Kata mboga mchanganyiko vipande vidogo.','Kaanga vitunguu kwa mafuta ya moto.','Weka mboga, koroga kwa moto mkali dakika 5.','Tia chumvi, pakua zikiwa bado na rangi nzuri.'],
+    en:['Chop mixed vegetables into small pieces.','Fry onion in hot oil.','Add vegetables and stir-fry on high heat for 5 min.','Season with salt and serve while still colourful.']},
 };
 function ytLink(sw){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent('jinsi ya kupika '+sw); }
 function recipeSteps(dish){ const r=RECIPES[dish.sw]; return r ? (lang==='sw'?r.sw:r.en) : null; }
+function allDishes(){ return [...BREAKFAST,...MAINS,...SIDES]; }
+function dishBySw(sw){ return allDishes().find(d=>d.sw===sw)||null; }
+
+function TSh(n){ return Math.round(n).toLocaleString('en-US')+' TSh'; }
+function budgetActive(){ return filters.budget && budget.amount>0; }
+function allowanceFor(scope){
+  if(!budgetActive()) return 0;
+  const people=Math.max(1,budget.people);
+  const perPerson=budget.amount/people;
+  if(scope==='week'){
+    return Math.max(500, perPerson/7/3 - (FRUIT_COST+JUICE_COST)/3);
+  }
+  if(scope==='day'){
+    return Math.max(500, perPerson/3 - (FRUIT_COST+JUICE_COST));
+  }
+  return Math.max(500, perPerson - (FRUIT_COST+JUICE_COST));
+}
+function affordable(pool, allowance){
+  if(!allowance) return pool;
+  const ok=pool.filter(d=>d.cost<=allowance*1.1);
+  if(ok.length) return ok;
+  return [...pool].sort((a,b)=>a.cost-b.cost).slice(0,3);
+}
 
 /* ---------- filtering & selection ---------- */
+const PROTEIN_FILTERS=['fish','chicken','meat'];
+const SOFT_FILTERS=['quick'];   // a convenience wish — may be relaxed if nothing matches
 function activeFilterList(){ return Object.keys(filters).filter(k=>filters[k]); }
-function matches(dish){
-  const need=activeFilterList();
-  return need.every(f=> dish.tags.includes(f));
+function matchesKeys(dish, keys){
+  // 'budget' is handled by the money allowance, not as a tag requirement
+  const need=keys.filter(f=>f!=='budget');
+  const wantProtein=need.filter(f=>PROTEIN_FILTERS.includes(f));
+  const others=need.filter(f=>!PROTEIN_FILTERS.includes(f));
+  if(!others.every(f=>dish.tags.includes(f))) return false;
+  if(wantProtein.length) return wantProtein.some(f=>dish.tags.includes(f));
+  return true;
 }
-function poolFor(meal){
+function matches(dish){ return matchesKeys(dish, activeFilterList()); }
+/* Relax only the soft wishes when nothing matches — a diet choice such as
+   Vegetarian is never dropped, or we would serve meat to a vegetarian. */
+function filteredList(base){
+  const keys=activeFilterList();
+  const attempts=[keys, keys.filter(k=>!SOFT_FILTERS.includes(k))];
+  for(const set of attempts){
+    const ok=base.filter(d=>matchesKeys(d,set));
+    if(ok.length) return ok;
+  }
+  return base;
+}
+function poolFor(meal, scope){
   const base = meal==='breakfast' ? BREAKFAST : MAINS;
-  // rare dishes (e.g. uyoga/mushroom) only show up occasionally
-  let ok = base.filter(matches).filter(d=> !d.rare || Math.random()<0.15);
-  if(!ok.length) ok = base.filter(matches);
-  return ok.length ? ok : base;   // if filters too strict, fall back so we always suggest something
+  const list = filteredList(base);
+  let ok = list.filter(d=> !d.rare || Math.random()<0.15);
+  if(!ok.length) ok = list;
+  return affordable(ok, allowanceFor(scope||'meal'));
 }
+function sidePool(){ return filteredList(SIDES); }
 function chooseAvoiding(pool, key){
   const d=load(); const recent=(d.recent&&d.recent[key])||[];
   const fresh=pool.filter(x=>!recent.includes(x.sw));
   const chosen=pick(fresh.length?fresh:pool);
-  // remember last 3 so suggestions don't repeat back-to-back
   d.recent=d.recent||{}; const list=[chosen.sw,...recent].slice(0,3); d.recent[key]=list; save(d);
   return chosen;
 }
-function chooseMain(meal){ return chooseAvoiding(poolFor(meal), meal); }
+function chooseMain(meal, scope){ return chooseAvoiding(poolFor(meal,scope), meal); }
 function nm(o){ return lang==='sw'?o.sw:o.en; }
-function sub(o){ return lang==='sw'?o.en:o.sw; }  // show the other language as a hint
+function sub(o){ return lang==='sw'?o.en:o.sw; }
 
 const MEALINFO={
   breakfast:{ic:'🌅', en:'Breakfast', sw:'Kifungua kinywa'},
   lunch:{ic:'☀️', en:'Lunch', sw:'Chakula cha mchana'},
   dinner:{ic:'🌙', en:'Dinner', sw:'Chakula cha usiku'},
 };
+const TAGLABEL=()=>({veg:t('Vegetarian','Mboga tu'),budget:t('Budget','Nafuu'),quick:t('Quick','Haraka'),
+  hearty:t('Filling','Inashibisha'),fish:t('Fish','Samaki'),chicken:t('Chicken','Kuku'),meat:t('Meat','Nyama')});
+
+/* ---------- saved plans (LOCKED until the cook asks for a new one) ---------- */
+function plansOf(d){ const u=d.session&&d.users&&d.users[d.session]; return u?(u.plans=u.plans||{}):(d.plans=d.plans||{}); }
+function getPlan(type){ return plansOf(load())[type]||null; }
+function storePlan(type,plan){ const d=load(); plansOf(d)[type]=plan; save(d); }
+function planDate(ts){ return new Date(ts).toLocaleDateString(lang==='sw'?'sw-TZ':'en-GB',{day:'numeric',month:'short'}); }
+
+function buildWeekPlan(){
+  function series(meal){
+    const p=poolFor(meal,'week').slice(); const out=[];
+    for(let i=0;i<7;i++){ if(!p.length) p.push(...poolFor(meal,'week')); out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); }
+    return out;
+  }
+  const wb=series('breakfast'), wl=series('lunch'), wd=series('dinner');
+  // don't serve the same dish for lunch and dinner on one day — swap it with another day
+  for(let i=0;i<7;i++){
+    if(wd[i].sw!==wl[i].sw) continue;
+    const j=wd.findIndex((x,k)=>k!==i && x.sw!==wl[i].sw && wl[k].sw!==wd[i].sw);
+    if(j>-1){ const tmp=wd[i]; wd[i]=wd[j]; wd[j]=tmp; }
+  }
+  const days=[];
+  for(let i=0;i<7;i++){
+    const fr=pickFruit(), jc=pickJuice();
+    days.push({b:wb[i].sw, l:wl[i].sw, d:wd[i].sw, fruit:fr.sw, juice:jc.fruitSw});
+  }
+  return {createdAt:Date.now(), people:budget.people, budget:budgetActive()?budget.amount:0,
+          filters:activeFilterList(), days, checked:{}};
+}
+function buildDayPlan(){
+  const meals={};
+  ['breakfast','lunch','dinner'].forEach(m=>{
+    const main=chooseMain(m,'day');
+    const side = m==='breakfast'? null : pick(sidePool());
+    const fr=pickFruit(), jc=pickJuice();
+    meals[m]={main:main.sw, side:side?side.sw:null, fruit:fr.sw, juice:jc.fruitSw};
+  });
+  return {createdAt:Date.now(), people:budget.people, budget:budgetActive()?budget.amount:0,
+          filters:activeFilterList(), meals, checked:{}};
+}
+
+function planCost(plan,type){
+  const people=Math.max(1,plan.people||1);
+  let total=0;
+  if(type==='week'){
+    plan.days.forEach(day=>{
+      ['b','l','d'].forEach(k=>{ const dish=dishBySw(day[k]); total += dish?dish.cost:0; });
+      total += FRUIT_COST + JUICE_COST;
+    });
+  } else {
+    Object.values(plan.meals).forEach(m=>{
+      const dish=dishBySw(m.main); total += dish?dish.cost:0;
+      if(m.side){ const s=dishBySw(m.side); total += s?s.cost:0; }
+      total += FRUIT_COST + JUICE_COST;
+    });
+  }
+  return total*people;
+}
+
+/* ---------- shopping list ---------- */
+const SHOP_CATS=[
+  {en:'Grains & flour', sw:'Nafaka na unga', words:['mchele','unga','mkate','tambi','mahindi','hamira','ulezi','ngano','chapati']},
+  {en:'Meat, fish & eggs', sw:'Nyama, samaki na mayai', words:['nyama','kuku','samaki','dagaa','maini','mayai']},
+  {en:'Vegetables & roots', sw:'Mboga na mizizi', words:['vitunguu','nyanya','mchicha','kisamvu','mboga','njegere','maharage','viazi','mihogo','magimbi','uyoga','pilipili','saladi','karanga','tango']},
+  {en:'Fruit', sw:'Matunda', words:['matunda','embe','machungwa','papai','tikiti','parachichi','ndizi','nanasi','pera','zabibu','passion','ndimu','ukwaju','rozela','beetroot']},
+  {en:'Other', sw:'Vingine', words:[]},
+];
+function catOf(item){
+  const s=item.toLowerCase();
+  for(let i=0;i<SHOP_CATS.length-1;i++){
+    if(SHOP_CATS[i].words.some(w=>s.includes(w))) return i;
+  }
+  return SHOP_CATS.length-1;
+}
+function addItems(map, shopStr){
+  if(!shopStr) return;
+  shopStr.split(',').map(s=>s.trim()).filter(Boolean).forEach(item=>{
+    const key=item.toLowerCase();
+    map[key]=(map[key]||0)+1;
+  });
+}
+function shoppingFrom(plan,type){
+  const map={};
+  if(type==='week'){
+    plan.days.forEach(day=>{
+      ['b','l','d'].forEach(k=>{ const dish=dishBySw(day[k]); if(dish) addItems(map,dish.shop); });
+      addItems(map, fruitBySw(day.fruit).sw.toLowerCase());
+      addItems(map, fruitBySw(day.juice).sw.toLowerCase());
+    });
+  } else {
+    Object.values(plan.meals).forEach(m=>{
+      const dish=dishBySw(m.main); if(dish) addItems(map,dish.shop);
+      if(m.side){ const s=dishBySw(m.side); if(s) addItems(map,s.shop); }
+      addItems(map, fruitBySw(m.fruit).sw.toLowerCase());
+      addItems(map, fruitBySw(m.juice).sw.toLowerCase());
+    });
+  }
+  return map;
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function renderShopping(into){
+  const week=getPlan('week'), day=getPlan('day');
+  const plan = week || day;
+  const type = week ? 'week' : (day ? 'day' : null);
+  let html=`<h2 style="margin-top:0">🛒 ${t('Shopping list','Orodha ya manunuzi')}</h2>`;
+  if(!plan){
+    html+=`<p class="muted">${t('Make a weekly menu or a day plan first — then everything you need to buy appears here.','Tengeneza menyu ya wiki au mpango wa siku kwanza — kisha vitu vyote vya kununua vitaonekana hapa.')}</p>
+      <div class="row">
+        <button class="btn" data-again="week">🗓️ ${t('Make weekly menu','Tengeneza menyu ya wiki')}</button>
+        <button class="btn ghost small" data-again="day">📅 ${t('Plan a day','Panga siku')}</button>
+      </div>
+      <div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+    into.innerHTML=html; wireSuggestButtons(into); show(into.id); return;
+  }
+  const people=Math.max(1,plan.people||1);
+  html+=`<p class="muted">${type==='week'
+      ? t('For your saved weekly menu','Kwa menyu yako ya wiki iliyohifadhiwa')
+      : t('For your saved day plan','Kwa mpango wako wa siku uliohifadhiwa')} · ${t('for','kwa')} <b>${people}</b> ${t(people===1?'person':'people','watu')} · ${planDate(plan.createdAt)}</p>`;
+
+  const map=shoppingFrom(plan,type);
+  const groups=SHOP_CATS.map(()=>[]);
+  Object.entries(map).sort((a,b)=>b[1]-a[1]).forEach(([item,count])=>{ groups[catOf(item)].push([item,count]); });
+
+  plan.checked=plan.checked||{};
+  groups.forEach((items,i)=>{
+    if(!items.length) return;
+    html+=`<div class="shopcat"><h4>${t(SHOP_CATS[i].en,SHOP_CATS[i].sw)}</h4>`;
+    items.forEach(([item,count])=>{
+      const done=!!plan.checked[item];
+      const id='ck_'+btoa(unescape(encodeURIComponent(item))).replace(/[^A-Za-z0-9]/g,'');
+      html+=`<div class="shopitem${done?' done':''}">
+        <input type="checkbox" id="${id}" data-buy="${escAttr(item)}" ${done?'checked':''} />
+        <label for="${id}">${cap(item)}
+          <small>${t('needed for','inahitajika kwa')} ${count} ${t(count===1?'meal':'meals','milo')}</small></label>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+
+  const cost=planCost(plan,type);
+  html+=`<div class="total"><span>${t('Estimated total','Makadirio ya jumla')}</span><span class="amt">${TSh(cost)}</span></div>`;
+  if(plan.budget){
+    const left=plan.budget-cost;
+    html+= left>=0
+      ? `<div class="note lock">✅ ${t('Within your budget of','Ndani ya bajeti yako ya')} <b>${TSh(plan.budget)}</b> — ${t('about','takribani')} <b>${TSh(left)}</b> ${t('left over.','zinabaki.')}</div>`
+      : `<div class="note over">⚠️ ${t('About','Takribani')} <b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(plan.budget)}</b>. ${t('Turn on 💰 Budget and make a new plan for cheaper meals.','Washa 💰 Nafuu kisha tengeneza mpango mpya wa vyakula vya bei nafuu.')}</div>`;
+  }
+  html+=`<div class="note">💡 ${t('Prices are rough estimates for Tanzania — markets differ.','Bei ni makadirio ya kawaida ya Tanzania — masoko hutofautiana.')}</div>
+    <div class="row">
+      <button class="btn ghost small" data-again="${type}">${type==='week'?'🗓️ '+t('See my menu','Ona menyu yangu'):'📅 '+t('See my day','Ona siku yangu')}</button>
+      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+    </div>`;
+  into.innerHTML=html; wireSuggestButtons(into); show(into.id);
+
+  into.querySelectorAll('[data-buy]').forEach(cb=>cb.onchange=()=>{
+    const d=load(); const p=plansOf(d)[type]; if(!p) return;
+    p.checked=p.checked||{};
+    if(cb.checked) p.checked[cb.dataset.buy]=true; else delete p.checked[cb.dataset.buy];
+    save(d);
+    cb.closest('.shopitem').classList.toggle('done', cb.checked);
+  });
+}
+
+/* ---------- recipe sheet (works from anywhere) ---------- */
+let lastFocus=null;
+function openRecipe(sw){
+  const dish=dishBySw(sw); if(!dish) return;
+  lastFocus=document.activeElement;
+  const steps=recipeSteps(dish);
+  const tags=(dish.tags||[]).map(tg=>`<span class="t t-${tg}">${TAGLABEL()[tg]||tg}</span>`).join('');
+  $('recipeSheet').innerHTML=`
+    <div class="sheetHead">
+      <h3 id="rsTitle">${dish.sw}<br><span class="muted" style="font-size:15px; font-weight:400">${dish.en}</span></h3>
+      <button class="xbtn" id="rsClose" aria-label="${t('Close','Funga')}">✕</button>
+    </div>
+    <div class="tags">${tags}<span class="t t-cost">${TSh(dish.cost)} / ${t('person','mtu')}</span></div>
+    <div class="recipe">
+      <div><b>${t('Ingredients','Mahitaji')}:</b> ${dish.shop}</div>
+      <div style="margin-top:10px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
+        <ol class="rsteps">${(steps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol>
+      </div>
+      <a class="ytbtn" href="${ytLink(dish.sw)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
+    </div>`;
+  $('recipeOverlay').classList.remove('hidden');
+  $('rsClose').onclick=closeRecipe;
+  $('rsClose').focus();
+}
+function closeRecipe(){
+  $('recipeOverlay').classList.add('hidden');
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+$('recipeOverlay').onclick=e=>{ if(e.target===$('recipeOverlay')) closeRecipe(); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('recipeOverlay').classList.contains('hidden')) closeRecipe(); });
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-recipe-for]');
+  if(b){ e.preventDefault(); openRecipe(b.dataset.recipeFor); }
+});
 
 /* ---------- render one meal ---------- */
 function suggestMeal(meal, into){
   const info=MEALINFO[meal];
-  const main=chooseMain(meal);
-  const wantSide = meal!=='breakfast' || main.tags.includes('hearty');
-  const side = (meal==='breakfast') ? null : chooseAvoiding(SIDES.filter(matches).length?SIDES.filter(matches):SIDES, meal+'_side');
+  const main=chooseMain(meal,'meal');
+  const side = (meal==='breakfast') ? null : chooseAvoiding(sidePool(), meal+'_side');
   const fruit = pickFruit();
   const juice = pickJuice();
 
-  const tagLabel={veg:t('Vegetarian','Mboga tu'),budget:t('Budget','Nafuu'),quick:t('Quick','Haraka'),hearty:t('Filling','Inashibisha')};
-  const tagsHtml=main.tags.map(tg=>`<span class="t t-${tg}">${tagLabel[tg]||tg}</span>`).join('');
+  const tagsHtml=main.tags.map(tg=>`<span class="t t-${tg}">${TAGLABEL()[tg]||tg}</span>`).join('')
+    + `<span class="t t-cost">${TSh(main.cost)} / ${t('person','mtu')}</span>`;
 
   const fav=isFav(main.sw);
   let html=`
@@ -460,20 +779,19 @@ function suggestMeal(meal, into){
     <div class="tags">${tagsHtml}</div>
 
     <div style="margin-top:12px">`;
-  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v">${nm(side)}<small>${sub(side)}</small></span></div>`;
+  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(side.sw)}">${nm(side)}</button><small>${sub(side)}</small></span></div>`;
   html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v">${nm(fruit)}<small>${sub(fruit)}</small></span></div>
     <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v">${nm(juice)}<small>${sub(juice)}</small></span></div>
-    <div class="lineitem"><span class="k">${t('Shopping','Manunuzi')}</span><span class="v" style="font-weight:600">${main.shop}${side?', '+ (lang==='sw'?side.sw.toLowerCase():side.en.toLowerCase()):''}, ${fruit.sw.toLowerCase()}, ${juice.fruitSw.toLowerCase()}</span></div>
+    <div class="lineitem"><span class="k">${t('Shopping','Manunuzi')}</span><span class="v" style="font-weight:600">${main.shop}${side?', '+side.shop:''}, ${fruit.sw.toLowerCase()}, ${juice.fruitSw.toLowerCase()}</span></div>
     </div>`;
 
-  // recipe + how to prepare + YouTube video (hidden until tapped)
-  const rsteps=recipeSteps(main);
-  html+=`<button class="btn ghost small" data-recipe style="width:100%; margin-top:14px">📖 ${t('Show recipe & video','Onyesha mapishi na video')}</button>
+  const steps=recipeSteps(main);
+  html+=`<button class="btn ghost small" data-recipe style="width:100%; margin-top:14px">📖 ${t('Show recipe & steps','Onyesha mapishi na hatua')}</button>
     <div class="recipe hidden" id="recipeBox">
       <div><b>${t('Ingredients','Mahitaji')}:</b> ${main.shop}</div>
-      <div style="margin-top:8px"><b>${t('How to prepare','Jinsi ya kuandaa')}:</b>
-        <ol class="rsteps">${(rsteps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
-      <a class="ytbtn" href="${ytLink(main.sw)}" target="_blank" rel="noopener">▶ ${t('Watch how to cook it on YouTube','Tazama jinsi ya kupika kwenye YouTube')}</a>
+      <div style="margin-top:8px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
+        <ol class="rsteps">${(steps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
+      <a class="ytbtn" href="${ytLink(main.sw)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
     </div>`;
 
   html+=`<div class="row">
@@ -485,62 +803,90 @@ function suggestMeal(meal, into){
   show(into.id);
 }
 
-/* ---------- full day ---------- */
-function suggestDay(into){
-  const meals=['breakfast','lunch','dinner'];
-  let html=`<h2 style="margin-top:0">📅 ${t("Today's plan","Mpango wa leo")}</h2>`;
-  meals.forEach(m=>{
-    const info=MEALINFO[m];
-    const main=chooseMain(m);
-    const side = m==='breakfast'? null : pick(SIDES.filter(matches).length?SIDES.filter(matches):SIDES);
-    const fruit=pickFruit(); const juice=pickJuice();
+/* ---------- day plan (LOCKED) ---------- */
+function suggestDay(into, force){
+  let plan=getPlan('day');
+  if(!plan || force){ plan=buildDayPlan(); storePlan('day',plan); }
+  let html=`<h2 style="margin-top:0">📅 ${t("My day plan","Mpango wangu wa siku")}</h2>
+    <div class="note lock">📌 ${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this plan stays the same so your shopping is not wasted. It only changes when you tap “New day”.','mpango huu hautabadilika ili manunuzi yako yasipotee. Utabadilika tu ukibonyeza “Siku mpya”.')}</div>`;
+
+  ['breakfast','lunch','dinner'].forEach(m=>{
+    const info=MEALINFO[m]; const slot=plan.meals[m];
+    const main=dishBySw(slot.main); if(!main) return;
+    const side=slot.side?dishBySw(slot.side):null;
+    const fruit=fruitBySw(slot.fruit), juice=juiceOf(slot.juice);
     html+=`<div class="daycard">
       <h3>${info.ic} ${t(info.en,info.sw)}</h3>
-      <div style="font-size:18px; font-weight:800"><a class="dishlink" href="${ytLink(main.sw)}" target="_blank" rel="noopener">${nm(main)}</a> <span class="muted" style="font-size:13px; font-weight:400">· ${sub(main)}</span></div>
-      <div class="muted" style="font-size:13px; margin-top:4px">
-        ${side?'🥗 '+nm(side)+' · ':''}🍎 ${nm(fruit)} · 🥤 ${nm(juice)}</div>
+      <div style="font-size:18px"><button class="dishbtn" data-recipe-for="${escAttr(main.sw)}">${nm(main)}</button>
+        <a class="ytmini" href="${ytLink(main.sw)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+        <span class="muted" style="font-size:13px"> · ${sub(main)}</span></div>
+      <div class="muted" style="font-size:13px; margin-top:6px">
+        ${side?'🥗 <button class="dishbtn" style="font-size:13px" data-recipe-for="'+escAttr(side.sw)+'">'+nm(side)+'</button> · ':''}🍎 ${nm(fruit)} · 🥤 ${nm(juice)}</div>
+      <div class="muted" style="font-size:12px; margin-top:6px">📖 ${t('Tap the dish name for step-by-step cooking','Gusa jina la chakula upate hatua za kupika')}</div>
     </div>`;
   });
+
+  const cost=planCost(plan,'day');
+  html+=`<div class="total"><span>${t('Estimated cost for','Makadirio ya gharama kwa')} ${plan.people} ${t('people','watu')}</span><span class="amt">${TSh(cost)}</span></div>`;
+  if(plan.budget) html+=budgetVerdict(cost, plan.budget);
   html+=`<div class="row">
-      <button class="btn" data-again="day">🔄 ${t('Shuffle the day','Changanya siku')}</button>
+      <button class="btn green" data-again="shop">🛒 ${t('What to buy','Cha kununua')}</button>
+      <button class="btn ghost small" data-new="day">🔄 ${t('New day','Siku mpya')}</button>
       <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
-/* ---------- weekly menu ---------- */
-function suggestWeek(into){
+function budgetVerdict(cost,amount){
+  const left=amount-cost;
+  return left>=0
+    ? `<div class="note lock">✅ ${t('Fits your budget of','Inatosha bajeti yako ya')} <b>${TSh(amount)}</b> · <b>${TSh(left)}</b> ${t('left over','zinabaki')}</div>`
+    : `<div class="note over">⚠️ <b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(amount)}</b>. ${t('Make a new plan for cheaper meals.','Tengeneza mpango mpya wa vyakula nafuu.')}</div>`;
+}
+
+/* ---------- weekly menu (LOCKED) ---------- */
+function suggestWeek(into, force){
+  let plan=getPlan('week');
+  if(!plan || force){ plan=buildWeekPlan(); storePlan('week',plan); }
   const days = lang==='sw'
     ? ['Jumatatu','Jumanne','Jumatano','Alhamisi','Ijumaa','Jumamosi','Jumapili']
     : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  // build 7 distinct-ish picks per meal
-  function week(meal){
-    const p=poolFor(meal).slice(); const out=[];
-    for(let i=0;i<7;i++){ if(!p.length) p.push(...poolFor(meal)); out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); }
-    return out;
+
+  let html=`<h2 style="margin-top:0">🗓️ ${t('My weekly menu','Menyu yangu ya wiki')}</h2>
+    <div class="note lock">📌 ${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this timetable will NOT change on its own. Your shopping list stays valid until you tap “New week” yourself.','ratiba hii HAITABADILIKA yenyewe. Orodha yako ya manunuzi itabaki sahihi hadi wewe mwenyewe ubonyeze “Wiki mpya”.')}</div>`;
+  if(plan.filters && plan.filters.length){
+    const names=plan.filters.map(k=>{ const f=FILTER_DEFS.find(x=>x.key===k); return f?t(f.en,f.sw):k; }).join(', ');
+    html+=`<p class="muted" style="font-size:13px">${t('Filters used','Vichujio vilivyotumika')}: <b>${names}</b></p>`;
   }
-  const wb=week('breakfast'), wl=week('lunch'), wd=week('dinner');
-  let html=`<h2 style="margin-top:0">🗓️ ${t('Weekly menu','Menyu ya wiki')}</h2>
-    <table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
-  // show both languages: Swahili name (link) with the English name below
-  const cell=d=>`<a class="dishlink" href="${ytLink(d.sw)}" target="_blank" rel="noopener">${d.sw}</a><br><small class="muted">${d.en}</small>`;
-  for(let i=0;i<7;i++){
-    const fr=pickFruit(), jc=pickJuice();
-    html+=`<tr><td><b>${days[i]}</b></td><td>${cell(wb[i])}</td><td>${cell(wl[i])}</td><td>${cell(wd[i])}</td><td><small class="muted">🍎 ${fr.sw} / ${fr.en}<br>🥤 ${jc.sw}</small></td></tr>`;
-  }
+  html+=`<table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
+  const cell=sw=>{ const d=dishBySw(sw); if(!d) return '';
+    return `<button class="dishbtn" data-recipe-for="${escAttr(d.sw)}">${d.sw}</button>
+      <a class="ytmini" href="${ytLink(d.sw)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+      <br><small class="muted">${d.en}</small>`; };
+  plan.days.forEach((day,i)=>{
+    const fr=fruitBySw(day.fruit), jc=juiceOf(day.juice);
+    html+=`<tr><td><b>${days[i]}</b></td><td>${cell(day.b)}</td><td>${cell(day.l)}</td><td>${cell(day.d)}</td>
+      <td><small class="muted">🍎 ${fr.sw} / ${fr.en}<br>🥤 ${jc.sw}</small></td></tr>`;
+  });
   html+=`</table>
-    <div class="note">💡 ${t('Tip: cook beans or ugali in a bigger pot once, then reuse for two days to save time and money.','Dokezo: pika maharage au ugali kwa wingi mara moja, kisha tumia kwa siku mbili kuokoa muda na pesa.')}</div>
-    <div class="note">🍹 ${t('Add a fresh fruit and a juice to every meal (one is suggested per day above).','Ongeza tunda na juisi kwa kila mlo (limependekezwa kwa kila siku hapo juu).')}</div>
+    <div class="note">📖 ${t('Tap any dish name to read the step-by-step cooking instructions. The ▶ opens a video instead.','Gusa jina la chakula chochote usome hatua za kupika. Alama ▶ hufungua video badala yake.')}</div>`;
+
+  const cost=planCost(plan,'week');
+  html+=`<div class="total"><span>${t('Estimated cost for','Makadirio ya gharama kwa')} ${plan.people} ${t('people','watu')} / ${t('week','wiki')}</span><span class="amt">${TSh(cost)}</span></div>`;
+  if(plan.budget) html+=budgetVerdict(cost, plan.budget);
+
+  html+=`<div class="note">💡 ${t('Tip: cook beans or ugali in a bigger pot once, then reuse for two days to save time and money.','Dokezo: pika maharage au ugali kwa wingi mara moja, kisha tumia kwa siku mbili kuokoa muda na pesa.')}</div>
     <div class="row">
-      <button class="btn" data-again="week">🔄 ${t('New week','Wiki mpya')}</button>
+      <button class="btn green" data-again="shop">🛒 ${t('What to buy for this week','Cha kununua kwa wiki hii')}</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost small" data-new="week">🔄 ${t('New week','Wiki mpya')}</button>
       <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
 /* ---------- favourites ---------- */
-function allDishes(){ return [...BREAKFAST,...MAINS]; }
-/* favourites belong to the logged-in account; guests share the device list */
 function favList(d){ const u=d.session&&d.users&&d.users[d.session]; return u?(u.favs=u.favs||[]):(d.favs=d.favs||[]); }
 function isFav(sw){ return favList(load()).includes(sw); }
 function toggleFav(sw){ const d=load(); const f=favList(d); const i=f.indexOf(sw);
@@ -552,8 +898,8 @@ function renderFavs(into){
     html+=`<p class="muted">${t('No favourites yet. Tap the heart 🤍 on any dish to save it here.','Bado hakuna vipendwa. Gusa moyo 🤍 kwenye chakula chochote kukihifadhi.')}</p>`;
   } else {
     favs.forEach(sw=>{
-      const dish=allDishes().find(x=>x.sw===sw)||{sw, en:''};
-      html+=`<div class="lineitem"><span class="v" style="flex:1">${nm(dish)}<small>${sub(dish)}</small></span>
+      const dish=dishBySw(sw)||{sw, en:''};
+      html+=`<div class="lineitem"><span class="v" style="flex:1"><button class="dishbtn" data-recipe-for="${escAttr(sw)}">${nm(dish)}</button><small>${sub(dish)}</small></span>
         <span class="fav" data-fav="${escAttr(sw)}">❤️</span></div>`;
     });
   }
@@ -561,7 +907,7 @@ function renderFavs(into){
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
-/* ---------- accounts (stored on this device only; passwords hashed, never sent) ---------- */
+/* ---------- accounts (this device only; passwords hashed, never sent) ---------- */
 let authMode='login';
 async function hashPw(pw,salt){
   const msg=salt+':'+pw;
@@ -569,7 +915,7 @@ async function hashPw(pw,salt){
     const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
     return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
   }
-  let h=2166136261;                     // fallback for very old browsers
+  let h=2166136261;
   for(let i=0;i<msg.length;i++){ h^=msg.charCodeAt(i); h=Math.imul(h,16777619); }
   return 'f'+(h>>>0).toString(16);
 }
@@ -596,7 +942,7 @@ async function doAuth(){
     if(!name) return authErr(t('Please enter your name.','Tafadhali andika jina lako.'));
     if(d.users[email]) return authErr(t('That email already has an account on this device — try logging in.','Barua pepe hiyo tayari ina akaunti kwenye kifaa hiki — jaribu kuingia.'));
     const salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-    d.users[email]={name, salt, hash:await hashPw(pass,salt), favs:[], created:Date.now()};
+    d.users[email]={name, salt, hash:await hashPw(pass,salt), favs:[], plans:{}, created:Date.now()};
   } else {
     const u=d.users[email];
     if(!u) return authErr(t('No account with that email on this device. Create one first.','Hakuna akaunti ya barua pepe hiyo kwenye kifaa hiki. Fungua akaunti kwanza.'));
@@ -620,23 +966,69 @@ function refreshHome(){
   const d=load(); const u=d.users&&d.users[d.session];
   const g=(h<12?t('Good morning','Habari za asubuhi'):h<17?t('Good afternoon','Habari za mchana'):t('Good evening','Habari za jioni'));
   $('greet').textContent=g+(u?', '+u.name.split(' ')[0]:'')+'! 👋';
+  updateBudgetUI();
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
 
+function renderFilters(){
+  const row=$('filterRow');
+  row.innerHTML=`<span class="muted">${t('Filters:','Vichujio:')}</span>`;
+  FILTER_DEFS.forEach(f=>{
+    const el=document.createElement('span');
+    el.className='chip'+(filters[f.key]?' on':'');
+    el.textContent=t(f.en,f.sw);
+    el.setAttribute('role','button'); el.tabIndex=0;
+    el.onclick=()=>{ filters[f.key]=!filters[f.key]; el.classList.toggle('on',filters[f.key]);
+      persistSettings(); updateBudgetUI(); };
+    el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } };
+    row.appendChild(el);
+  });
+}
+function updateBudgetUI(){
+  $('budgetBox').classList.toggle('hidden', !filters.budget);
+  $('bAmount').value = budget.amount||'';
+  $('bPeople').value = budget.people||4;
+  const hint=$('bHint');
+  if(budgetActive()){
+    const perDay=budget.amount/7;
+    hint.innerHTML=`💡 ${t('That is about','Hiyo ni takribani')} <b>${TSh(perDay)}</b> ${t('per day for','kwa siku kwa')} ${budget.people} ${t('people','watu')}. ${t('I will suggest meals that fit.','Nitapendekeza vyakula vinavyotosha.')}`;
+  } else {
+    hint.textContent=t('Type how much you have and I will plan meals that fit it.','Andika kiasi ulichonacho nami nitapanga vyakula vinavyotosha.');
+  }
+}
+$('bAmount').oninput=()=>{ budget.amount=Math.max(0,+$('bAmount').value||0); persistSettings(); updateBudgetUI(); };
+$('bPeople').oninput=()=>{ budget.people=Math.min(20,Math.max(1,+$('bPeople').value||1)); persistSettings(); updateBudgetUI(); };
+
 function route(meal){
-  if(meal==='day') return suggestDay($('multi'));
-  if(meal==='week') return suggestWeek($('multi'));
+  if(meal==='day')  return suggestDay($('multi'), false);
+  if(meal==='week') return suggestWeek($('multi'), false);
   if(meal==='favs') return renderFavs($('multi'));
+  if(meal==='shop') return renderShopping($('multi'));
   return suggestMeal(meal, $('suggest'));
+}
+function confirmNew(type){
+  const has = !!getPlan(type);
+  if(!has) return true;
+  const msg = type==='week'
+    ? t('Make a NEW weekly menu?\n\nYour current timetable and its shopping list will be replaced — food you already bought may not match the new plan.',
+        'Kutengeneza menyu MPYA ya wiki?\n\nRatiba yako ya sasa na orodha yake ya manunuzi vitabadilishwa — vyakula ulivyokwisha nunua vinaweza visiendane na mpango mpya.')
+    : t('Make a NEW day plan?\n\nThe current plan and its shopping list will be replaced.',
+        'Kutengeneza mpango MPYA wa siku?\n\nMpango wa sasa na orodha yake ya manunuzi vitabadilishwa.');
+  return window.confirm(msg);
 }
 function wireSuggestButtons(scope){
   scope.querySelectorAll('[data-again]').forEach(b=>b.onclick=()=>route(b.dataset.again));
+  scope.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>{
+    const type=b.dataset.new;
+    if(!confirmNew(type)) return;
+    if(type==='week') suggestWeek($('multi'), true); else suggestDay($('multi'), true);
+  });
   const home=scope.querySelector('#bkHome'); if(home) home.onclick=()=>{refreshHome();show('home');};
   const rt=scope.querySelector('[data-recipe]');
   if(rt) rt.onclick=()=>{
     const box=scope.querySelector('#recipeBox');
     const hidden=box.classList.toggle('hidden');
-    rt.textContent = hidden ? '📖 '+t('Show recipe & video','Onyesha mapishi na video')
+    rt.textContent = hidden ? '📖 '+t('Show recipe & steps','Onyesha mapishi na hatua')
                             : '📖 '+t('Hide recipe','Ficha mapishi');
   };
   scope.querySelectorAll('[data-fav]').forEach(h=>h.onclick=()=>{
@@ -645,9 +1037,6 @@ function wireSuggestButtons(scope){
 }
 
 document.querySelectorAll('.tile').forEach(tl=>tl.onclick=()=>route(tl.dataset.meal));
-document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
-  const f=c.dataset.f; filters[f]=!filters[f]; c.classList.toggle('on', filters[f]);
-});
 $('favBtn').onclick=()=>route('favs');
 
 $('tabLogin').onclick=()=>setAuthMode('login');
@@ -659,6 +1048,7 @@ $('userPill').onclick=logout;
 
 applyLang();
 setAuthMode('login');
+renderFilters();
 refreshHome();
 updateUserPill();
 const boot=load();
