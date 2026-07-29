@@ -28,12 +28,12 @@ $('langToggle').onclick=()=>{
 
 /* ---------- FILTERS ---------- */
 const FILTER_DEFS=[
-  {key:'veg',     en:'🥬 Vegetarian', sw:'🥬 Mboga tu'},
-  {key:'budget',  en:'💰 Budget',     sw:'💰 Nafuu'},
-  {key:'quick',   en:'⏱️ Quick',      sw:'⏱️ Haraka'},
-  {key:'fish',    en:'🐟 Fish',       sw:'🐟 Samaki'},
-  {key:'chicken', en:'🍗 Chicken',    sw:'🍗 Kuku'},
-  {key:'meat',    en:'🥩 Meat',       sw:'🥩 Nyama'},
+  {key:'veg',     en:'Vegetarian', sw:'Mboga tu'},
+  {key:'budget',  en:'Budget',     sw:'Nafuu'},
+  {key:'quick',   en:'Quick',      sw:'Haraka'},
+  {key:'fish',    en:'Fish',       sw:'Samaki'},
+  {key:'chicken', en:'Chicken',    sw:'Kuku'},
+  {key:'meat',    en:'Meat',       sw:'Nyama'},
 ];
 let filters={};
 FILTER_DEFS.forEach(f=>filters[f.key]=false);
@@ -401,9 +401,9 @@ function nm(o){ return escHtml(lang==='sw'?o.sw:o.en); }
 function sub(o){ return escHtml(lang==='sw'?o.en:o.sw); }
 
 const MEALINFO={
-  breakfast:{ic:'🌅', en:'Breakfast', sw:'Kifungua kinywa'},
-  lunch:{ic:'☀️', en:'Lunch', sw:'Chakula cha mchana'},
-  dinner:{ic:'🌙', en:'Dinner', sw:'Chakula cha usiku'},
+  breakfast:{en:'Breakfast', sw:'Kifungua kinywa'},
+  lunch:{en:'Lunch', sw:'Chakula cha mchana'},
+  dinner:{en:'Dinner', sw:'Chakula cha usiku'},
 };
 const TAGLABEL=()=>({veg:t('Vegetarian','Mboga tu'),budget:t('Budget','Nafuu'),quick:t('Quick','Haraka'),
   hearty:t('Filling','Inashibisha'),fish:t('Fish','Samaki'),chicken:t('Chicken','Kuku'),meat:t('Meat','Nyama')});
@@ -566,14 +566,14 @@ function renderShopping(into){
   const week=getPlan('week'), day=getPlan('day');
   const plan = week || day;
   const type = week ? 'week' : (day ? 'day' : null);
-  let html=`<h2 style="margin-top:0">🛒 ${t('Shopping list','Orodha ya manunuzi')}</h2>`;
+  let html=`<h2 style="margin-top:0">${t('Shopping list','Orodha ya manunuzi')}</h2>`;
   if(!plan){
     html+=`<p class="muted">${t('Make a weekly menu or a day plan first — then everything you need to buy appears here.','Tengeneza menyu ya wiki au mpango wa siku kwanza — kisha vitu vyote vya kununua vitaonekana hapa.')}</p>
       <div class="row">
-        <button class="btn" data-again="week">🗓️ ${t('Make weekly menu','Tengeneza menyu ya wiki')}</button>
-        <button class="btn ghost small" data-again="day">📅 ${t('Plan a day','Panga siku')}</button>
+        <button class="btn" data-again="week">${t('Make weekly menu','Tengeneza menyu ya wiki')}</button>
+        <button class="btn ghost small" data-again="day">${t('Plan a day','Panga siku')}</button>
       </div>
-      <div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+      <div class="row"><button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button></div>`;
     into.innerHTML=html; wireSuggestButtons(into); show(into.id); return;
   }
   const people=Math.max(1,plan.people||1);
@@ -606,13 +606,13 @@ function renderShopping(into){
   if(plan.budget){
     const left=plan.budget-cost;
     html+= left>=0
-      ? `<div class="note lock">✅ ${t('Within your budget of','Ndani ya bajeti yako ya')} <b>${TSh(plan.budget)}</b> — ${t('about','takribani')} <b>${TSh(left)}</b> ${t('left over.','zinabaki.')}</div>`
-      : `<div class="note over">⚠️ ${t('About','Takribani')} <b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(plan.budget)}</b>. ${t('Turn on 💰 Budget and make a new plan for cheaper meals.','Washa 💰 Nafuu kisha tengeneza mpango mpya wa vyakula vya bei nafuu.')}</div>`;
+      ? `<div class="note lock">${t('Within your budget of','Ndani ya bajeti yako ya')} <b>${TSh(plan.budget)}</b> — ${t('about','takribani')} <b>${TSh(left)}</b> ${t('left over.','zinabaki.')}</div>`
+      : `<div class="note over">${t('About','Takribani')} <b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(plan.budget)}</b>. ${t('Turn on Budget and make a new plan for cheaper meals.','Washa Nafuu kisha tengeneza mpango mpya wa vyakula vya bei nafuu.')}</div>`;
   }
-  html+=`<div class="note">💡 ${t('Prices are rough estimates for Tanzania — markets differ.','Bei ni makadirio ya kawaida ya Tanzania — masoko hutofautiana.')}</div>
+  html+=`<div class="note">${t('Prices are rough estimates for Tanzania — markets differ.','Bei ni makadirio ya kawaida ya Tanzania — masoko hutofautiana.')}</div>
     <div class="row">
-      <button class="btn ghost small" data-again="${type}">${type==='week'?'🗓️ '+t('See my menu','Ona menyu yangu'):'📅 '+t('See my day','Ona siku yangu')}</button>
-      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+      <button class="btn ghost small" data-again="${type}">${type==='week'?''+t('See my menu','Ona menyu yangu'):''+t('See my day','Ona siku yangu')}</button>
+      <button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 
@@ -635,7 +635,7 @@ function openRecipe(sw){
   $('recipeSheet').innerHTML=`
     <div class="sheetHead">
       <h3 id="rsTitle">${escHtml(dish.sw)}<br><span class="muted" style="font-size:15px; font-weight:400">${escHtml(dish.en||'')}</span></h3>
-      <button class="xbtn" id="rsClose" aria-label="${t('Close','Funga')}">✕</button>
+      <button class="xbtn" id="rsClose" aria-label="${t('Close','Funga')}">×</button>
     </div>
     <div class="tags">${tags}<span class="t t-cost">${TSh(dish.cost)} / ${t('person','mtu')}</span></div>
     <div class="recipe">
@@ -643,8 +643,8 @@ function openRecipe(sw){
       ${steps
         ? `<div style="margin-top:10px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
              <ol class="rsteps">${steps.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ol></div>`
-        : `<div class="note" style="margin-top:10px">🎬 ${t('You have not written the steps for this one yet — watch the video below and it will show you how to cook it.','Bado hujaandika hatua za chakula hiki — tazama video hapa chini nayo itakuonyesha jinsi ya kupika.')}</div>`}
-      <a class="ytbtn" href="${ytOf(dish)}" target="_blank" rel="noopener">▶ ${dish.video
+        : `<div class="note" style="margin-top:10px">${t('You have not written the steps for this one yet — watch the video below and it will show you how to cook it.','Bado hujaandika hatua za chakula hiki — tazama video hapa chini nayo itakuonyesha jinsi ya kupika.')}</div>`}
+      <a class="ytbtn" href="${ytOf(dish)}" target="_blank" rel="noopener">${dish.video
         ? t('Watch your saved video','Tazama video yako uliyohifadhi')
         : t('Watch how to cook it on YouTube','Tazama jinsi ya kupika kwenye YouTube')}</a>
     </div>`;
@@ -677,33 +677,33 @@ function suggestMeal(meal, into){
 
   const fav=isFav(main.sw);
   let html=`
-    <div class="sgHead"><span class="mi">${info.ic}</span><h2>${t(info.en,info.sw)}</h2>
+    <div class="sgHead"><h2>${t(info.en,info.sw)}</h2>
       <span class="spacer" style="flex:1"></span>
-      <span class="fav" data-fav="${escAttr(main.sw)}" title="${t('Save to favourites','Hifadhi kwenye vipendwa')}">${fav?'❤️':'🤍'}</span>
+      <button class="fav" data-fav="${escAttr(main.sw)}" aria-pressed="${fav?'true':'false'}">${fav?t('Saved','Imehifadhiwa'):t('Save','Hifadhi')}</button>
     </div>
     <div class="dish">${nm(main)}</div>
     <div class="gloss">${sub(main)}</div>
     <div class="tags">${tagsHtml}</div>
 
     <div style="margin-top:12px">`;
-  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(side.sw)}">${nm(side)}</button> <a class="ytmini" href="${ytOf(side)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(side)}</small></span></div>`;
-  html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(fruit)}</small></span></div>
-    <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">▶</a><small>${sub(juice)}</small></span></div>
+  if(side) html+=`<div class="lineitem"><span class="k">${t('Serve with','Andama na')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(side.sw)}">${nm(side)}</button> <a class="ytmini" href="${ytOf(side)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a><small>${sub(side)}</small></span></div>`;
+  html+=`<div class="lineitem"><span class="k">${t('Fruit','Tunda')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a><small>${sub(fruit)}</small></span></div>
+    <div class="lineitem"><span class="k">${t('Juice','Juisi')}</span><span class="v"><button class="dishbtn" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a><small>${sub(juice)}</small></span></div>
     <div class="lineitem"><span class="k">${t('Shopping','Manunuzi')}</span><span class="v" style="font-weight:600">${main.shop}${side?', '+side.shop:''}, ${fruit.sw.toLowerCase()}, ${juice.fruitSw.toLowerCase()}</span></div>
     </div>`;
 
   const steps=recipeSteps(main);
-  html+=`<button class="btn ghost small" data-recipe style="width:100%; margin-top:14px">📖 ${t('Show recipe & steps','Onyesha mapishi na hatua')}</button>
+  html+=`<button class="btn ghost small" data-recipe style="width:100%; margin-top:14px">${t('Show recipe & steps','Onyesha mapishi na hatua')}</button>
     <div class="recipe hidden" id="recipeBox">
       <div><b>${t('Ingredients','Mahitaji')}:</b> ${main.shop}</div>
       <div style="margin-top:8px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
         <ol class="rsteps">${(steps||[t('Follow the steps shown in the video below.','Fuata hatua zinazoonyeshwa kwenye video hapa chini.')]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
-      <a class="ytbtn" href="${ytOf(main)}" target="_blank" rel="noopener">▶ ${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
+      <a class="ytbtn" href="${ytOf(main)}" target="_blank" rel="noopener">${t('Or watch it on YouTube','Au tazama kwenye YouTube')}</a>
     </div>`;
 
   html+=`<div class="row">
-      <button class="btn" data-again="${meal}">🔄 ${t('Another idea','Wazo lingine')}</button>
-      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+      <button class="btn" data-again="${meal}">${t('Another idea','Wazo lingine')}</button>
+      <button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html;
   wireSuggestButtons(into);
@@ -714,8 +714,8 @@ function suggestMeal(meal, into){
 function suggestDay(into, force){
   let plan=getPlan('day');
   if(!plan || force){ plan=buildDayPlan(); storePlan('day',plan); }
-  let html=`<h2 style="margin-top:0">📅 ${t("My day plan","Mpango wangu wa siku")}</h2>
-    <div class="note lock">📌 ${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this plan stays the same so your shopping is not wasted. It only changes when you tap “New day”.','mpango huu hautabadilika ili manunuzi yako yasipotee. Utabadilika tu ukibonyeza “Siku mpya”.')}</div>`;
+  let html=`<h2 style="margin-top:0">${t("My day plan","Mpango wangu wa siku")}</h2>
+    <div class="note lock">${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this plan stays the same so your shopping is not wasted. It only changes when you tap “New day”.','mpango huu hautabadilika ili manunuzi yako yasipotee. Utabadilika tu ukibonyeza “Siku mpya”.')}</div>`;
 
   ['breakfast','lunch','dinner'].forEach(m=>{
     const info=MEALINFO[m]; const slot=plan.meals[m];
@@ -723,13 +723,13 @@ function suggestDay(into, force){
     const side=slot.side?dishBySw(slot.side):null;
     const fruit=fruitBySw(slot.fruit), juice=juiceOf(slot.juice);
     html+=`<div class="daycard">
-      <h3>${info.ic} ${t(info.en,info.sw)}</h3>
+      <h3>${t(info.en,info.sw)}</h3>
       <div style="font-size:18px"><button class="dishbtn" data-recipe-for="${escAttr(main.sw)}">${nm(main)}</button>
-        <a class="ytmini" href="${ytOf(main)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+        <a class="ytmini" href="${ytOf(main)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a>
         <span class="muted" style="font-size:13px"> · ${sub(main)}</span></div>
       <div class="muted" style="font-size:13px; margin-top:6px">
-        ${side?'🥗 <button class="dishbtn" style="font-size:13px" data-recipe-for="'+escAttr(side.sw)+'">'+nm(side)+'</button> <a class="ytmini" href="'+ytOf(side)+'" target="_blank" rel="noopener" title="YouTube">▶</a> · ':''}🍎 <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">▶</a> · 🥤 <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">▶</a></div>
-      <div class="muted" style="font-size:12px; margin-top:6px">📖 ${t('Tap any name for the steps, or ▶ for a video','Gusa jina lolote upate hatua, au ▶ kwa video')}</div>
+        ${side?t('Side','Mboga')+': <button class="dishbtn" style="font-size:13px" data-recipe-for="'+escAttr(side.sw)+'">'+nm(side)+'</button> <a class="ytmini" href="'+ytOf(side)+'" target="_blank" rel="noopener" title="YouTube">'+t('video','video')+'</a> · ':''}${t('Fruit','Tunda')}: <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(fruit.sw)}">${nm(fruit)}</button> <a class="ytmini" href="${ytOf(fruit)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a> · ${t('Juice','Juisi')}: <button class="dishbtn" style="font-size:13px" data-recipe-for="${escAttr(juice.sw)}">${nm(juice)}</button> <a class="ytmini" href="${ytOf(juice)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a></div>
+      <div class="muted" style="font-size:12px; margin-top:6px">${t('Tap any name for the steps, or “video” to watch it','Gusa jina lolote upate hatua, au “video” kuitazama')}</div>
     </div>`;
   });
 
@@ -737,9 +737,9 @@ function suggestDay(into, force){
   html+=`<div class="total"><span>${t('Estimated cost for','Makadirio ya gharama kwa')} ${plan.people} ${t('people','watu')}</span><span class="amt">${TSh(cost)}</span></div>`;
   if(plan.budget) html+=budgetVerdict(cost, plan.budget);
   html+=`<div class="row">
-      <button class="btn green" data-again="shop">🛒 ${t('What to buy','Cha kununua')}</button>
-      <button class="btn ghost small" data-new="day">🔄 ${t('New day','Siku mpya')}</button>
-      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+      <button class="btn green" data-again="shop">${t('What to buy','Cha kununua')}</button>
+      <button class="btn ghost small" data-new="day">${t('New day','Siku mpya')}</button>
+      <button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
@@ -747,8 +747,8 @@ function suggestDay(into, force){
 function budgetVerdict(cost,amount){
   const left=amount-cost;
   return left>=0
-    ? `<div class="note lock">✅ ${t('Fits your budget of','Inatosha bajeti yako ya')} <b>${TSh(amount)}</b> · <b>${TSh(left)}</b> ${t('left over','zinabaki')}</div>`
-    : `<div class="note over">⚠️ <b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(amount)}</b>. ${t('Make a new plan for cheaper meals.','Tengeneza mpango mpya wa vyakula nafuu.')}</div>`;
+    ? `<div class="note lock">${t('Fits your budget of','Inatosha bajeti yako ya')} <b>${TSh(amount)}</b> · <b>${TSh(left)}</b> ${t('left over','zinabaki')}</div>`
+    : `<div class="note over"><b>${TSh(-left)}</b> ${t('over your budget of','zaidi ya bajeti yako ya')} <b>${TSh(amount)}</b>. ${t('Make a new plan for cheaper meals.','Tengeneza mpango mpya wa vyakula nafuu.')}</div>`;
 }
 
 /* ---------- weekly menu (LOCKED) ---------- */
@@ -759,40 +759,40 @@ function suggestWeek(into, force){
     ? ['Jumatatu','Jumanne','Jumatano','Alhamisi','Ijumaa','Jumamosi','Jumapili']
     : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-  let html=`<h2 style="margin-top:0">🗓️ ${t('My weekly menu','Menyu yangu ya wiki')}</h2>
-    <div class="note lock">📌 ${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this timetable will NOT change on its own. Your shopping list stays valid until you tap “New week” yourself.','ratiba hii HAITABADILIKA yenyewe. Orodha yako ya manunuzi itabaki sahihi hadi wewe mwenyewe ubonyeze “Wiki mpya”.')}</div>`;
+  let html=`<h2 style="margin-top:0">${t('My weekly menu','Menyu yangu ya wiki')}</h2>
+    <div class="note lock">${t('Saved on','Umehifadhiwa')} ${planDate(plan.createdAt)} — ${t('this timetable will NOT change on its own. Your shopping list stays valid until you tap “New week” yourself.','ratiba hii HAITABADILIKA yenyewe. Orodha yako ya manunuzi itabaki sahihi hadi wewe mwenyewe ubonyeze “Wiki mpya”.')}</div>`;
   if(plan.filters && plan.filters.length){
     const names=plan.filters.map(k=>{ const f=FILTER_DEFS.find(x=>x.key===k); return f?t(f.en,f.sw):k; }).join(', ');
     html+=`<p class="muted" style="font-size:13px">${t('Filters used','Vichujio vilivyotumika')}: <b>${names}</b></p>`;
   }
-  html+=`<table><tr><th>${t('Day','Siku')}</th><th>🌅 ${t('Breakfast','Asubuhi')}</th><th>☀️ ${t('Lunch','Mchana')}</th><th>🌙 ${t('Dinner','Usiku')}</th><th>🍊 ${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
+  html+=`<table><tr><th>${t('Day','Siku')}</th><th>${t('Breakfast','Asubuhi')}</th><th>${t('Lunch','Mchana')}</th><th>${t('Dinner','Usiku')}</th><th>${t('Fruit & juice','Tunda & juisi')}</th></tr>`;
   const cell=sw=>{ const d=anyBySw(sw); if(!d) return '';
     return `<button class="dishbtn" data-recipe-for="${escAttr(d.sw)}">${d.sw}</button>
-      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">▶</a>
+      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a>
       <br><small class="muted">${d.en}</small>`; };
   const mini=(sw,icon)=>{ const d=anyBySw(sw); if(!d) return icon+' '+sw;
     return `${icon} <button class="dishbtn" style="font-weight:400" data-recipe-for="${escAttr(d.sw)}">${d.sw}</button>
-      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">▶</a>`; };
+      <a class="ytmini" href="${ytOf(d)}" target="_blank" rel="noopener" title="YouTube">${t('video','video')}</a>`; };
   plan.days.forEach((day,i)=>{
     const fr=fruitBySw(day.fruit), jc=juiceOf(day.juice);
-    const sideLine = day.side ? `<br><small class="muted">${mini(day.side,'🥗')}</small>` : '';
+    const sideLine = day.side ? `<br><small class="muted">${mini(day.side,t('Side','Mboga')+':')}</small>` : '';
     html+=`<tr><td><b>${days[i]}</b></td><td>${cell(day.b)}</td><td>${cell(day.l)}</td><td>${cell(day.d)}${sideLine}</td>
-      <td><small class="muted">${mini(fr.sw,'🍎')}<br>${mini(jc.sw,'🥤')}</small></td></tr>`;
+      <td><small class="muted">${mini(fr.sw,t('Fruit','Tunda')+':')}<br>${mini(jc.sw,t('Juice','Juisi')+':')}</small></td></tr>`;
   });
   html+=`</table>
-    <div class="note">📖 ${t('Tap any name — food, mboga, fruit or juice — to read the steps. The ▶ opens a video of how to cook it, even for foods you added yourself.','Gusa jina lolote — chakula, mboga, tunda au juisi — usome hatua. Alama ▶ hufungua video ya jinsi ya kupika, hata kwa vyakula ulivyoongeza mwenyewe.')}</div>`;
+    <div class="note">${t('Tap any name — food, mboga, fruit or juice — to read the steps. “video” opens a clip of how to cook it, even for foods you added yourself.','Gusa jina lolote — chakula, mboga, tunda au juisi — usome hatua. “video” hufungua klipu ya jinsi ya kupika, hata kwa vyakula ulivyoongeza mwenyewe.')}</div>`;
 
   const cost=planCost(plan,'week');
   html+=`<div class="total"><span>${t('Estimated cost for','Makadirio ya gharama kwa')} ${plan.people} ${t('people','watu')} / ${t('week','wiki')}</span><span class="amt">${TSh(cost)}</span></div>`;
   if(plan.budget) html+=budgetVerdict(cost, plan.budget);
 
-  html+=`<div class="note">💡 ${t('Tip: cook beans or ugali in a bigger pot once, then reuse for two days to save time and money.','Dokezo: pika maharage au ugali kwa wingi mara moja, kisha tumia kwa siku mbili kuokoa muda na pesa.')}</div>
+  html+=`<div class="note">${t('Tip: cook beans or ugali in a bigger pot once, then reuse for two days to save time and money.','Dokezo: pika maharage au ugali kwa wingi mara moja, kisha tumia kwa siku mbili kuokoa muda na pesa.')}</div>
     <div class="row">
-      <button class="btn green" data-again="shop">🛒 ${t('What to buy for this week','Cha kununua kwa wiki hii')}</button>
+      <button class="btn green" data-again="shop">${t('What to buy for this week','Cha kununua kwa wiki hii')}</button>
     </div>
     <div class="row">
-      <button class="btn ghost small" data-new="week">🔄 ${t('New week','Wiki mpya')}</button>
-      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+      <button class="btn ghost small" data-new="week">${t('New week','Wiki mpya')}</button>
+      <button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button>
     </div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
@@ -813,7 +813,7 @@ function whenText(f){
 function renderMyFoods(into){
   const list=myFoods();
   const kindName=k=>{ const o=KINDS.find(x=>x.key===k)||KINDS[0]; return t(o.en,o.sw); };
-  let html=`<h2 style="margin-top:0">🍽️ ${t('My foods','Vyakula vyangu')}</h2>
+  let html=`<h2 style="margin-top:0">${t('My foods','Vyakula vyangu')}</h2>
     <p class="muted">${t('Write the foods, juices, fruit and mboga your family likes. Say which meal they belong to and how often you want them — the planner will then include them for you.','Andika vyakula, juisi, matunda na mboga anazopenda familia yako. Sema ni mlo gani na mara ngapi unavitaka — kisha mpangaji atavijumuisha.')}</p>`;
 
   if(list.length){
@@ -824,16 +824,16 @@ function renderMyFoods(into){
         <td><div class="fname">${escHtml(f.sw)}</div>
             ${f.en?`<div class="fsub">${escHtml(f.en)}</div>`:''}
             <span class="kindtag">${kindName(f.kind)}</span>
-            ${f.video?`<span class="kindtag" title="${t('Has your own video','Ina video yako')}">🎬 ${t('video','video')}</span>`:''}</td>
+            ${f.video?`<span class="kindtag" title="${t('Has your own video','Ina video yako')}">${t('video','video')}</span>`:''}</td>
         <td>${whenText(f)}</td>
         <td>${freqText(f)}</td>
         <td style="white-space:nowrap">
-          <button class="iconbtn" data-edit="${escAttr(f.id)}" title="${t('Edit','Hariri')}" aria-label="${t('Edit','Hariri')} ${escAttr(f.sw)}">✏️</button>
-          <button class="iconbtn" data-del="${escAttr(f.id)}" title="${t('Delete','Futa')}" aria-label="${t('Delete','Futa')} ${escAttr(f.sw)}">🗑️</button>
+          <button class="iconbtn" data-edit="${escAttr(f.id)}" title="${t('Edit','Hariri')}" aria-label="${t('Edit','Hariri')} ${escAttr(f.sw)}">${t('Edit','Hariri')}</button>
+          <button class="iconbtn" data-del="${escAttr(f.id)}" title="${t('Delete','Futa')}" aria-label="${t('Delete','Futa')} ${escAttr(f.sw)}">${t('Delete','Futa')}</button>
         </td></tr>`;
     });
     html+=`</table>
-      <div class="note lock">📌 ${t('Your saved weekly menu will not change by itself. Tap “New week” on the weekly menu when you are ready to use these foods.','Menyu yako ya wiki iliyohifadhiwa haitabadilika yenyewe. Bonyeza “Wiki mpya” kwenye menyu ya wiki ukiwa tayari kutumia vyakula hivi.')}</div>`;
+      <div class="note lock">${t('Your saved weekly menu will not change by itself. Tap “New week” on the weekly menu when you are ready to use these foods.','Menyu yako ya wiki iliyohifadhiwa haitabadilika yenyewe. Bonyeza “Wiki mpya” kwenye menyu ya wiki ukiwa tayari kutumia vyakula hivi.')}</div>`;
   } else {
     html+=`<p class="muted">${t('Nothing added yet. Use the form below to add your first food.','Bado hakuna kilichoongezwa. Tumia fomu hapa chini kuongeza chakula chako cha kwanza.')}</p>`;
   }
@@ -841,7 +841,7 @@ function renderMyFoods(into){
   const ed = editingId ? list.find(f=>f.id===editingId) : null;
   if(ed) formMeals=mealsOf(ed).slice();
   html+=`<div class="mfform">
-    <h3>${ed?'✏️ '+t('Edit food','Hariri chakula'):'➕ '+t('Add a food','Ongeza chakula')}</h3>
+    <h3>${ed?t('Edit food','Hariri chakula'):t('Add a food','Ongeza chakula')}</h3>
     <label class="mflabel" for="mfName">${t('Name (Kiswahili)','Jina (Kiswahili)')}</label>
     <input class="field" id="mfName" placeholder="${t('e.g. Ndizi nyama','mf. Ndizi nyama')}" value="${ed?escAttr(ed.sw):''}" />
     <div class="mfgrid">
@@ -881,11 +881,11 @@ function renderMyFoods(into){
 
     <div id="mfErr" class="autherr hidden"></div>
     <div class="row">
-      <button class="btn green" id="mfSave">${ed?'💾 '+t('Save changes','Hifadhi mabadiliko'):'➕ '+t('Add to my foods','Ongeza kwenye vyakula vyangu')}</button>
+      <button class="btn green" id="mfSave">${ed?t('Save changes','Hifadhi mabadiliko'):t('Add to my foods','Ongeza kwenye vyakula vyangu')}</button>
     </div>
     ${ed?`<div class="row"><button class="btn ghost small" id="mfCancel">${t('Cancel','Ghairi')}</button></div>`:''}
   </div>
-  <div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+  <div class="row"><button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button></div>`;
 
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 
@@ -949,17 +949,17 @@ function toggleFav(sw){ const d=load(); const f=favList(d); const i=f.indexOf(sw
   if(i<0) f.push(sw); else f.splice(i,1); save(d); return i<0; }
 function renderFavs(into){
   const d=load(); const favs=favList(d).slice();
-  let html=`<h2 style="margin-top:0">❤️ ${t('My favourites','Vipendwa vyangu')}</h2>`;
+  let html=`<h2 style="margin-top:0">${t('My favourites','Vipendwa vyangu')}</h2>`;
   if(!favs.length){
-    html+=`<p class="muted">${t('No favourites yet. Tap the heart 🤍 on any dish to save it here.','Bado hakuna vipendwa. Gusa moyo 🤍 kwenye chakula chochote kukihifadhi.')}</p>`;
+    html+=`<p class="muted">${t('No favourites yet. Tap “Save” on any dish to keep it here.','Bado hakuna vipendwa. Gusa “Hifadhi” kwenye chakula chochote ili kikae hapa.')}</p>`;
   } else {
     favs.forEach(sw=>{
       const dish=dishBySw(sw)||{sw, en:''};
       html+=`<div class="lineitem"><span class="v" style="flex:1"><button class="dishbtn" data-recipe-for="${escAttr(sw)}">${nm(dish)}</button><small>${sub(dish)}</small></span>
-        <span class="fav" data-fav="${escAttr(sw)}">❤️</span></div>`;
+        <button class="fav on" data-fav="${escAttr(sw)}" aria-pressed="true">${t('Saved','Imehifadhiwa')}</button></div>`;
     });
   }
-  html+=`<div class="row"><button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button></div>`;
+  html+=`<div class="row"><button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button></div>`;
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
@@ -971,16 +971,16 @@ function renderAccount(into){
   const badMsg=(el,msg)=>{ el.textContent=msg; el.className='autherr'; el.classList.remove('hidden'); };
 
   into.innerHTML=`
-    <h2 style="margin-top:0">👤 ${t('My account','Akaunti yangu')}</h2>
+    <h2 style="margin-top:0">${t('My account','Akaunti yangu')}</h2>
     <div class="lineitem"><span class="k">${t('Name','Jina')}</span><span class="v">${escHtml(u.name)}</span></div>
     <div class="lineitem"><span class="k">${t('Email','Barua pepe')}</span><span class="v">${escHtml(d.session||'')}</span></div>
     <div class="lineitem"><span class="k">${t('Sync','Usawazishaji')}</span><span class="v">${
-      CC.isOffline() ? '📴 '+t('Offline — saved on this device','Hakuna mtandao — imehifadhiwa kwenye kifaa hiki')
-      : CC.hasPendingWork() ? '🔄 '+t('Saving…','Inahifadhi…')
-      : '✅ '+t('Saved to your account','Imehifadhiwa kwenye akaunti yako')}
+      CC.isOffline() ? ''+t('Offline — saved on this device','Hakuna mtandao — imehifadhiwa kwenye kifaa hiki')
+      : CC.hasPendingWork() ? ''+t('Saving…','Inahifadhi…')
+      : ''+t('Saved to your account','Imehifadhiwa kwenye akaunti yako')}
       <small>${t('Log in on any phone or laptop to find the same kitchen.','Ingia kwenye simu au kompyuta yoyote upate jikoni lilelile.')}</small></span></div>
 
-    <h3 style="margin:20px 0 4px; font-size:16px">🔑 ${t('Change password','Badilisha nenosiri')}</h3>
+    <h3 style="margin:20px 0 4px; font-size:16px">${t('Change password','Badilisha nenosiri')}</h3>
     <p class="muted" style="font-size:12px; margin:0">${t('Changing it signs out your other devices.','Ukibadilisha, vifaa vyako vingine vitatolewa.')}</p>
     <form id="pwForm">
       <input class="field" type="password" id="pwOld" autocomplete="current-password" placeholder="${t('Current password','Nenosiri la sasa')}" />
@@ -989,7 +989,7 @@ function renderAccount(into){
       <div class="row"><button class="btn small" type="submit" id="pwBtn">${t('Change password','Badilisha nenosiri')}</button></div>
     </form>
 
-    <details class="more"><summary>⚠️ ${t('Delete my account','Futa akaunti yangu')}</summary>
+    <details class="more"><summary>${t('Delete my account','Futa akaunti yangu')}</summary>
       <p class="muted" style="font-size:13px">${t('This removes your account and everything in it — favourites, plans and your own foods — from every device. It cannot be undone.','Hii itaondoa akaunti yako na kila kitu ndani yake — vipendwa, mipango na vyakula vyako — kwenye kila kifaa. Haiwezi kurudishwa.')}</p>
       <form id="delForm">
         <input class="field" type="password" id="delPass" autocomplete="current-password" placeholder="${t('Your password','Nenosiri lako')}" />
@@ -999,8 +999,8 @@ function renderAccount(into){
     </details>
 
     <div class="row">
-      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
-      <button class="btn ghost small" id="acctOut">🚪 ${t('Log out','Toka')}</button>
+      <button class="btn ghost small" id="bkHome">${t('Home','Nyumbani')}</button>
+      <button class="btn ghost small" id="acctOut">${t('Log out','Toka')}</button>
     </div>`;
 
   into.querySelector('#pwForm').onsubmit=async e=>{
@@ -1054,8 +1054,8 @@ function setAuthMode(m){
   $('aPass2').classList.toggle('hidden',m!=='signup');
   $('aPass').setAttribute('autocomplete', m==='signup'?'new-password':'current-password');
   const b=$('aSubmit');
-  b.dataset.en = m==='signup'?'Create account ▶':'Log in ▶';
-  b.dataset.sw = m==='signup'?'Fungua akaunti ▶':'Ingia ▶';
+  b.dataset.en = m==='signup'?'Create account':'Log in';
+  b.dataset.sw = m==='signup'?'Fungua akaunti':'Ingia';
   b.textContent = t(b.dataset.en,b.dataset.sw);
   $('aErr').classList.add('hidden');
 }
@@ -1141,7 +1141,7 @@ function refreshHome(){
   const h=new Date().getHours();
   const u=currentUser();
   const g=(h<12?t('Good morning','Habari za asubuhi'):h<17?t('Good afternoon','Habari za mchana'):t('Good evening','Habari za jioni'));
-  $('greet').textContent=g+(u?', '+u.name.split(' ')[0]:'')+'! 👋';
+  $('greet').textContent=g+(u?', '+u.name.split(' ')[0]:'')+'!';
   updateBudgetUI();
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
@@ -1169,7 +1169,7 @@ function updateBudgetUI(){
   const hint=$('bHint');
   if(budgetActive()){
     const perDay=budget.amount/7;
-    hint.innerHTML=`💡 ${t('That is about','Hiyo ni takribani')} <b>${TSh(perDay)}</b> ${t('per day for','kwa siku kwa')} ${budget.people} ${t('people','watu')}. ${t('I will suggest meals that fit.','Nitapendekeza vyakula vinavyotosha.')}`;
+    hint.innerHTML=`${t('That is about','Hiyo ni takribani')} <b>${TSh(perDay)}</b> ${t('per day for','kwa siku kwa')} ${budget.people} ${t('people','watu')}. ${t('I will suggest meals that fit.','Nitapendekeza vyakula vinavyotosha.')}`;
   } else {
     hint.textContent=t('Type how much you have and I will plan meals that fit it.','Andika kiasi ulichonacho nami nitapanga vyakula vinavyotosha.');
   }
@@ -1208,11 +1208,13 @@ function wireSuggestButtons(scope){
   if(rt) rt.onclick=()=>{
     const box=scope.querySelector('#recipeBox');
     const hidden=box.classList.toggle('hidden');
-    rt.textContent = hidden ? '📖 '+t('Show recipe & steps','Onyesha mapishi na hatua')
-                            : '📖 '+t('Hide recipe','Ficha mapishi');
+    rt.textContent = hidden ? ''+t('Show recipe & steps','Onyesha mapishi na hatua')
+                            : ''+t('Hide recipe','Ficha mapishi');
   };
   scope.querySelectorAll('[data-fav]').forEach(h=>h.onclick=()=>{
-    const sw=h.dataset.fav; const now=toggleFav(sw); h.textContent=now?'❤️':'🤍';
+    const sw=h.dataset.fav; const now=toggleFav(sw);
+    h.textContent = now ? t('Saved','Imehifadhiwa') : t('Save','Hifadhi');
+    h.classList.toggle('on', now); h.setAttribute('aria-pressed', now?'true':'false');
   });
 }
 
@@ -1230,10 +1232,10 @@ $('accountBtn').onclick=()=>renderAccount($('multi'));
 
 /* ---------- sync indicator ---------- */
 const SYNC_TEXT={
-  saved:   ()=>['✅ '+t('Saved','Imehifadhiwa'), t('Everything is saved to your account.','Kila kitu kimehifadhiwa kwenye akaunti yako.')],
-  saving:  ()=>['🔄 '+t('Saving…','Inahifadhi…'), t('Sending your changes to your account.','Inatuma mabadiliko yako kwenye akaunti yako.')],
-  pending: ()=>['🕒 '+t('Saving…','Inahifadhi…'), t('Your changes are about to be sent.','Mabadiliko yako yanakaribia kutumwa.')],
-  offline: ()=>['📴 '+t('Offline','Hakuna mtandao'), t('No connection. Your kitchen is safe on this device and will sync when you are back online.','Hakuna mtandao. Jikoni lako liko salama kwenye kifaa hiki na litasawazishwa ukirudi mtandaoni.')],
+  saved:   ()=>[''+t('Saved','Imehifadhiwa'), t('Everything is saved to your account.','Kila kitu kimehifadhiwa kwenye akaunti yako.')],
+  saving:  ()=>[''+t('Saving…','Inahifadhi…'), t('Sending your changes to your account.','Inatuma mabadiliko yako kwenye akaunti yako.')],
+  pending: ()=>[''+t('Saving…','Inahifadhi…'), t('Your changes are about to be sent.','Mabadiliko yako yanakaribia kutumwa.')],
+  offline: ()=>[''+t('Offline','Hakuna mtandao'), t('No connection. Your kitchen is safe on this device and will sync when you are back online.','Hakuna mtandao. Jikoni lako liko salama kwenye kifaa hiki na litasawazishwa ukirudi mtandaoni.')],
 };
 function renderSync(state){
   const pill=$('syncPill');

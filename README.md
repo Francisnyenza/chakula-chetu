@@ -1,4 +1,4 @@
-# Chakula Chetu 🍲
+# Chakula Chetu
 
 Tanzanian meal ideas — what to cook for breakfast, lunch and dinner, with
 recipes, a weekly menu that stays put, and a shopping list costed in shillings.
@@ -72,7 +72,7 @@ Errors come back as `{"error": "code"}` with a short code — `bad_credentials`,
 
 The app never waits for the network. Every change is written to memory and
 `localStorage` at once, then pushed a moment later. If the push fails the work
-is kept and retried; the pill in the header says `📴 Offline` until it lands.
+is kept and retried; the pill in the header reads “Offline” until it lands.
 
 The kitchen is stored in sections — favourites, plans, my foods, filters,
 budget, recent, language — and each carries the time it was last edited. When a
