@@ -237,3 +237,44 @@
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{transition:none!important; animation:none!important}
   }
+
+  /* An explicit theme choice (a host that stamps data-theme on the root)
+     overrides what the operating system asked for, in both directions. */
+  :root[data-theme="dark"]{
+      --bg:#201310; --card:#2B1B15; --card2:#3A251C;
+      --ink:#FBEFE6; --muted:#C9AC9C;
+      --brand:#F97316; --brand2:#FB923C; --deep:#FDBA74;
+      --accent:#34D399; --good:#34D399; --bad:#F87171; --warn:#FBBF24;
+      --btn-ink:#431407; --accent-ink:#052E20;
+      --line:#4C3529;
+      --glow1:#3A2417; --glow2:#33200F;
+      --shadow:0 12px 28px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#FFF8EC; --card:#FFFFFF; --card2:#FFF1DC;
+    --ink:#291D18; --muted:#8A7265;
+    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;   /* terracotta */
+    --accent:#047857; --good:#047857; --bad:#DC2626; --warn:#D97706;
+    --btn-ink:#FFFFFF; --accent-ink:#FFFFFF;
+    --line:#F0DFD2;
+    --glow1:#FFE8C7; --glow2:#FFEFD9;
+    --shadow:0 12px 28px rgba(154,52,18,.12);
+  }
+  :root[data-theme="dark"] .t-veg{background:#14532D; color:#BBF7D0}
+  :root[data-theme="dark"] .t-budget{background:#1E3A8A; color:#BFDBFE}
+  :root[data-theme="dark"] .t-quick{background:#713F12; color:#FDE68A}
+  :root[data-theme="dark"] .t-hearty{background:#7F1D1D; color:#FECACA}
+  :root[data-theme="dark"] .t-fish{background:#164E63; color:#A5F3FC}
+  :root[data-theme="dark"] .t-chicken{background:#881337; color:#FECDD3}
+  :root[data-theme="dark"] .t-meat{background:#7C2D12; color:#FED7AA}
+  :root[data-theme="dark"] .autherr{background:#450A0A; border-color:#7F1D1D; color:#FECACA}
+  :root[data-theme="dark"] .autherr.ok{background:#052E20; border-color:#166534; color:#BBF7D0}
+  :root[data-theme="light"] .t-veg{background:#DCFCE7; color:#166534}
+  :root[data-theme="light"] .t-budget{background:#DBEAFE; color:#1E40AF}
+  :root[data-theme="light"] .t-quick{background:#FEF3C7; color:#92400E}
+  :root[data-theme="light"] .t-hearty{background:#FEE2E2; color:#991B1B}
+  :root[data-theme="light"] .t-fish{background:#CFFAFE; color:#155E75}
+  :root[data-theme="light"] .t-chicken{background:#FFE4E6; color:#9F1239}
+  :root[data-theme="light"] .t-meat{background:#F5E0D3; color:#7C2D12}
+  :root[data-theme="light"] .autherr{background:#FEE2E2; border-color:#FCA5A5; color:#991B1B}
+  :root[data-theme="light"] .autherr.ok{background:#DCFCE7; border-color:#86EFAC; color:#166534}
