@@ -1,0 +1,19 @@
+{
+  "name": "Chakula Chetu — Tanzanian meal ideas",
+  "short_name": "Chakula Chetu",
+  "description": "What shall we eat? Tanzanian meal suggestions, recipes, weekly menus and a shopping list that fits your budget.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8EC",
+  "theme_color": "#C2410C",
+  "lang": "en",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

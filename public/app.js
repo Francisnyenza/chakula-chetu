@@ -1,331 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#C2410C" />
-<title>Chakula Chetu 🍲 — Meal Suggester (Tanzania)</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
-  :root{
-    --bg:#FFF8EC; --card:#FFFFFF; --card2:#FFF1DC;
-    --ink:#291D18; --muted:#8A7265;
-    --brand:#C2410C; --brand2:#EA580C; --deep:#9A3412;   /* terracotta */
-    --accent:#047857; --good:#047857; --bad:#DC2626; --warn:#D97706;
-    --btn-ink:#FFFFFF; --accent-ink:#FFFFFF;
-    --line:#F0DFD2;
-    --glow1:#FFE8C7; --glow2:#FFEFD9;
-    --shadow:0 12px 28px rgba(154,52,18,.12);
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#201310; --card:#2B1B15; --card2:#3A251C;
-      --ink:#FBEFE6; --muted:#C9AC9C;
-      --brand:#F97316; --brand2:#FB923C; --deep:#FDBA74;
-      --accent:#34D399; --good:#34D399; --bad:#F87171; --warn:#FBBF24;
-      --btn-ink:#431407; --accent-ink:#052E20;
-      --line:#4C3529;
-      --glow1:#3A2417; --glow2:#33200F;
-      --shadow:0 12px 28px rgba(0,0,0,.4);
-    }
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:"Atkinson Hyperlegible","Segoe UI",system-ui,Arial,sans-serif;
-    background:
-      radial-gradient(700px 340px at 92% -6%, var(--glow1) 0%, transparent 60%),
-      radial-gradient(560px 320px at -8% 12%, var(--glow2) 0%, transparent 60%),
-      var(--bg);
-    color:var(--ink); min-height:100vh; padding:18px; line-height:1.5;
-  }
-  .wrap{max-width:600px; margin:0 auto}
-  header{display:flex; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap}
-  .logo{font-size:38px; filter:drop-shadow(0 3px 6px rgba(154,52,18,.25))}
-  h1{font-size:26px; margin:0; font-weight:700; color:var(--deep); letter-spacing:-.5px}
-  .tag{color:var(--muted); font-size:13px; margin:2px 0 0}
-  .spacer{flex:1}
-  .pill{background:var(--card); border:2px solid var(--line); border-radius:999px;
-    padding:7px 14px; font-size:13px; color:var(--muted); font-weight:700}
-  .pill b{color:var(--brand)}
-  .pill.lang{cursor:pointer; user-select:none; transition:border-color .2s, transform .2s}
-  .pill.lang:hover{border-color:var(--brand); transform:translateY(-1px)}
-  .card{background:var(--card); border:2px solid var(--line); border-radius:20px;
-    padding:22px; margin-bottom:16px; box-shadow:var(--shadow)}
-  .btn{appearance:none; border:0; cursor:pointer; font-weight:700; font-size:16px;
-    padding:14px 18px; border-radius:14px; color:var(--btn-ink);
-    background:linear-gradient(180deg,var(--brand2),var(--brand));
-    box-shadow:0 6px 16px rgba(194,65,12,.28);
-    transition:transform .2s, filter .2s, box-shadow .2s; width:100%}
-  .btn:hover{filter:brightness(1.06); transform:translateY(-1px)}
-  .btn:active{transform:translateY(1px) scale(.99)}
-  .btn.ghost{background:var(--card2); color:var(--ink); border:2px solid var(--line); box-shadow:none}
-  .btn.ghost:hover{border-color:var(--brand); filter:none}
-  .btn.small{width:auto; font-size:14px; padding:10px 16px}
-  .btn.green{background:linear-gradient(180deg,#10B981,#047857); color:#fff; box-shadow:0 6px 16px rgba(4,120,87,.28)}
-
-  .meals{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:6px}
-  .tile{cursor:pointer; border:2px solid var(--line); border-radius:18px; padding:18px 14px;
-    background:var(--card2); text-align:center;
-    transition:transform .2s, border-color .2s, box-shadow .2s}
-  .tile:hover{transform:translateY(-3px); border-color:var(--brand); box-shadow:var(--shadow)}
-  .tile:active{transform:translateY(0) scale(.98)}
-  .tile .ic{font-size:32px; display:block; margin-bottom:6px}
-  .tile .nm{font-weight:700; font-size:15px}
-  .tile .sub{color:var(--muted); font-size:12px; margin-top:3px}
-  .tile.wide{grid-column:1 / -1}
-  .tile.tonight{grid-column:1 / -1; border-color:transparent;
-    background:linear-gradient(135deg,#EA580C 0%,#9A3412 100%)}
-  .tile.tonight .nm{color:#fff; font-size:17px}
-  .tile.tonight .sub{color:#FFD9B3}
-  .tile.tonight:hover{border-color:transparent; filter:brightness(1.06)}
-  .tile.shop{grid-column:1 / -1; border-color:var(--accent); background:var(--card)}
-  .tile.shop .nm{color:var(--accent)}
-
-  .filters{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 4px; align-items:center}
-  .chip{cursor:pointer; border:2px solid var(--line); background:var(--card); color:var(--muted);
-    border-radius:999px; padding:8px 14px; font-weight:700; font-size:13px; user-select:none;
-    transition:background .2s, color .2s, border-color .2s}
-  .chip:hover{border-color:var(--accent)}
-  .chip.on{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
-
-  /* budget box */
-  .budgetbox{background:var(--card2); border:2px solid var(--accent); border-radius:14px;
-    padding:14px; margin-top:12px}
-  .budgetbox h4{margin:0 0 8px; font-size:14px; color:var(--accent)}
-  .bgrid{display:grid; grid-template-columns:1fr 110px; gap:10px}
-  .bgrid label{display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:4px}
-  .bhint{font-size:12px; color:var(--muted); margin-top:8px}
-
-  /* suggestion */
-  .sgHead{display:flex; align-items:center; gap:10px; margin-bottom:4px}
-  .sgHead .mi{font-size:32px}
-  .sgHead h2{margin:0; font-size:20px}
-  .dish{font-size:30px; font-weight:700; margin:10px 0 2px; color:var(--deep); letter-spacing:-.5px; line-height:1.2}
-  .gloss{color:var(--muted); font-size:15px; margin-bottom:10px}
-  .lineitem{display:flex; gap:10px; padding:11px 0; border-bottom:1px dashed var(--line); font-size:15px}
-  .lineitem:last-child{border-bottom:0}
-  .lineitem .k{color:var(--muted); min-width:92px; font-size:12px; padding-top:3px; font-weight:700; text-transform:uppercase; letter-spacing:.4px}
-  .lineitem .v{font-weight:700}
-  .lineitem .v small{display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:1px}
-  .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
-  .t{font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px}
-  .t-veg{background:#DCFCE7; color:#166534}
-  .t-budget{background:#DBEAFE; color:#1E40AF}
-  .t-quick{background:#FEF3C7; color:#92400E}
-  .t-hearty{background:#FEE2E2; color:#991B1B}
-  .t-fish{background:#CFFAFE; color:#155E75}
-  .t-chicken{background:#FFE4E6; color:#9F1239}
-  .t-meat{background:#F5E0D3; color:#7C2D12}
-  .t-cost{background:var(--card2); color:var(--brand); border:1px solid var(--line)}
-  .note{background:var(--card2); border-left:4px solid var(--warn); padding:12px 14px; border-radius:10px; margin-top:12px; font-size:14px; line-height:1.55}
-  .note.lock{border-left-color:var(--accent)}
-  .note.over{border-left-color:var(--bad)}
-  .shopbox{background:var(--card2); border:2px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:12px; font-size:14px}
-  .shopbox b{color:var(--brand)}
-  .recipe{background:var(--card2); border:2px solid var(--line); border-radius:14px; padding:16px; margin-top:10px; font-size:14px; line-height:1.6}
-  .rsteps{margin:6px 0 0; padding-left:18px}
-  .rsteps li{margin:6px 0}
-  .ytbtn{display:block; text-align:center; margin-top:12px; background:linear-gradient(180deg,#EF4444,#DC2626); color:#fff; text-decoration:none;
-    font-weight:700; padding:13px; border-radius:12px; box-shadow:0 6px 14px rgba(220,38,38,.3);
-    transition:transform .2s, filter .2s}
-  .ytbtn:hover{filter:brightness(1.08); transform:translateY(-1px)}
-  .dishlink{color:var(--brand); text-decoration:none; border-bottom:2px dotted var(--line); font-weight:700}
-  .dishlink:hover{border-bottom-style:solid; border-bottom-color:var(--brand)}
-  .dishbtn{appearance:none; background:none; border:0; padding:0; cursor:pointer; text-align:left;
-    color:var(--brand); font-weight:700; font-size:inherit; font-family:inherit;
-    border-bottom:2px dotted var(--line)}
-  .dishbtn:hover{border-bottom-style:solid; border-bottom-color:var(--brand)}
-  .ytmini{text-decoration:none; font-size:12px; margin-left:6px; opacity:.85}
-
-  /* recipe modal */
-  .overlay{position:fixed; inset:0; background:rgba(41,29,24,.55); backdrop-filter:blur(3px);
-    display:flex; align-items:flex-end; justify-content:center; z-index:1000; padding:12px}
-  @media(min-width:600px){ .overlay{align-items:center} }
-  .sheet{background:var(--card); border:2px solid var(--line); border-radius:20px; padding:20px;
-    width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow)}
-  .sheetHead{display:flex; align-items:flex-start; gap:10px; margin-bottom:6px}
-  .sheetHead h3{margin:0; font-size:22px; color:var(--deep); flex:1; line-height:1.25}
-  .xbtn{appearance:none; border:2px solid var(--line); background:var(--card2); color:var(--ink);
-    cursor:pointer; border-radius:50%; width:38px; height:38px; font-size:18px; font-weight:700; flex:none}
-  .xbtn:hover{border-color:var(--brand)}
-
-  /* shopping list */
-  .shopcat{margin-top:16px}
-  .shopcat h4{margin:0 0 6px; font-size:12px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
-  .shopitem{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line)}
-  .shopitem:last-child{border-bottom:0}
-  .shopitem input{width:22px; height:22px; accent-color:var(--accent); flex:none; cursor:pointer}
-  .shopitem label{flex:1; cursor:pointer; font-weight:700}
-  .shopitem label small{display:block; font-weight:400; color:var(--muted); font-size:12px}
-  .shopitem.done label{text-decoration:line-through; opacity:.5}
-  .total{display:flex; justify-content:space-between; align-items:center; background:var(--card2);
-    border:2px solid var(--line); border-radius:14px; padding:14px; margin-top:16px; font-weight:700}
-  .total .amt{font-size:22px; color:var(--brand)}
-
-  /* day / week */
-  .daycard{border:2px solid var(--line); border-radius:16px; padding:16px; margin-top:12px; background:var(--card2)}
-  .daycard h3{margin:0 0 8px; font-size:13px; color:var(--brand); text-transform:uppercase; letter-spacing:.6px}
-  table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px}
-  th,td{text-align:left; padding:9px 6px; border-bottom:1px solid var(--line); vertical-align:top}
-  th{color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.5px}
-  .muted{color:var(--muted)}
-  .row{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
-  .hidden{display:none}
-  .fav{cursor:pointer; font-size:24px; user-select:none; transition:transform .15s}
-  .fav:hover{transform:scale(1.15)}
-  footer{text-align:center; color:var(--muted); font-size:12px; margin-top:14px}
-  :focus-visible{outline:3px solid var(--brand2); outline-offset:2px}
-  /* login */
-  .field{width:100%; font-size:16px; padding:13px 14px; border-radius:12px; margin-top:8px;
-    border:2px solid var(--line); background:var(--card); color:var(--ink); outline:none;
-    transition:border-color .2s, box-shadow .2s}
-  .field:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(234,88,12,.15)}
-  .field.tight{margin-top:0}
-  .authtabs{display:flex; gap:8px; margin:4px 0 10px}
-  .authtabs .chip.on{background:var(--brand); color:var(--btn-ink); border-color:var(--brand)}
-  .autherr{background:#FEE2E2; border:2px solid #FCA5A5; color:#991B1B;
-    border-radius:10px; padding:10px 12px; margin-top:10px; font-size:13px; font-weight:700}
-  .userpill{cursor:pointer; user-select:none}
-
-  /* my foods */
-  .mytable td{font-size:13px}
-  .mytable .fname{font-weight:700; font-size:14px}
-  .mytable .fsub{color:var(--muted); font-size:11px}
-  .kindtag{display:inline-block; background:var(--card2); border:1px solid var(--line); color:var(--muted);
-    border-radius:999px; padding:1px 8px; font-size:10px; font-weight:700; margin-top:3px}
-  .whenbadge{display:inline-block; background:var(--card2); border:1px solid var(--line);
-    border-radius:999px; padding:2px 7px; font-size:10px; font-weight:700; margin:1px 2px 1px 0}
-  .freqbig{font-weight:700; color:var(--brand)}
-  .iconbtn{appearance:none; border:2px solid var(--line); background:var(--card); color:var(--ink);
-    cursor:pointer; border-radius:10px; min-width:38px; height:38px; font-size:15px; margin:1px;
-    transition:border-color .2s}
-  .iconbtn:hover{border-color:var(--brand)}
-  .mfform{background:var(--card2); border:2px solid var(--line); border-radius:16px; padding:16px; margin-top:16px}
-  .mfform h3{margin:0 0 4px; font-size:16px; color:var(--deep)}
-  .mfgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-  .mflabel{display:block; font-size:12px; color:var(--muted); font-weight:700;
-    margin:12px 0 4px; text-transform:uppercase; letter-spacing:.4px}
-  .freqrow{display:grid; grid-template-columns:100px 1fr; gap:10px}
-  select.field{appearance:auto; -webkit-appearance:menulist}
-  textarea.field{min-height:76px; font-family:inherit; resize:vertical; line-height:1.5}
-  details.more summary{cursor:pointer; font-weight:700; color:var(--brand); font-size:13px; margin-top:14px}
-  .mfchips{display:flex; gap:8px; flex-wrap:wrap}
-  @media (max-width:400px){ .mfgrid{grid-template-columns:1fr} }
-  @media (prefers-color-scheme: dark){
-    .t-veg{background:#14532D; color:#BBF7D0}
-    .t-budget{background:#1E3A8A; color:#BFDBFE}
-    .t-quick{background:#713F12; color:#FDE68A}
-    .t-hearty{background:#7F1D1D; color:#FECACA}
-    .t-fish{background:#164E63; color:#A5F3FC}
-    .t-chicken{background:#881337; color:#FECDD3}
-    .t-meat{background:#7C2D12; color:#FED7AA}
-    .autherr{background:#450A0A; border-color:#7F1D1D; color:#FECACA}
-  }
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{transition:none!important; animation:none!important}
-  }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <div class="logo">🍲</div>
-    <div>
-      <h1 data-en="Chakula Chetu" data-sw="Chakula Chetu">Chakula Chetu</h1>
-      <p class="tag" data-en="What shall we eat? • Tanzanian meal ideas" data-sw="Tule nini? • Mawazo ya chakula cha Kitanzania">What shall we eat? • Tanzanian meal ideas</p>
-    </div>
-    <div class="spacer"></div>
-    <div class="pill userpill hidden" id="userPill">👤 <b id="userName"></b> · <span data-en="Log out" data-sw="Toka">Log out</span></div>
-    <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
-  </header>
-
-  <!-- LOGIN -->
-  <div id="auth" class="card hidden">
-    <h2 style="margin-top:0">🔐 <span data-en="Log in to continue" data-sw="Ingia ili uendelee">Log in to continue</span></h2>
-    <p class="muted" data-en="Chakula Chetu needs an email and a password. Your favourite dishes and meal plans are saved to your own account." data-sw="Chakula Chetu kinahitaji barua pepe na nenosiri. Vyakula unavyovipenda na mipango yako huhifadhiwa kwenye akaunti yako.">Chakula Chetu needs an email and a password. Your favourite dishes and meal plans are saved to your own account.</p>
-    <div class="authtabs">
-      <span class="chip on" id="tabLogin" role="button" tabindex="0" data-en="Log in" data-sw="Ingia">Log in</span>
-      <span class="chip" id="tabSignup" role="button" tabindex="0" data-en="Create account" data-sw="Fungua akaunti">Create account</span>
-    </div>
-    <form id="authForm" autocomplete="on" novalidate>
-      <input class="field hidden" type="text" id="aName" autocomplete="name" placeholder="Jina / Name" />
-      <input class="field" type="email" id="aEmail" autocomplete="email" inputmode="email" required placeholder="Barua pepe / Email" />
-      <input class="field" type="password" id="aPass" autocomplete="current-password" required placeholder="Nenosiri / Password" />
-      <input class="field hidden" type="password" id="aPass2" autocomplete="new-password" placeholder="Rudia nenosiri / Repeat password" />
-      <div id="aErr" class="autherr hidden" role="alert"></div>
-      <div class="row">
-        <button class="btn" type="submit" id="aSubmit" data-en="Log in ▶" data-sw="Ingia ▶">Log in ▶</button>
-      </div>
-    </form>
-    <p class="muted" style="font-size:12px; margin-top:12px" data-en="An account is required — there is no guest mode. Accounts live on this device only, and passwords are never sent anywhere." data-sw="Akaunti inahitajika — hakuna matumizi ya mgeni. Akaunti zinakaa kwenye kifaa hiki tu, na nenosiri halitumwi popote.">An account is required — there is no guest mode. Accounts live on this device only, and passwords are never sent anywhere.</p>
-  </div>
-
-  <!-- HOME -->
-  <div id="home" class="card hidden">
-    <h2 id="greet" style="margin-top:0">Karibu! 👋</h2>
-    <p class="muted" id="homeMsg" data-en="Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy."
-       data-sw="Chagua mlo nami nitapendekeza chakula cha Kitanzania, jinsi ya kupika, tunda na juisi, na cha kununua.">
-       Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy.</p>
-
-    <div class="filters" id="filterRow">
-      <span class="muted" data-en="Filters:" data-sw="Vichujio:">Filters:</span>
-    </div>
-    <div id="budgetBox" class="budgetbox hidden">
-      <h4 data-en="💰 My budget" data-sw="💰 Bajeti yangu">💰 My budget</h4>
-      <div class="bgrid">
-        <div>
-          <label for="bAmount" data-en="How much money do I have? (TSh)" data-sw="Nina shilingi ngapi? (TSh)">How much money do I have? (TSh)</label>
-          <input class="field tight" type="number" id="bAmount" inputmode="numeric" min="0" placeholder="50000" />
-        </div>
-        <div>
-          <label for="bPeople" data-en="People" data-sw="Watu">People</label>
-          <input class="field tight" type="number" id="bPeople" inputmode="numeric" min="1" max="20" value="4" />
-        </div>
-      </div>
-      <div class="bhint" id="bHint"></div>
-    </div>
-
-    <div class="meals">
-      <div class="tile tonight" data-meal="dinner"><span class="ic">🌙</span><div class="nm" data-en="What's for dinner tonight?" data-sw="Tule nini usiku huu?">What's for dinner tonight?</div><div class="sub" data-en="instant suggestion" data-sw="pendekezo la papo hapo">instant suggestion</div></div>
-      <div class="tile" data-meal="breakfast"><span class="ic">🌅</span><div class="nm" data-en="Breakfast" data-sw="Kifungua kinywa">Breakfast</div></div>
-      <div class="tile" data-meal="lunch"><span class="ic">☀️</span><div class="nm" data-en="Lunch" data-sw="Chakula cha mchana">Lunch</div></div>
-      <div class="tile wide" data-meal="day"><span class="ic">📅</span><div class="nm" data-en="Plan my whole day" data-sw="Panga siku nzima">Plan my whole day</div><div class="sub" data-en="breakfast + lunch + dinner" data-sw="kifungua + mchana + usiku">breakfast + lunch + dinner</div></div>
-      <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div><div class="sub" data-en="saved until you change it" data-sw="huhifadhiwa hadi ubadilishe">saved until you change it</div></div>
-      <div class="tile shop" data-meal="shop"><span class="ic">🛒</span><div class="nm" data-en="Shopping list" data-sw="Orodha ya manunuzi">Shopping list</div><div class="sub" data-en="everything to buy for your plan" data-sw="vitu vyote vya kununua kwa mpango wako">everything to buy for your plan</div></div>
-      <div class="tile wide" data-meal="myfoods"><span class="ic">🍽️</span><div class="nm" data-en="My foods" data-sw="Vyakula vyangu">My foods</div><div class="sub" data-en="add your own dishes, juices, fruit & mboga — say when and how often" data-sw="ongeza vyakula, juisi, matunda na mboga zako — sema lini na mara ngapi">add your own dishes, juices, fruit &amp; mboga — say when and how often</div></div>
-    </div>
-
-    <div class="row">
-      <button class="btn ghost small" id="favBtn" data-en="❤️ My favourites" data-sw="❤️ Vipendwa vyangu">❤️ My favourites</button>
-    </div>
-  </div>
-
-  <!-- SUGGESTION (single meal) -->
-  <div id="suggest" class="card hidden"></div>
-  <!-- DAY / WEEK / FAVOURITES / SHOPPING -->
-  <div id="multi" class="card hidden"></div>
-
-  <footer>Chakula Chetu · <span data-en="Home-cooked, the Tanzanian way 🇹🇿" data-sw="Mapishi ya nyumbani, kwa mtindo wa Kitanzania 🇹🇿">Home-cooked, the Tanzanian way 🇹🇿</span></footer>
-</div>
-
-<!-- RECIPE SHEET -->
-<div id="recipeOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
-  <div class="sheet" id="recipeSheet"></div>
-</div>
-
-<script>
 /* ============================================================
-   Chakula Chetu — offline Tanzanian meal suggester.
+   Chakula Chetu — Tanzanian meal suggester.
    Breakfast / Lunch / Dinner + day plan + weekly menu + shopping list.
    Plans are LOCKED once made: they only change when the cook asks.
-   Everything saved in the browser. No internet needed.
+
+   You need an account. Everything is kept on the device so the app
+   works with no network, and synced to the server so the same
+   kitchen opens on any phone or laptop. See api.js.
    ============================================================ */
 
-const STORE='chakula_v1';
 const $=id=>document.getElementById(id);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-function load(){ try{return JSON.parse(localStorage.getItem(STORE))||{};}catch(e){return {};} }
-function save(o){ try{localStorage.setItem(STORE,JSON.stringify(o));}catch(e){} }
+/* load() hands back the live document; save() persists and syncs it. */
+function load(){ return CC.doc(); }
+function save(){ CC.commit(); }
 
 let lang=load().lang||'en';
 function t(en,sw){ return lang==='sw'?sw:en; }
@@ -351,11 +38,14 @@ const FILTER_DEFS=[
 let filters={};
 FILTER_DEFS.forEach(f=>filters[f.key]=false);
 let budget={amount:0, people:4};
-(function restoreSettings(){
+/* Read the account's settings into the live variables. Runs at start-up and
+   again whenever a sync brings newer settings down from another device. */
+function hydrateSettings(){
   const d=load();
-  if(d.filters) FILTER_DEFS.forEach(f=>{ filters[f.key]=!!d.filters[f.key]; });
-  if(d.budget) budget={amount:+d.budget.amount||0, people:+d.budget.people||4};
-})();
+  FILTER_DEFS.forEach(f=>{ filters[f.key] = !!(d.filters && d.filters[f.key]); });
+  budget = d.budget ? {amount:+d.budget.amount||0, people:+d.budget.people||4} : {amount:0, people:4};
+  lang = d.lang==='sw' ? 'sw' : 'en';
+}
 function persistSettings(){ const d=load(); d.filters=filters; d.budget=budget; save(d); }
 
 /* ---------- DATA: Tanzanian dishes ----------
@@ -601,7 +291,8 @@ function safeUrl(u){ const s=String(u||'').trim(); return /^https?:\/\//i.test(s
    they saw on social media and have never cooked before. */
 function ytLink(name, own){
   const mine=safeUrl(own);
-  if(mine) return mine;
+  /* Every caller drops this straight into href="…", so it leaves quote-safe. */
+  if(mine) return escHtml(mine);
   const q = lang==='sw' ? 'jinsi ya kupika '+name : 'how to cook '+name+' recipe';
   return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
 }
@@ -704,8 +395,10 @@ function chooseAvoiding(pool, key){
   return chosen;
 }
 function chooseMain(meal, scope){ return chooseAvoiding(poolFor(meal,scope), meal); }
-function nm(o){ return lang==='sw'?o.sw:o.en; }
-function sub(o){ return lang==='sw'?o.en:o.sw; }
+/* Dish names can be typed by the cook, so both of these are escaped: their
+   output always goes into innerHTML, never into textContent. */
+function nm(o){ return escHtml(lang==='sw'?o.sw:o.en); }
+function sub(o){ return escHtml(lang==='sw'?o.en:o.sw); }
 
 const MEALINFO={
   breakfast:{ic:'🌅', en:'Breakfast', sw:'Kifungua kinywa'},
@@ -901,7 +594,7 @@ function renderShopping(into){
       const id='ck_'+btoa(unescape(encodeURIComponent(item))).replace(/[^A-Za-z0-9]/g,'');
       html+=`<div class="shopitem${done?' done':''}">
         <input type="checkbox" id="${id}" data-buy="${escAttr(item)}" ${done?'checked':''} />
-        <label for="${id}">${cap(item)}
+        <label for="${id}">${escHtml(cap(item))}
           <small>${t('needed for','inahitajika kwa')} ${count} ${t(count===1?'meal':'meals','milo')}</small></label>
       </div>`;
     });
@@ -941,15 +634,15 @@ function openRecipe(sw){
   const tags=(dish.tags||[]).map(tg=>`<span class="t t-${tg}">${TAGLABEL()[tg]||tg}</span>`).join('');
   $('recipeSheet').innerHTML=`
     <div class="sheetHead">
-      <h3 id="rsTitle">${dish.sw}<br><span class="muted" style="font-size:15px; font-weight:400">${dish.en}</span></h3>
+      <h3 id="rsTitle">${escHtml(dish.sw)}<br><span class="muted" style="font-size:15px; font-weight:400">${escHtml(dish.en||'')}</span></h3>
       <button class="xbtn" id="rsClose" aria-label="${t('Close','Funga')}">✕</button>
     </div>
     <div class="tags">${tags}<span class="t t-cost">${TSh(dish.cost)} / ${t('person','mtu')}</span></div>
     <div class="recipe">
-      <div><b>${t('Ingredients','Mahitaji')}:</b> ${dish.shop}</div>
+      <div><b>${t('Ingredients','Mahitaji')}:</b> ${escHtml(dish.shop||'')}</div>
       ${steps
         ? `<div style="margin-top:10px"><b>${t('How to prepare — step by step','Jinsi ya kuandaa — hatua kwa hatua')}:</b>
-             <ol class="rsteps">${steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>`
+             <ol class="rsteps">${steps.map(s=>`<li>${escHtml(s)}</li>`).join('')}</ol></div>`
         : `<div class="note" style="margin-top:10px">🎬 ${t('You have not written the steps for this one yet — watch the video below and it will show you how to cook it.','Bado hujaandika hatua za chakula hiki — tazama video hapa chini nayo itakuonyesha jinsi ya kupika.')}</div>`}
       <a class="ytbtn" href="${ytOf(dish)}" target="_blank" rel="noopener">▶ ${dish.video
         ? t('Watch your saved video','Tazama video yako uliyohifadhi')
@@ -1128,8 +821,8 @@ function renderMyFoods(into){
       <tr><th>${t('Food','Chakula')}</th><th>${t('When','Wakati')}</th><th>${t('How often','Mara ngapi')}</th><th></th></tr>`;
     list.forEach(f=>{
       html+=`<tr>
-        <td><div class="fname">${f.sw}</div>
-            ${f.en?`<div class="fsub">${f.en}</div>`:''}
+        <td><div class="fname">${escHtml(f.sw)}</div>
+            ${f.en?`<div class="fsub">${escHtml(f.en)}</div>`:''}
             <span class="kindtag">${kindName(f.kind)}</span>
             ${f.video?`<span class="kindtag" title="${t('Has your own video','Ina video yako')}">🎬 ${t('video','video')}</span>`:''}</td>
         <td>${whenText(f)}</td>
@@ -1183,7 +876,7 @@ function renderMyFoods(into){
       <label class="mflabel" for="mfShop">${t('Ingredients to buy (separate with commas)','Mahitaji ya kununua (tenganisha kwa koma)')}</label>
       <input class="field" id="mfShop" placeholder="${t('e.g. ndizi, nyama, nyanya','mf. ndizi, nyama, nyanya')}" value="${ed&&ed.shop?escAttr(ed.shop):''}" />
       <label class="mflabel" for="mfSteps">${t('How to prepare — one step per line','Jinsi ya kuandaa — hatua moja kila mstari')}</label>
-      <textarea class="field" id="mfSteps" placeholder="${t('Fry the onions...\nAdd the meat...','Kaanga vitunguu...\nOngeza nyama...')}">${ed&&ed.steps?ed.steps.join('\n'):''}</textarea>
+      <textarea class="field" id="mfSteps" placeholder="${t('Fry the onions...\nAdd the meat...','Kaanga vitunguu...\nOngeza nyama...')}">${ed&&ed.steps?escHtml(ed.steps.join('\n')):''}</textarea>
     </details>
 
     <div id="mfErr" class="autherr hidden"></div>
@@ -1270,18 +963,86 @@ function renderFavs(into){
   into.innerHTML=html; wireSuggestButtons(into); show(into.id);
 }
 
-/* ---------- accounts (this device only; passwords hashed, never sent) ---------- */
-let authMode='login';
-async function hashPw(pw,salt){
-  const msg=salt+':'+pw;
-  if(window.crypto && crypto.subtle){
-    const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-  let h=2166136261;
-  for(let i=0;i<msg.length;i++){ h^=msg.charCodeAt(i); h=Math.imul(h,16777619); }
-  return 'f'+(h>>>0).toString(16);
+/* ---------- account screen ---------- */
+function renderAccount(into){
+  const u=currentUser(); if(!u) return show('auth');
+  const d=load();
+  const okMsg=(el,msg)=>{ el.textContent=msg; el.className='autherr ok'; el.classList.remove('hidden'); };
+  const badMsg=(el,msg)=>{ el.textContent=msg; el.className='autherr'; el.classList.remove('hidden'); };
+
+  into.innerHTML=`
+    <h2 style="margin-top:0">👤 ${t('My account','Akaunti yangu')}</h2>
+    <div class="lineitem"><span class="k">${t('Name','Jina')}</span><span class="v">${escHtml(u.name)}</span></div>
+    <div class="lineitem"><span class="k">${t('Email','Barua pepe')}</span><span class="v">${escHtml(d.session||'')}</span></div>
+    <div class="lineitem"><span class="k">${t('Sync','Usawazishaji')}</span><span class="v">${
+      CC.isOffline() ? '📴 '+t('Offline — saved on this device','Hakuna mtandao — imehifadhiwa kwenye kifaa hiki')
+      : CC.hasPendingWork() ? '🔄 '+t('Saving…','Inahifadhi…')
+      : '✅ '+t('Saved to your account','Imehifadhiwa kwenye akaunti yako')}
+      <small>${t('Log in on any phone or laptop to find the same kitchen.','Ingia kwenye simu au kompyuta yoyote upate jikoni lilelile.')}</small></span></div>
+
+    <h3 style="margin:20px 0 4px; font-size:16px">🔑 ${t('Change password','Badilisha nenosiri')}</h3>
+    <p class="muted" style="font-size:12px; margin:0">${t('Changing it signs out your other devices.','Ukibadilisha, vifaa vyako vingine vitatolewa.')}</p>
+    <form id="pwForm">
+      <input class="field" type="password" id="pwOld" autocomplete="current-password" placeholder="${t('Current password','Nenosiri la sasa')}" />
+      <input class="field" type="password" id="pwNew" autocomplete="new-password" placeholder="${t('New password','Nenosiri jipya')}" />
+      <div id="pwMsg" class="autherr hidden" role="alert"></div>
+      <div class="row"><button class="btn small" type="submit" id="pwBtn">${t('Change password','Badilisha nenosiri')}</button></div>
+    </form>
+
+    <details class="more"><summary>⚠️ ${t('Delete my account','Futa akaunti yangu')}</summary>
+      <p class="muted" style="font-size:13px">${t('This removes your account and everything in it — favourites, plans and your own foods — from every device. It cannot be undone.','Hii itaondoa akaunti yako na kila kitu ndani yake — vipendwa, mipango na vyakula vyako — kwenye kila kifaa. Haiwezi kurudishwa.')}</p>
+      <form id="delForm">
+        <input class="field" type="password" id="delPass" autocomplete="current-password" placeholder="${t('Your password','Nenosiri lako')}" />
+        <div id="delMsg" class="autherr hidden" role="alert"></div>
+        <div class="row"><button class="btn small danger" type="submit">${t('Delete for ever','Futa milele')}</button></div>
+      </form>
+    </details>
+
+    <div class="row">
+      <button class="btn ghost small" id="bkHome">🏠 ${t('Home','Nyumbani')}</button>
+      <button class="btn ghost small" id="acctOut">🚪 ${t('Log out','Toka')}</button>
+    </div>`;
+
+  into.querySelector('#pwForm').onsubmit=async e=>{
+    e.preventDefault();
+    const msg=into.querySelector('#pwMsg'), btn=into.querySelector('#pwBtn');
+    const next=into.querySelector('#pwNew').value;
+    if(next.length<MIN_PASSWORD) return badMsg(msg, authMessage('password_short'));
+    btn.disabled=true;
+    try{
+      await CC.changePassword(into.querySelector('#pwOld').value, next);
+      into.querySelector('#pwOld').value=''; into.querySelector('#pwNew').value='';
+      okMsg(msg, t('Password changed. Your other devices have been signed out.','Nenosiri limebadilishwa. Vifaa vyako vingine vimetolewa.'));
+    }catch(err){
+      badMsg(msg, err && err.status===403 ? t('That current password is not right.','Nenosiri la sasa si sahihi.') : authMessage(err&&err.status?err.message:'offline'));
+    }
+    btn.disabled=false;
+  };
+
+  into.querySelector('#delForm').onsubmit=async e=>{
+    e.preventDefault();
+    const msg=into.querySelector('#delMsg');
+    if(!window.confirm(t('Delete your account and everything in it for ever?','Kufuta akaunti yako na kila kitu ndani yake milele?'))) return;
+    try{
+      await CC.deleteAccount(into.querySelector('#delPass').value);
+      CC.forgetLegacy();
+      location.reload();
+    }catch(err){
+      badMsg(msg, err && err.status===403 ? t('That password is not right.','Nenosiri hilo si sahihi.') : authMessage(err&&err.status?err.message:'offline'));
+    }
+  };
+
+  into.querySelector('#bkHome').onclick=()=>{ refreshHome(); show('home'); };
+  into.querySelector('#acctOut').onclick=logout;
+  show(into.id);
 }
+
+/* ---------- accounts ----------
+   The account lives on the server, so the same kitchen opens on any device.
+   Passwords are only ever sent to the server to be checked; nothing about
+   them is kept here.                                                       */
+let authMode='login';
+const MIN_PASSWORD=8;
 /* the logged-in account, or null — every screen except the login page needs one */
 function currentUser(d){ d=d||load(); return (d.session && d.users && d.users[d.session]) || null; }
 function isLoggedIn(){ return !!currentUser(); }
@@ -1299,42 +1060,69 @@ function setAuthMode(m){
   $('aErr').classList.add('hidden');
 }
 function authErr(msg){ const e=$('aErr'); e.textContent=msg; e.classList.remove('hidden'); }
+function authBusy(on){
+  const b=$('aSubmit');
+  b.disabled=on;
+  b.textContent = on ? t('Please wait…','Subiri kidogo…') : t(b.dataset.en,b.dataset.sw);
+}
+/* Server answers are short codes so both languages can be spoken here. */
+function authMessage(code){
+  switch(code){
+    case 'email_required':   return t('Please enter your email address.','Tafadhali andika barua pepe yako.');
+    case 'email_invalid':    return t('Please enter a valid email address.','Tafadhali andika barua pepe sahihi.');
+    case 'password_required':return t('Please enter your password.','Tafadhali andika nenosiri lako.');
+    case 'password_short':   return t('Password must be at least '+MIN_PASSWORD+' characters.','Nenosiri liwe na herufi '+MIN_PASSWORD+' au zaidi.');
+    case 'password_long':    return t('That password is too long.','Nenosiri hilo ni refu mno.');
+    case 'name_required':    return t('Please enter your name.','Tafadhali andika jina lako.');
+    case 'name_long':        return t('That name is too long.','Jina hilo ni refu mno.');
+    case 'email_taken':      return t('That email already has an account — log in instead.','Barua pepe hiyo tayari ina akaunti — ingia badala yake.');
+    case 'bad_credentials':  return t('Wrong email or password — try again.','Barua pepe au nenosiri si sahihi — jaribu tena.');
+    case 'too_many_attempts':return t('Too many tries. Please wait a few minutes and try again.','Umejaribu mara nyingi mno. Subiri dakika chache kisha jaribu tena.');
+    case 'offline':          return t('No connection. You need to be online to log in the first time on a device.','Hakuna mtandao. Unahitaji mtandao ili kuingia mara ya kwanza kwenye kifaa.');
+    default:                 return t('Something went wrong. Please try again.','Kuna hitilafu. Tafadhali jaribu tena.');
+  }
+}
 async function doAuth(){
   const email=$('aEmail').value.trim().toLowerCase();
   const pass=$('aPass').value;
-  if(!email) return authErr(t('Please enter your email address.','Tafadhali andika barua pepe yako.'));
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return authErr(t('Please enter a valid email address.','Tafadhali andika barua pepe sahihi.'));
-  if(!pass) return authErr(t('Please enter your password.','Tafadhali andika nenosiri lako.'));
-  if(pass.length<6) return authErr(t('Password must be at least 6 characters.','Nenosiri liwe na herufi 6 au zaidi.'));
-  const d=load(); d.users=d.users||{};
+  if(!email) return authErr(authMessage('email_required'));
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return authErr(authMessage('email_invalid'));
+  if(!pass) return authErr(authMessage('password_required'));
+  if(pass.length<MIN_PASSWORD) return authErr(authMessage('password_short'));
+  const name=$('aName').value.trim();
   if(authMode==='signup'){
-    const name=$('aName').value.trim();
-    if(!name) return authErr(t('Please enter your name.','Tafadhali andika jina lako.'));
+    if(!name) return authErr(authMessage('name_required'));
     if($('aPass2').value!==pass) return authErr(t('The two passwords do not match.','Manenosiri mawili hayafanani.'));
-    if(d.users[email]) return authErr(t('That email already has an account on this device — try logging in.','Barua pepe hiyo tayari ina akaunti kwenye kifaa hiki — jaribu kuingia.'));
-    const salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-    d.users[email]={name, salt, hash:await hashPw(pass,salt), favs:[], plans:{}, myFoods:[], created:Date.now()};
-    adoptDeviceData(d, d.users[email]);
-  } else {
-    const u=d.users[email];
-    if(!u) return authErr(t('No account with that email on this device. Create one first.','Hakuna akaunti ya barua pepe hiyo kwenye kifaa hiki. Fungua akaunti kwanza.'));
-    if(await hashPw(pass,u.salt)!==u.hash) return authErr(t('Wrong password — try again.','Nenosiri si sahihi — jaribu tena.'));
   }
-  d.session=email; save(d);
+
+  authBusy(true);
+  try{
+    if(authMode==='signup'){
+      await CC.signup(name,email,pass);
+      const legacy=CC.legacyData();
+      if(legacy){ await CC.uploadLegacy(legacy); CC.forgetLegacy(); }
+    } else {
+      await CC.login(email,pass);
+    }
+  } catch(err){
+    authBusy(false);
+    return authErr(authMessage(err && err.status ? err.message : 'offline'));
+  }
+  authBusy(false);
   $('aPass').value=''; $('aPass2').value=''; $('aErr').classList.add('hidden');
+  enterApp();
+}
+/** Everything that has to happen once an account is open. */
+function enterApp(){
+  hydrateSettings();
+  applyLang(); renderFilters();
   updateUserPill(); refreshHome(); show('home');
 }
-/* favourites / plans / foods saved before accounts existed move into the first account made */
-function adoptDeviceData(d,u){
-  if(Array.isArray(d.favs) && d.favs.length && !u.favs.length){ u.favs=d.favs; }
-  if(Array.isArray(d.myFoods) && d.myFoods.length && !u.myFoods.length){ u.myFoods=d.myFoods; }
-  if(d.plans && Object.keys(d.plans).length && !Object.keys(u.plans).length){ u.plans=d.plans; }
-  delete d.favs; delete d.myFoods; delete d.plans;
-}
-function logout(){
-  const d=load(); delete d.session; save(d);
-  updateUserPill(); $('aPass').value=''; $('aPass2').value='';
-  setAuthMode('login'); show('auth'); $('aEmail').focus();
+async function logout(){
+  const pill=$('userPill'); pill.style.pointerEvents='none';
+  try{ await CC.logout(); } finally { pill.style.pointerEvents=''; }
+  $('aPass').value=''; $('aPass2').value='';
+  updateUserPill(); setAuthMode('login'); show('auth');
 }
 function updateUserPill(){
   const u=currentUser();
@@ -1357,6 +1145,8 @@ function refreshHome(){
   updateBudgetUI();
 }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+/* Names and emails come from people, so they never go into HTML unescaped. */
+function escHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function renderFilters(){
   const row=$('filterRow');
@@ -1436,17 +1226,46 @@ $('favBtn').onclick=()=>route('favs');
 });
 $('authForm').onsubmit=e=>{ e.preventDefault(); doAuth(); };
 $('userPill').onclick=logout;
+$('accountBtn').onclick=()=>renderAccount($('multi'));
 
+/* ---------- sync indicator ---------- */
+const SYNC_TEXT={
+  saved:   ()=>['✅ '+t('Saved','Imehifadhiwa'), t('Everything is saved to your account.','Kila kitu kimehifadhiwa kwenye akaunti yako.')],
+  saving:  ()=>['🔄 '+t('Saving…','Inahifadhi…'), t('Sending your changes to your account.','Inatuma mabadiliko yako kwenye akaunti yako.')],
+  pending: ()=>['🕒 '+t('Saving…','Inahifadhi…'), t('Your changes are about to be sent.','Mabadiliko yako yanakaribia kutumwa.')],
+  offline: ()=>['📴 '+t('Offline','Hakuna mtandao'), t('No connection. Your kitchen is safe on this device and will sync when you are back online.','Hakuna mtandao. Jikoni lako liko salama kwenye kifaa hiki na litasawazishwa ukirudi mtandaoni.')],
+};
+function renderSync(state){
+  const pill=$('syncPill');
+  if(state==='merged'){ onMergedFromAnotherDevice(); return; }
+  if(state==='out'){ pill.classList.add('hidden'); return; }
+  const build=SYNC_TEXT[state]||SYNC_TEXT.saved;
+  const [label,title]=build();
+  pill.classList.remove('hidden');
+  pill.classList.toggle('warn', state==='offline');
+  pill.textContent=label;
+  pill.title=title;
+}
+/* Another device pushed while this one was away — take the merged result and
+   redraw, so the cook is never looking at a menu the server has replaced. */
+function onMergedFromAnotherDevice(){
+  hydrateSettings(); applyLang(); renderFilters();
+  if(!$('home').classList.contains('hidden')) refreshHome();
+}
+CC.onStatus(renderSync);
+CC.onSignedOut(()=>{
+  updateUserPill(); setAuthMode('login'); show('auth');
+  authErr(t('You were signed out. Please log in again.','Umetolewa. Tafadhali ingia tena.'));
+});
+
+/* ---------- start ---------- */
 applyLang();
 setAuthMode('login');
 renderFilters();
 updateUserPill();
-(function boot(){
-  const d=load();
-  /* older versions allowed a guest session — that is no longer a way in */
-  if(d.session && !(d.users && d.users[d.session])){ delete d.session; save(d); }
-  if(isLoggedIn()){ refreshHome(); show('home'); } else { show('auth'); }
+(async function boot(){
+  let where='out';
+  try{ where=await CC.start(); }
+  finally{ $('splash').classList.add('hidden'); }
+  if(where==='in' || where==='offline') enterApp(); else show('auth');
 })();
-</script>
-</body>
-</html>

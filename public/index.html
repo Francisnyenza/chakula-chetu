@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#C2410C" />
+<meta name="description" content="Tanzanian meal ideas — what to cook for breakfast, lunch and dinner, with recipes, a weekly menu and a shopping list that fits your budget." />
+<title>Chakula Chetu 🍲 — Meal Suggester (Tanzania)</title>
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/icon-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🍲</div>
+    <div>
+      <h1 data-en="Chakula Chetu" data-sw="Chakula Chetu">Chakula Chetu</h1>
+      <p class="tag" data-en="What shall we eat? • Tanzanian meal ideas" data-sw="Tule nini? • Mawazo ya chakula cha Kitanzania">What shall we eat? • Tanzanian meal ideas</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="pill sync hidden" id="syncPill"></div>
+    <div class="pill userpill hidden" id="userPill">👤 <b id="userName"></b> · <span data-en="Log out" data-sw="Toka">Log out</span></div>
+    <div class="pill lang" id="langToggle">🌍 <b id="langLabel">English</b></div>
+  </header>
+
+  <!-- shown until we know whether anyone is signed in -->
+  <div id="splash" class="card splash">
+    <div class="spin" aria-hidden="true">🍲</div>
+    <p class="muted" data-en="Opening your kitchen…" data-sw="Inafungua jikoni lako…">Opening your kitchen…</p>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="auth" class="card hidden">
+    <h2 style="margin-top:0">🔐 <span data-en="Log in to continue" data-sw="Ingia ili uendelee">Log in to continue</span></h2>
+    <p class="muted" data-en="Chakula Chetu needs an email and a password. Your favourite dishes and meal plans are saved to your own account." data-sw="Chakula Chetu kinahitaji barua pepe na nenosiri. Vyakula unavyovipenda na mipango yako huhifadhiwa kwenye akaunti yako.">Chakula Chetu needs an email and a password. Your favourite dishes and meal plans are saved to your own account.</p>
+    <div class="authtabs">
+      <span class="chip on" id="tabLogin" role="button" tabindex="0" data-en="Log in" data-sw="Ingia">Log in</span>
+      <span class="chip" id="tabSignup" role="button" tabindex="0" data-en="Create account" data-sw="Fungua akaunti">Create account</span>
+    </div>
+    <form id="authForm" autocomplete="on" novalidate>
+      <input class="field hidden" type="text" id="aName" autocomplete="name" placeholder="Jina / Name" />
+      <input class="field" type="email" id="aEmail" autocomplete="email" inputmode="email" required placeholder="Barua pepe / Email" />
+      <input class="field" type="password" id="aPass" autocomplete="current-password" required placeholder="Nenosiri / Password" />
+      <input class="field hidden" type="password" id="aPass2" autocomplete="new-password" placeholder="Rudia nenosiri / Repeat password" />
+      <div id="aErr" class="autherr hidden" role="alert"></div>
+      <div class="row">
+        <button class="btn" type="submit" id="aSubmit" data-en="Log in ▶" data-sw="Ingia ▶">Log in ▶</button>
+      </div>
+    </form>
+    <p class="muted" style="font-size:12px; margin-top:12px" data-en="An account is required — there is no guest mode. Accounts live on this device only, and passwords are never sent anywhere." data-sw="Akaunti inahitajika — hakuna matumizi ya mgeni. Akaunti zinakaa kwenye kifaa hiki tu, na nenosiri halitumwi popote.">An account is required — there is no guest mode. Accounts live on this device only, and passwords are never sent anywhere.</p>
+  </div>
+
+  <!-- HOME -->
+  <div id="home" class="card hidden">
+    <h2 id="greet" style="margin-top:0">Karibu! 👋</h2>
+    <p class="muted" id="homeMsg" data-en="Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy."
+       data-sw="Chagua mlo nami nitapendekeza chakula cha Kitanzania, jinsi ya kupika, tunda na juisi, na cha kununua.">
+       Pick a meal and I'll suggest a Tanzanian dish, how to cook it, a fruit and juice, and what to buy.</p>
+
+    <div class="filters" id="filterRow">
+      <span class="muted" data-en="Filters:" data-sw="Vichujio:">Filters:</span>
+    </div>
+    <div id="budgetBox" class="budgetbox hidden">
+      <h4 data-en="💰 My budget" data-sw="💰 Bajeti yangu">💰 My budget</h4>
+      <div class="bgrid">
+        <div>
+          <label for="bAmount" data-en="How much money do I have? (TSh)" data-sw="Nina shilingi ngapi? (TSh)">How much money do I have? (TSh)</label>
+          <input class="field tight" type="number" id="bAmount" inputmode="numeric" min="0" placeholder="50000" />
+        </div>
+        <div>
+          <label for="bPeople" data-en="People" data-sw="Watu">People</label>
+          <input class="field tight" type="number" id="bPeople" inputmode="numeric" min="1" max="20" value="4" />
+        </div>
+      </div>
+      <div class="bhint" id="bHint"></div>
+    </div>
+
+    <div class="meals">
+      <div class="tile tonight" data-meal="dinner"><span class="ic">🌙</span><div class="nm" data-en="What's for dinner tonight?" data-sw="Tule nini usiku huu?">What's for dinner tonight?</div><div class="sub" data-en="instant suggestion" data-sw="pendekezo la papo hapo">instant suggestion</div></div>
+      <div class="tile" data-meal="breakfast"><span class="ic">🌅</span><div class="nm" data-en="Breakfast" data-sw="Kifungua kinywa">Breakfast</div></div>
+      <div class="tile" data-meal="lunch"><span class="ic">☀️</span><div class="nm" data-en="Lunch" data-sw="Chakula cha mchana">Lunch</div></div>
+      <div class="tile wide" data-meal="day"><span class="ic">📅</span><div class="nm" data-en="Plan my whole day" data-sw="Panga siku nzima">Plan my whole day</div><div class="sub" data-en="breakfast + lunch + dinner" data-sw="kifungua + mchana + usiku">breakfast + lunch + dinner</div></div>
+      <div class="tile wide" data-meal="week"><span class="ic">🗓️</span><div class="nm" data-en="Weekly menu (7 days)" data-sw="Menyu ya wiki (siku 7)">Weekly menu (7 days)</div><div class="sub" data-en="saved until you change it" data-sw="huhifadhiwa hadi ubadilishe">saved until you change it</div></div>
+      <div class="tile shop" data-meal="shop"><span class="ic">🛒</span><div class="nm" data-en="Shopping list" data-sw="Orodha ya manunuzi">Shopping list</div><div class="sub" data-en="everything to buy for your plan" data-sw="vitu vyote vya kununua kwa mpango wako">everything to buy for your plan</div></div>
+      <div class="tile wide" data-meal="myfoods"><span class="ic">🍽️</span><div class="nm" data-en="My foods" data-sw="Vyakula vyangu">My foods</div><div class="sub" data-en="add your own dishes, juices, fruit & mboga — say when and how often" data-sw="ongeza vyakula, juisi, matunda na mboga zako — sema lini na mara ngapi">add your own dishes, juices, fruit &amp; mboga — say when and how often</div></div>
+    </div>
+
+    <div class="row">
+      <button class="btn ghost small" id="favBtn" data-en="❤️ My favourites" data-sw="❤️ Vipendwa vyangu">❤️ My favourites</button>
+      <button class="btn ghost small" id="accountBtn" data-en="👤 My account" data-sw="👤 Akaunti yangu">👤 My account</button>
+    </div>
+  </div>
+
+  <!-- SUGGESTION (single meal) -->
+  <div id="suggest" class="card hidden"></div>
+  <!-- DAY / WEEK / FAVOURITES / SHOPPING / ACCOUNT -->
+  <div id="multi" class="card hidden"></div>
+
+  <footer>Chakula Chetu · <span data-en="Home-cooked, the Tanzanian way 🇹🇿" data-sw="Mapishi ya nyumbani, kwa mtindo wa Kitanzania 🇹🇿">Home-cooked, the Tanzanian way 🇹🇿</span></footer>
+</div>
+
+<!-- RECIPE SHEET -->
+<div id="recipeOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+  <div class="sheet" id="recipeSheet"></div>
+</div>
+
+<script src="/api.js"></script>
+<script src="/app.js"></script>
+<script src="/register-sw.js"></script>
+</body>
+</html>
