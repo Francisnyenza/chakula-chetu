@@ -278,11 +278,3 @@
   :root[data-theme="light"] .t-meat{background:#F5E0D3; color:#7C2D12}
   :root[data-theme="light"] .autherr{background:#FEE2E2; border-color:#FCA5A5; color:#991B1B}
   :root[data-theme="light"] .autherr.ok{background:#DCFCE7; border-color:#86EFAC; color:#166534}
-
-  /* demo notice, added only by tools/build-pages.js */
-  .previewnote{max-width:600px; margin:0 auto 16px; background:var(--card2);
-    border:2px solid var(--line); border-left:5px solid var(--brand); border-radius:14px;
-    padding:13px 16px; font-size:13px; line-height:1.6; color:var(--ink)}
-  .previewnote b{color:var(--brand)}
-  .previewnote code{background:var(--card); border:1px solid var(--line); border-radius:6px;
-    padding:1px 6px; font-size:12px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}

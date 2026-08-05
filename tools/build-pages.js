@@ -43,26 +43,19 @@ function relativise(html) {
     .replace(/href="\/"/g, 'href="./"');
 }
 
-const NOTICE = `  <div class="previewnote" role="note">
-    <b>Demo.</b> This is the real Chakula Chetu, running without its server.
-    Create an account and everything works — suggestions, the weekly menu,
-    the shopping list, your own foods. The account is kept in
-    <i>this browser only</i>. To have one kitchen follow you across your
-    phone and laptop, run the server from the repository
-    (<code>npm start</code>) — GitHub Pages can only serve files, it cannot
-    run Node.
-  </div>
-`;
-
-const NOTICE_CSS = `
-  /* demo notice, added only by tools/build-pages.js */
-  .previewnote{max-width:600px; margin:0 auto 16px; background:var(--card2);
-    border:2px solid var(--line); border-left:5px solid var(--brand); border-radius:14px;
-    padding:13px 16px; font-size:13px; line-height:1.6; color:var(--ink)}
-  .previewnote b{color:var(--brand)}
-  .previewnote code{background:var(--card); border:1px solid var(--line); border-radius:6px;
-    padding:1px 6px; font-size:12px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-`;
+/* The deployed copy keeps accounts in the browser, so the one line of fine
+   print on the login card that promises a kitchen on every device is replaced
+   with what this build actually does. */
+const FINE_PRINT = {
+  from: {
+    en: 'An account is required — there is no guest mode. Log in on any phone or laptop to find the same kitchen.',
+    sw: 'Akaunti inahitajika — hakuna matumizi ya mgeni. Ingia kwenye simu au kompyuta yoyote upate jikoni lilelile.',
+  },
+  to: {
+    en: 'An account is required — there is no guest mode. This copy runs without its server, so your account stays in this browser.',
+    sw: 'Akaunti inahitajika — hakuna matumizi ya mgeni. Nakala hii inafanya kazi bila seva yake, hivyo akaunti yako inabaki kwenye kivinjari hiki.',
+  },
+};
 
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
@@ -72,15 +65,17 @@ function build() {
     fs.copyFileSync(path.join(PUBLIC, name), path.join(DIST, name));
   }
 
-  /* styles + the notice's own rules */
-  fs.appendFileSync(path.join(DIST, 'styles.css'), NOTICE_CSS);
-
   /* the page: swap the store, relativise, add the notice */
   let html = fs.readFileSync(path.join(PUBLIC, 'index.html'), 'utf8');
   html = html.replace('<script src="/api.js"></script>', '<script src="static-store.js"></script>');
   if (html.includes('/api.js')) throw new Error('api.js is still referenced — the store was not swapped');
   html = relativise(html);
-  html = html.replace('  <header>', NOTICE + '  <header>');
+  for (const lang of ['en', 'sw']) {
+    if (!html.includes(FINE_PRINT.from[lang])) {
+      throw new Error('the login fine print changed — update FINE_PRINT in this script (' + lang + ')');
+    }
+    html = html.split(FINE_PRINT.from[lang]).join(FINE_PRINT.to[lang]);
+  }
   fs.writeFileSync(path.join(DIST, 'index.html'), html);
 
   fs.copyFileSync(path.join(__dirname, 'static-store.js'), path.join(DIST, 'static-store.js'));
