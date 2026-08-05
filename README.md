@@ -7,6 +7,14 @@ English and Kiswahili.
 You need an account. Log in on any phone or laptop and the same kitchen is
 there: your favourites, your weekly menu, your own dishes.
 
+**Try it: https://francisnyenza.github.io/chakula-chetu/**
+
+That is the GitHub Pages build. Pages serves files and cannot run Node, so
+the deployed copy keeps your account in the browser you are using instead of
+on a server — every screen works, but a kitchen does not follow you to a
+second device. Run the server (below) for that. See
+[Deploying](#deploying) for how the build is made.
+
 ---
 
 ## Running it
@@ -116,6 +124,29 @@ gives it an icon and a full screen.
 The one thing that genuinely needs a connection is **the first login on a
 device** — there is no account on it yet to check a password against. After
 that, it opens offline.
+
+## Deploying
+
+`.github/workflows/pages.yml` runs the tests, builds and deploys on every push
+to `main`. The Pages source must stay **GitHub Actions** (Settings → Pages);
+`actions/configure-pages` sets it, and it matters: on the older "deploy from a
+branch" setting, Jekyll builds the repository root instead. The app lives in
+`public/`, so a root build finds no `index.html` and publishes `README.md` as
+the site — which is exactly what happened once, when a branch build finished
+15 seconds after the workflow's and replaced it.
+
+`tools/build-pages.js` writes `dist/` from `public/`. The markup, styles and
+all of `app.js` are copied untouched so the deployed site cannot drift from
+the real one. It changes only what a static host requires:
+
+- `public/api.js` is swapped for `tools/static-store.js`, the same `CC`
+  interface backed by the browser rather than the server.
+- Root-absolute paths become relative, because Pages serves from `/<repo>/`.
+- The service worker's cached paths and scope, and the manifest's
+  `start_url`, follow the project path.
+- `.nojekyll` stops Pages reinterpreting the build.
+
+To build it yourself: `node tools/build-pages.js`, then serve `dist/`.
 
 ## Notes
 
