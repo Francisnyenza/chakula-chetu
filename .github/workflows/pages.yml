@@ -1,10 +1,11 @@
 name: Deploy to GitHub Pages
 
+# The github-pages environment only accepts deployments from the default
+# branch, so a run from anywhere else fails at the deploy step by design.
 on:
   push:
     branches:
       - main
-      - claude/email-password-login-w01hrc
   workflow_dispatch:
 
 permissions:
