@@ -23,6 +23,19 @@ const DIST = path.join(ROOT, 'dist');
 
 const COPY = ['styles.css', 'app.js', 'sw.js', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-180.png'];
 
+/* The same build is also mirrored to the repository root and committed.
+   Reason: if the Pages source is ever "deploy from a branch" rather than
+   GitHub Actions, Pages builds the repository root — and with the app living
+   in public/, it finds no index.html and publishes README.md as the site.
+   Keeping a built copy at the root means the site is correct under either
+   source. `npm run build:pages -- --check` fails if the two fall out of step.
+   Once Pages is set to GitHub Actions for good, these can be deleted. */
+const MIRROR = [
+  'index.html', 'styles.css', 'app.js', 'static-store.js', 'register-sw.js',
+  'sw.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
+  'icon-180.png', '.nojekyll',
+];
+
 /** Root-absolute URLs break under /<repo>/; make them relative to the page. */
 function relativise(html) {
   return html
@@ -106,7 +119,38 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 
   const files = fs.readdirSync(DIST).sort();
-  console.log('Built dist/ with ' + files.length + ' files:\n  ' + files.join('\n  '));
+  console.log('Built dist/ with ' + files.length + ' files.');
+  return files;
 }
 
+/** Copy the build to the repository root, or report what is out of step. */
+function mirror(check) {
+  const stale = [];
+  for (const name of MIRROR) {
+    const from = path.join(DIST, name);
+    const to = path.join(ROOT, name);
+    const built = fs.readFileSync(from);
+    const current = fs.existsSync(to) ? fs.readFileSync(to) : null;
+    if (current && built.equals(current)) continue;
+    if (check) { stale.push(name); continue; }
+    fs.writeFileSync(to, built);
+  }
+
+  if (!check) {
+    console.log('Mirrored ' + MIRROR.length + ' files to the repository root.');
+    return;
+  }
+  if (stale.length) {
+    console.error(
+      'The build at the repository root is out of step with public/:\n  ' +
+      stale.join('\n  ') +
+      '\n\nRun `npm run build:pages` and commit the result.'
+    );
+    process.exit(1);
+  }
+  console.log('The repository root matches public/.');
+}
+
+const check = process.argv.includes('--check');
 build();
+mirror(check);

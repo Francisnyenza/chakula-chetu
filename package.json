@@ -1,16 +1,25 @@
 {
   "name": "chakula-chetu",
   "version": "2.0.0",
-  "description": "Tanzanian meal suggester — dishes, recipes, weekly menus and a shopping list that fits your budget.",
+  "description": "Tanzanian meal suggester \u2014 dishes, recipes, weekly menus and a shopping list that fits your budget.",
   "private": true,
   "license": "MIT",
   "type": "commonjs",
   "main": "server/server.js",
-  "engines": { "node": ">=22.5" },
+  "engines": {
+    "node": ">=22.5"
+  },
   "scripts": {
     "start": "node --no-warnings=ExperimentalWarning server/server.js",
     "dev": "node --no-warnings=ExperimentalWarning --watch server/server.js",
-    "test": "node --no-warnings=ExperimentalWarning --test \"test/*.test.js\""
+    "test": "node --no-warnings=ExperimentalWarning --test \"test/*.test.js\"",
+    "build:pages": "node tools/build-pages.js"
   },
-  "keywords": ["tanzania", "food", "meal-planner", "swahili", "pwa"]
+  "keywords": [
+    "tanzania",
+    "food",
+    "meal-planner",
+    "swahili",
+    "pwa"
+  ]
 }

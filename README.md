@@ -128,12 +128,21 @@ that, it opens offline.
 ## Deploying
 
 `.github/workflows/pages.yml` runs the tests, builds and deploys on every push
-to `main`. The Pages source must stay **GitHub Actions** (Settings → Pages);
-`actions/configure-pages` sets it, and it matters: on the older "deploy from a
-branch" setting, Jekyll builds the repository root instead. The app lives in
-`public/`, so a root build finds no `index.html` and publishes `README.md` as
-the site — which is exactly what happened once, when a branch build finished
-15 seconds after the workflow's and replaced it.
+to `main`.
+
+**Two Pages builds can race.** With the source set to "deploy from a branch",
+a push starts GitHub's own Jekyll build *as well as* the workflow, and whichever
+finishes last wins. That bit once: the Jekyll build finished 15 seconds later,
+built the repository root, found no `index.html` there — the app lives in
+`public/` — and published `README.md` as the site.
+
+So the build is mirrored to the repository root and committed. Both builds then
+publish the same app and the race stops mattering. `npm run build:pages` writes
+`dist/` and refreshes that mirror; CI runs it with `--check` and fails if
+`public/` changed without it, so the two cannot drift.
+
+Setting Settings → Pages → Source to **GitHub Actions** stops the Jekyll build
+entirely, after which the mirrored files at the root can be deleted.
 
 `tools/build-pages.js` writes `dist/` from `public/`. The markup, styles and
 all of `app.js` are copied untouched so the deployed site cannot drift from

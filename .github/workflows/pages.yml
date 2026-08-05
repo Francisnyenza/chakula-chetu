@@ -32,8 +32,10 @@ jobs:
       - name: Test
         run: npm test
 
+      # Fails if public/ changed without rebuilding the copy at the repository
+      # root, which is what a branch-based Pages build serves.
       - name: Build the static site
-        run: node tools/build-pages.js
+        run: node tools/build-pages.js --check
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
