@@ -1,0 +1,15 @@
+/* How it works — shown to visitors on the log-in screen */
+.hiw{margin-top:22px; padding-top:20px; border-top:2px dashed var(--line)}
+.hiw h3{margin:0 0 4px; font-size:20px; color:var(--deep); letter-spacing:-.3px}
+.hiw .hiw-sub{margin:0; color:var(--muted); font-size:14px}
+.hiw ol{list-style:none; margin:16px 0 0; padding:0; display:grid; gap:12px}
+.hiw li{display:flex; gap:14px; align-items:flex-start; background:var(--card2);
+  border:2px solid var(--line); border-radius:16px; padding:14px}
+.hiw .num{flex:none; width:36px; height:36px; border-radius:12px; display:grid; place-items:center;
+  font-weight:700; color:var(--btn-ink); background:linear-gradient(180deg,var(--brand2),var(--brand));
+  box-shadow:0 4px 10px rgba(194,65,12,.25)}
+.hiw .t{display:block; font-weight:700; color:var(--ink)}
+.hiw .d{display:block; color:var(--muted); font-size:14px; margin-top:2px}
+/* hidden only once the animation script has loaded, so the text is always readable offline */
+.hiw.hiw-ready li{opacity:0}
+@media (prefers-reduced-motion: reduce){ .hiw.hiw-ready li{opacity:1} }

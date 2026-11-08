@@ -6,13 +6,15 @@
    server or fail, and api.js falls back to the copy of the kitchen it
    keeps on the device.
    ============================================================ */
-const VERSION = 'chakula-v3';
+const VERSION = 'chakula-v4';
 const SHELL = [
   './',
   './index.html',
   './styles.css',
   './static-store.js',
   './app.js',
+  './how-it-works.css',
+  './how-it-works.js',
     './manifest.webmanifest',
   './icon.svg',
   './icon-192.png',
